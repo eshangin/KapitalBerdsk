@@ -63,26 +63,32 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: BuildingObject/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var emp = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == id);
+            var model = new BuildingObjectModel
+            {
+                Name = emp.Name,
+                Id = emp.Id
+            };
+            return View(model);
         }
 
         // POST: BuildingObject/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(BuildingObjectModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                BuildingObject el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == model.Id);
+                el.Name = model.Name;
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View();
         }
 
         // GET: BuildingObject/Delete/5
