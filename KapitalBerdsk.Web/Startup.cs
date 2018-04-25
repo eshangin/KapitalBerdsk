@@ -12,6 +12,7 @@ using KapitalBerdsk.Web.Data;
 using KapitalBerdsk.Web.Models;
 using KapitalBerdsk.Web.Services;
 using Microsoft.EntityFrameworkCore.Migrations;
+using KapitalBerdsk.Web.Resources;
 
 namespace KapitalBerdsk.Web
 {
@@ -47,7 +48,12 @@ namespace KapitalBerdsk.Web
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddDataAnnotationsLocalization(options =>
+                {
+                    options.DataAnnotationLocalizerProvider = (type, factory) =>
+                        factory.Create(typeof(SharedResource));
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

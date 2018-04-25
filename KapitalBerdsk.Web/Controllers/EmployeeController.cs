@@ -6,6 +6,7 @@ using KapitalBerdsk.Web.Data;
 using KapitalBerdsk.Web.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Controllers
 {
@@ -19,9 +20,9 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: Employee
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var model = _context.Employees.ToList().Select(item => new EmployeeModel
+            var model = (await _context.Employees.ToListAsync()).Select(item => new EmployeeModel
             {
                 FirstName = item.FirstName,
                 Id = item.Id,
@@ -38,7 +39,7 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: Employee/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             return View();
         }
@@ -46,13 +47,20 @@ namespace KapitalBerdsk.Web.Controllers
         // POST: Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(EmployeeModel model)
         {
             try
             {
-                // TODO: Add insert logic here
+                if (ModelState.IsValid)
+                {
+                    // TODO: Add insert logic here
 
-                return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return View();
+                }
             }
             catch
             {
