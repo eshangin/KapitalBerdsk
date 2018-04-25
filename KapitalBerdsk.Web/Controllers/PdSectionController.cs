@@ -107,18 +107,34 @@ namespace KapitalBerdsk.Web.Controllers
         // POST: PdSection/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(EditPdSectionModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                var pdSection = await _context.PdSections.FirstOrDefaultAsync(item => item.Id == model.Id);
+                pdSection.Name = model.Name;
+                pdSection.BuildingObjectId = model.BuildingObjectId.Value;
+                pdSection.EmployeeId = model.EmployeeId.Value;
+                pdSection.Price = model.Price.Value;
+                await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(BuildingObjectController.Index), nameof(BuildingObjectController));
+                return RedirectToAction(nameof(BuildingObjectController.Details), "BuildingObject",
+                    new { id = model.SelectedBuildingObjectId });
             }
-            catch
+
+            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
             {
-                return View();
-            }
+                Value = item.Id.ToString(),
+                Text = item.Name,
+                Selected = item.Id == model.SelectedBuildingObjectId
+            });
+            model.Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+            {
+                Text = item.FullName,
+                Value = item.Id.ToString()
+            });
+
+            return View(model);
         }
     }
 }
