@@ -26,7 +26,8 @@ namespace KapitalBerdsk.Web.Controllers
             {
                 FirstName = item.FirstName,
                 Id = item.Id,
-                LastName = item.LastName
+                LastName = item.LastName,
+                Salary = item.Salary
             });
 
             return View(model);
@@ -54,7 +55,8 @@ namespace KapitalBerdsk.Web.Controllers
                 await _context.Employees.AddAsync(new Employee
                 {
                     FirstName = model.FirstName,
-                    LastName = model.LastName
+                    LastName = model.LastName,
+                    Salary = model.Salary
                 });
                 await _context.SaveChangesAsync();
 
@@ -72,6 +74,7 @@ namespace KapitalBerdsk.Web.Controllers
             {
                 FirstName = emp.FirstName,
                 LastName = emp.LastName,
+                Salary = emp.Salary,
                 Id = emp.Id
             };
             return View(model);
@@ -87,6 +90,7 @@ namespace KapitalBerdsk.Web.Controllers
                 Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
                 emp.FirstName = model.FirstName;
                 emp.LastName = model.LastName;
+                emp.Salary = model.Salary;
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));

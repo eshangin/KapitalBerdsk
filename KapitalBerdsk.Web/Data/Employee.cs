@@ -19,5 +19,7 @@ namespace KapitalBerdsk.Web.Data
         public string LastName { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
+
+        public decimal Salary { get; set; }
     }
 }
