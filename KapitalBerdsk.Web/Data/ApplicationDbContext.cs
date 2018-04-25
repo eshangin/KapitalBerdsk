@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using KapitalBerdsk.Web.Models;
+using KapitalBerdsk.Web.Models.BusinessObjectModels;
 
 namespace KapitalBerdsk.Web.Data
 {

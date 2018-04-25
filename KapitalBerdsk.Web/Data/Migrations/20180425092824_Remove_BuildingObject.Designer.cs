@@ -11,28 +11,15 @@ using System;
 namespace KapitalBerdsk.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180425092824_Remove_BuildingObject")]
+    partial class Remove_BuildingObject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.BuildingObject", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BuildingObjects");
-                });
 
             modelBuilder.Entity("KapitalBerdsk.Web.Data.Employee", b =>
                 {

@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace KapitalBerdsk.Web.Data
+namespace KapitalBerdsk.Web.Models.BusinessObjectModels
 {
-    public class BuildingObject
+    public class BuildingObjectModel
     {
         public int Id { get; set; }
 
