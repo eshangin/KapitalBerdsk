@@ -22,6 +22,7 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         [Display(Name = "Оклад")]
         public decimal Salary { get; set; }
 
+        [Display(Name = "ФИО")]
         public string FullName => $"{FirstName} {LastName}";
 
         [Display(Name = "Начислено")]

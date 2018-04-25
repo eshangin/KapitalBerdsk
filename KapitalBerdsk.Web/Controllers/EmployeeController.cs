@@ -36,9 +36,28 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: Employee/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            Employee emp = await _context.Employees
+                .Include(item => item.PdSections)
+                .ThenInclude(item => item.BuildingObject)
+                .FirstOrDefaultAsync(item => item.Id == id);
+
+            var model = new EmployeeDetailsModel
+            {
+                FullName = emp.FullName,
+                Salary = emp.Salary,
+                Id = emp.Id,
+                BuildingObjects = emp.PdSections.GroupBy(item => item.BuildingObjectId)
+                                        .Select(item => new EmployeeDetailsModel.BuildingObjectDetail
+                                        {
+                                            Name = item.First().BuildingObject.Name,
+                                            Id = item.First().BuildingObject.Id,
+                                            Total = item.Sum(pd => pd.Price)
+                                        })
+            };
+
+            return View(model);
         }
 
         // GET: Employee/Create

@@ -1,0 +1,40 @@
+﻿@model KapitalBerdsk.Web.Models.BusinessObjectModels.EmployeeDetailsModel
+
+@{
+    ViewData["Title"] = Model.FullName;
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <hr />
+    <div>
+        <b>@Html.DisplayNameFor(model => model.Salary):</b>
+        @Html.DisplayFor(model => model.Salary)
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Название
+                </th>
+                <th>
+                    Всего
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.BuildingObjects)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>
