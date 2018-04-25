@@ -47,48 +47,52 @@ namespace KapitalBerdsk.Web.Controllers
         // POST: Employee/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(EmployeeModel model)
+        public async Task<ActionResult> Create(EmployeeModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
+                await _context.Employees.AddAsync(new Employee
                 {
-                    // TODO: Add insert logic here
+                    FirstName = model.FirstName,
+                    LastName = model.LastName
+                });
+                await _context.SaveChangesAsync();
 
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    return View();
-                }
+                return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View();
         }
 
         // GET: Employee/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == id);
+            var model = new EmployeeModel
+            {
+                FirstName = emp.FirstName,
+                LastName = emp.LastName,
+                Id = emp.Id
+            };
+            return View(model);
         }
 
         // POST: Employee/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(EmployeeModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
+                emp.FirstName = model.FirstName;
+                emp.LastName = model.LastName;
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View();
         }
 
         // GET: Employee/Delete/5
