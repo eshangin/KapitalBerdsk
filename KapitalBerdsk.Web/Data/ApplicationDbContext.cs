@@ -13,6 +13,7 @@ namespace KapitalBerdsk.Web.Data
     {
         public DbSet<Employee> Employees { get; set; }
         public DbSet<BuildingObject> BuildingObjects { get; set; }
+        public DbSet<PdSection> PdSections { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
