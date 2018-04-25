@@ -78,9 +78,30 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: PdSection/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var pdSection = await _context.PdSections.FirstOrDefaultAsync(item => item.Id == id);
+            var model = new EditPdSectionModel
+            {
+                Id = pdSection.Id,
+                Name = pdSection.Name,
+                Price = pdSection.Price,
+                EmployeeId = pdSection.EmployeeId,
+                Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Text = item.FullName,
+                    Value = item.Id.ToString()
+                }),
+                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name,
+                    Selected = item.Id == pdSection.BuildingObjectId
+                }),
+                BuildingObjectId = pdSection.BuildingObjectId,
+                SelectedBuildingObjectId = pdSection.BuildingObjectId
+            };
+            return View(model);
         }
 
         // POST: PdSection/Edit/5
