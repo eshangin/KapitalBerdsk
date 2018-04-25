@@ -61,7 +61,7 @@ namespace KapitalBerdsk.Web.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Обязательное!.
+        ///   Looks up a localized string similar to Поле не может быть пустым.
         /// </summary>
         public static string Required {
             get {

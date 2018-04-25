@@ -46,18 +46,20 @@ namespace KapitalBerdsk.Web.Controllers
         // POST: BuildingObject/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(BuildingObjectModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add insert logic here
+                await _context.BuildingObjects.AddAsync(new BuildingObject
+                {
+                    Name = model.Name
+                });
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View();
         }
 
         // GET: BuildingObject/Edit/5

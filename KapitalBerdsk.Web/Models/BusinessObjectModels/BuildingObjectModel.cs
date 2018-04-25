@@ -10,8 +10,9 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [MaxLength(500)]
+        [Display(Name = "Название")]
         public string Name { get; set; }
     }
 }
