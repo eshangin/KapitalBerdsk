@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Data;
+using KapitalBerdsk.Web.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +11,24 @@ namespace KapitalBerdsk.Web.Controllers
 {
     public class EmployeeController : Controller
     {
+        private ApplicationDbContext _context;
+
+        public EmployeeController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         // GET: Employee
         public ActionResult Index()
         {
-            return View();
+            var model = _context.Employees.ToList().Select(item => new EmployeeModel
+            {
+                FirstName = item.FirstName,
+                Id = item.Id,
+                LastName = item.LastName
+            });
+
+            return View(model);
         }
 
         // GET: Employee/Details/5
