@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using KapitalBerdsk.Web.Data;
 using KapitalBerdsk.Web.Models;
 using KapitalBerdsk.Web.Services;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace KapitalBerdsk.Web
 {
@@ -29,7 +30,17 @@ namespace KapitalBerdsk.Web
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                {
+                    options.Password = new PasswordOptions
+                    {
+                        RequireDigit = true,
+                        RequiredLength = 6,
+                        RequireLowercase = false,
+                        RequireUppercase = false,
+                        RequireNonAlphanumeric = false
+                    };
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
