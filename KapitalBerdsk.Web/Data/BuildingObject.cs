@@ -11,6 +11,7 @@ namespace KapitalBerdsk.Web.Data
         public string Id { get; set; }
 
         [Required]
+        [MaxLength(500)]
         public string Name { get; set; }
     }
 }
