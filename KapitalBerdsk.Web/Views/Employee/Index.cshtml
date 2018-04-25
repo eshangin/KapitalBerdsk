@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KapitalBerdsk.Web.Models.BusinessObjectModels.EmployeeModel>
+﻿@model IEnumerable<KapitalBerdsk.Web.Models.BusinessObjectModels.EmployeeListItemModel>
 
 @{
     ViewData["Title"] = "Сотрудники";
@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Salary)
+                @Html.DisplayNameFor(model => model.Accrued)
             </th>
             <th></th>
         </tr>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Salary)
+                @Html.DisplayFor(modelItem => item.Accrued)
             </td>
             <td>
                 <a class="btn btn-sm btn-default" asp-action="Edit" asp-route-id="@item.Id">
