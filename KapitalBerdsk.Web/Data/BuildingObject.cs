@@ -13,5 +13,7 @@ namespace KapitalBerdsk.Web.Data
         [Required]
         [MaxLength(500)]
         public string Name { get; set; }
+
+        public List<PdSection> PdSections { get; set; }
     }
 }

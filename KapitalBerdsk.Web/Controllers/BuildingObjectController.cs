@@ -32,9 +32,25 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: BuildingObject/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var el = await _context.BuildingObjects
+                    .Include(item => item.PdSections)
+                    .ThenInclude(item => item.Employee)
+                    .FirstOrDefaultAsync(item => item.Id == id);
+            var model = new BuildingObjectModel
+            {
+                Name = el.Name,
+                Id = el.Id,
+                PdSections = el.PdSections.Select(item => new PdSectionModel
+                {
+                    Name = item.Name,
+                    Id = item.Id,
+                    Price = item.Price,
+                    EmployeeName = item.Employee.FullName
+                })
+            };
+            return View(model);
         }
 
         // GET: BuildingObject/Create
@@ -65,11 +81,11 @@ namespace KapitalBerdsk.Web.Controllers
         // GET: BuildingObject/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var emp = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == id);
+            var el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == id);
             var model = new BuildingObjectModel
             {
-                Name = emp.Name,
-                Id = emp.Id
+                Name = el.Name,
+                Id = el.Id
             };
             return View(model);
         }

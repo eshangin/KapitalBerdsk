@@ -1,0 +1,51 @@
+﻿@model KapitalBerdsk.Web.Models.BusinessObjectModels.BuildingObjectModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h2>@ViewData["Title"] <a class="btn btn-sm btn-default" asp-action="Edit" asp-route-id="@Model.Id"><i class="glyphicon glyphicon-edit"></i></a></h2>
+
+<div>
+    <h4>
+        Разделы ПД
+        <a class="btn btn-sm btn-default" asp-controller="PdSection" asp-action="Create" asp-route-objectId="@Model.Id">
+            <i class="glyphicon glyphicon-plus"></i>
+        </a>
+    </h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Сотрудник</th>
+                <th>Цена</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.PdSections)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-default" asp-controller="PdSection" asp-action="Edit" asp-route-id="@item.Id">
+                        <i class="glyphicon glyphicon-edit"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a class="btn btn-default" asp-action="Index"><i class="glyphicon glyphicon-arrow-left"></i></a>
+    
+</div>

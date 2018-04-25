@@ -1,0 +1,45 @@
+﻿@model KapitalBerdsk.Web.Models.BusinessObjectModels.EditPdSectionModel
+
+@{
+    ViewData["Title"] = "Добавление раздела";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SelectedBuildingObjectId" />
+            <div class="form-group">
+                <label asp-for="BuildingObjectId" class="control-label"></label>
+                <select asp-for="BuildingObjectId" asp-items="Model.BuildingObjects" class="form-control"></select>
+                <span asp-validation-for="BuildingObjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeId" class="control-label"></label>
+                <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-control">
+                    <option value="">-- Не выбран --</option>
+                </select>
+                <span asp-validation-for="EmployeeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a class="btn btn-default" asp-controller="BuildingObject" asp-action="Details" asp-route-id="@Model.SelectedBuildingObjectId">Отмена</a>
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

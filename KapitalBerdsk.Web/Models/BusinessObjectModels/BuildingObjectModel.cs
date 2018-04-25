@@ -14,5 +14,7 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         [MaxLength(500)]
         [Display(Name = "Название")]
         public string Name { get; set; }
+
+        public IEnumerable<PdSectionModel> PdSections { get; set; }
     }
 }

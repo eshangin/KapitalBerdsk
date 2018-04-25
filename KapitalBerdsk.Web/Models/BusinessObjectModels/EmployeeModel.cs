@@ -17,5 +17,7 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Фамилия")]
         public string LastName { get; set; }
+
+        public string FullName => $"{FirstName} {LastName}";
     }
 }
