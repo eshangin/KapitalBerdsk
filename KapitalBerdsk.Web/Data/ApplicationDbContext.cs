@@ -14,6 +14,7 @@ namespace KapitalBerdsk.Web.Data
         public DbSet<Employee> Employees { get; set; }
         public DbSet<BuildingObject> BuildingObjects { get; set; }
         public DbSet<PdSection> PdSections { get; set; }
+        public DbSet<FundsFlow> FundsFlows { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -27,7 +28,5 @@ namespace KapitalBerdsk.Web.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
-
-        public DbSet<KapitalBerdsk.Web.Models.BusinessObjectModels.EmployeeModel> EmployeeModel { get; set; }
     }
 }
