@@ -15,6 +15,7 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         public string Description { get; set; }
 
         [Display(Name = "Дата")]
+        [DisplayFormat(DataFormatString = "{0: dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
         [Display(Name = "Приход")]

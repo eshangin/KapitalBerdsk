@@ -8,5 +8,6 @@ namespace KapitalBerdsk.Web.Resources
     public class ResourceKeys
     {
         public const string Required = "Required";
+        public const string Currency = "Currency";
     }
 }

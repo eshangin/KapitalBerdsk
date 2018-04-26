@@ -74,6 +74,13 @@ namespace KapitalBerdsk.Web
 
             app.UseAuthentication();
 
+            var cultureInfo = new System.Globalization.CultureInfo("ru-RU");
+            cultureInfo.NumberFormat.CurrencyDecimalSeparator = ".";
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+
+            System.Globalization.CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

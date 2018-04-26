@@ -61,6 +61,15 @@ namespace KapitalBerdsk.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Неверное значение.
+        /// </summary>
+        public static string Currency {
+            get {
+                return ResourceManager.GetString("Currency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле не может быть пустым.
         /// </summary>
         public static string Required {

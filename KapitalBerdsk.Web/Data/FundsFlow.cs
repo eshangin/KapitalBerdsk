@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,10 @@ namespace KapitalBerdsk.Web.Data
     {
         public enum PaymentType
         {
+            [Display(Name = "Нал")]
             Cash = 1,
+
+            [Display(Name = "Безнал")]
             NonCash = 2
         }
 

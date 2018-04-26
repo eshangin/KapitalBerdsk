@@ -2,18 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Data;
 using KapitalBerdsk.Web.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Controllers
 {
     public class FundsFlowController : Controller
     {
-        // GET: FundsFlow
-        public ActionResult Index()
+        private ApplicationDbContext _context;
+
+        public FundsFlowController(ApplicationDbContext context)
         {
-            var model = new List<FundsFlowListItemModel>();
+            _context = context;
+        }
+
+        // GET: FundsFlow
+        public async Task<ActionResult> Index()
+        {
+            var model = (await _context.FundsFlows
+                .Include(item => item.Employee)
+                .Include(item => item.BuildingObject)
+                .ToListAsync()).Select(item => new FundsFlowListItemModel
+            {
+                Date = item.Date,
+                Description = item.Description,
+                Income = item.Income,
+                Outgo = item.Outgo,
+                PayType = item.PayType,
+                Id = item.Id,
+                EmployeeName = item.Employee.FullName,
+                BuildingObjectName = item.BuildingObject.Name
+            });
 
             return View(model);
         }
@@ -25,26 +48,64 @@ namespace KapitalBerdsk.Web.Controllers
         }
 
         // GET: FundsFlow/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var model = new EditFundsFlowModel
+            {
+                Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Text = item.FullName,
+                    Value = item.Id.ToString()
+                }),
+                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                }),
+                Date = DateTime.UtcNow
+            };
+            return View(model);
         }
 
         // POST: FundsFlow/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(EditFundsFlowModel model)
         {
-            try
+            if (model.Income == null && model.Outgo == null)
             {
-                // TODO: Add insert logic here
+                ModelState.AddModelError("", "Приход или расход должны быть указаны");
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _context.FundsFlows.AddAsync(new FundsFlow
+                {
+                    BuildingObjectId = model.BuildingObjectId.Value,
+                    Date = model.Date.Value,
+                    Description = model.Description,
+                    EmployeeId = model.EmployeeId.Value,
+                    PayType = model.PayType,
+                    Income = model.Income,
+                    Outgo = model.Outgo
+                });
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+
+            model.Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
             {
-                return View();
-            }
+                Text = item.FullName,
+                Value = item.Id.ToString()
+            });
+            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            {
+                Value = item.Id.ToString(),
+                Text = item.Name
+            });
+
+            return View(model);
         }
 
         // GET: FundsFlow/Edit/5
