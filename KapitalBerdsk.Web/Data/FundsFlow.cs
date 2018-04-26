@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KapitalBerdsk.Web.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KapitalBerdsk.Web.Data
 {
-    public class FundsFlow
+    public class FundsFlow : IAuditable
     {
         public enum PaymentType
         {
@@ -34,5 +35,8 @@ namespace KapitalBerdsk.Web.Data
         public BuildingObject BuildingObject { get; set; }
 
         public PaymentType PayType { get; set; }
+
+        public DateTime DateCreated { get; set; }
+        public DateTime DateUpdated { get; set; }
     }
 }

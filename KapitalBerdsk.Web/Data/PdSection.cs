@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KapitalBerdsk.Web.Data.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace KapitalBerdsk.Web.Data
     /// <summary>
     /// Section of project documentation
     /// </summary>
-    public class PdSection
+    public class PdSection : IAuditable
     {
         public int Id { get; set; }
 
@@ -24,5 +25,8 @@ namespace KapitalBerdsk.Web.Data
         public BuildingObject BuildingObject { get; set; }
 
         public decimal Price { get; set; }
+
+        public DateTime DateCreated { get; set; }
+        public DateTime DateUpdated { get; set; }
     }
 }

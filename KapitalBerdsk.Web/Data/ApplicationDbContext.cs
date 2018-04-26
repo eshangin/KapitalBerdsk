@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using KapitalBerdsk.Web.Models;
 using KapitalBerdsk.Web.Models.BusinessObjectModels;
+using System.Threading;
+using KapitalBerdsk.Web.Data.Interfaces;
 
 namespace KapitalBerdsk.Web.Data
 {
@@ -27,6 +29,37 @@ namespace KapitalBerdsk.Web.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+        }
+
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            AddTimestamps();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            AddTimestamps();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void AddTimestamps()
+        {
+            var entities = ChangeTracker.Entries().Where(x => x.Entity is IAuditable &&
+                (x.State == EntityState.Added || x.State == EntityState.Modified));
+
+            foreach (var entity in entities)
+            {
+                if (entity.State == EntityState.Added)
+                {
+                    ((IAuditable)entity.Entity).DateCreated = DateTime.UtcNow;
+                    ((IAuditable)entity.Entity).DateUpdated = ((IAuditable)entity.Entity).DateCreated;
+                }
+                else if (entity.State == EntityState.Modified)
+                {
+                    ((IAuditable)entity.Entity).DateUpdated = DateTime.UtcNow;
+                }
+            }
         }
     }
 }
