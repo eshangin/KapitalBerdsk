@@ -26,6 +26,7 @@ namespace KapitalBerdsk.Web.Controllers
             var model = (await _context.FundsFlows
                 .Include(item => item.Employee)
                 .Include(item => item.BuildingObject)
+                .OrderByDescending(item => item.Id)
                 .ToListAsync()).Select(item => new FundsFlowListItemModel
             {
                 Date = item.Date,
