@@ -35,6 +35,7 @@ namespace KapitalBerdsk.Web.Controllers
                 PayType = item.PayType,
                 Id = item.Id,
                 EmployeeName = item.Employee.FullName,
+                EmployeeId = item.EmployeeId,
                 BuildingObjectName = item.BuildingObject.Name
             });
 

@@ -27,6 +27,8 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         [Display(Name = "Сотрудник")]
         public string EmployeeName { get; set; }
 
+        public int EmployeeId { get; set; }
+
         [Display(Name = "Объект")]
         public string BuildingObjectName { get; set; }
 
