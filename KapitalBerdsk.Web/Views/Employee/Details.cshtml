@@ -12,6 +12,8 @@
         <b>@Html.DisplayNameFor(model => model.Salary):</b>
         @Html.DisplayFor(model => model.Salary)
     </div>
+
+    <h3>Объекты</h3>
     <table class="table">
         <thead>
             <tr>
@@ -24,7 +26,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.BuildingObjects)
+        @foreach (var item in Model.BuildingObjects)
         {
             <tr>
                 <td>
@@ -34,7 +36,7 @@
                     @Html.DisplayFor(modelItem => item.Total)
                 </td>
             </tr>
-    }
+        }
         </tbody>
     </table>
 </div>
