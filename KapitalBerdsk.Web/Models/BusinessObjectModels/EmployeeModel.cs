@@ -11,17 +11,11 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         public int Id { get; set; }
 
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
-        [Display(Name = "Имя")]
-        public string FirstName { get; set; }
-
-        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
-        [Display(Name = "Фамилия")]
-        public string LastName { get; set; }
-
-        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Оклад")]
         public decimal Salary { get; set; }
 
-        public string FullName => $"{FirstName} {LastName}";
+        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
+        [Display(Name = "ФИО")]
+        public string FullName { get; set; }
     }
 }

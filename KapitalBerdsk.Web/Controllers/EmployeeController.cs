@@ -25,9 +25,8 @@ namespace KapitalBerdsk.Web.Controllers
             var employees = await _context.Employees.Include(item => item.PdSections).ToListAsync();
             var model = employees.Select(item => new EmployeeListItemModel
             {
-                FirstName = item.FirstName,
+                FullName = item.FullName,
                 Id = item.Id,
-                LastName = item.LastName,
                 Salary = item.Salary,
                 Accrued = item.Salary + item.PdSections.Sum(s => s.Price)
             });
@@ -75,8 +74,7 @@ namespace KapitalBerdsk.Web.Controllers
             {
                 await _context.Employees.AddAsync(new Employee
                 {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
+                    FullName = model.FullName,
                     Salary = model.Salary
                 });
                 await _context.SaveChangesAsync();
@@ -93,8 +91,7 @@ namespace KapitalBerdsk.Web.Controllers
             Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == id);
             var model = new EmployeeModel
             {
-                FirstName = emp.FirstName,
-                LastName = emp.LastName,
+                FullName = emp.FullName,
                 Salary = emp.Salary,
                 Id = emp.Id
             };
@@ -109,8 +106,7 @@ namespace KapitalBerdsk.Web.Controllers
             if (ModelState.IsValid)
             {
                 Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
-                emp.FirstName = model.FirstName;
-                emp.LastName = model.LastName;
+                emp.FullName = model.FullName;
                 emp.Salary = model.Salary;
                 await _context.SaveChangesAsync();
 
