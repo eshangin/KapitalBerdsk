@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Data;
 using KapitalBerdsk.Web.Models.BusinessObjectModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         private ApplicationDbContext _context;

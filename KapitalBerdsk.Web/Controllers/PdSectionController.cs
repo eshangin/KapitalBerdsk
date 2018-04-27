@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Data;
 using KapitalBerdsk.Web.Models.BusinessObjectModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Controllers
 {
+    [Authorize]
     public class PdSectionController : Controller
     {
         private ApplicationDbContext _context;
