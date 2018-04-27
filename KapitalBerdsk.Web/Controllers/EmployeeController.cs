@@ -72,6 +72,11 @@ namespace KapitalBerdsk.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(EmployeeModel model)
         {
+            if ((await GetEmployeeByName(model.FullName)) != null)
+            {
+                ModelState.AddModelError("", "Сотрудник с таким ФИО уже есть в системе");
+            }
+
             if (ModelState.IsValid)
             {
                 await _context.Employees.AddAsync(new Employee
@@ -85,6 +90,11 @@ namespace KapitalBerdsk.Web.Controllers
             }
 
             return View();
+        }
+
+        private async Task<Employee> GetEmployeeByName(string name)
+        {
+            return await _context.Employees.FirstOrDefaultAsync(item => item.FullName == name);
         }
 
         // GET: Employee/Edit/5
@@ -105,6 +115,12 @@ namespace KapitalBerdsk.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EmployeeModel model)
         {
+            var objectByName = await GetEmployeeByName(model.FullName);
+            if (objectByName != null && objectByName.Id != model.Id)
+            {
+                ModelState.AddModelError("", "Сотрудник с таким ФИО уже есть в системе");
+            }
+
             if (ModelState.IsValid)
             {
                 Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
