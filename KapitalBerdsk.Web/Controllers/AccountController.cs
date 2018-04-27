@@ -74,7 +74,7 @@ namespace KapitalBerdsk.Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Неверные Email или пароль");
                     return View(model);
                 }
             }

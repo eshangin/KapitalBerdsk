@@ -66,6 +66,11 @@ namespace KapitalBerdsk.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(BuildingObjectModel model)
         {
+            if ((await GetBuildingObjectByName(model.Name)) != null)
+            {
+                ModelState.AddModelError("", "Объект с таким именем уже существует");
+            }
+
             if (ModelState.IsValid)
             {
                 await _context.BuildingObjects.AddAsync(new BuildingObject
@@ -78,6 +83,11 @@ namespace KapitalBerdsk.Web.Controllers
             }
 
             return View();
+        }
+
+        private async Task<BuildingObject> GetBuildingObjectByName(string buildingObjectName)
+        {
+            return await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Name == buildingObjectName);
         }
 
         // GET: BuildingObject/Edit/5
@@ -97,6 +107,12 @@ namespace KapitalBerdsk.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(BuildingObjectModel model)
         {
+            BuildingObject objectByName = await GetBuildingObjectByName(model.Name);
+            if (objectByName != null && objectByName.Id != model.Id)
+            {
+                ModelState.AddModelError("", "Объект с таким именем уже существует");
+            }
+
             if (ModelState.IsValid)
             {
                 BuildingObject el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == model.Id);
