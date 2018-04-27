@@ -80,7 +80,9 @@ namespace KapitalBerdsk.Web.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword);
+
+            var changePasswordResult = await _userManager.UpdateAsync(user);
             if (!changePasswordResult.Succeeded)
             {
                 AddErrors(changePasswordResult);
@@ -89,7 +91,7 @@ namespace KapitalBerdsk.Web.Controllers
 
             await _signInManager.SignInAsync(user, isPersistent: false);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "Пароль был изменен.";
 
             return RedirectToAction(nameof(ChangePassword));
         }
