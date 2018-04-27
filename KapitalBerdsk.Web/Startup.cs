@@ -64,6 +64,10 @@ namespace KapitalBerdsk.Web
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
+            }
+
+            if (env.IsDevelopment() || env.IsStaging())
+            {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
