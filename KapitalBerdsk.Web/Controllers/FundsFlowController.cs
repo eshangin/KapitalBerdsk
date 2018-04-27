@@ -66,7 +66,7 @@ namespace KapitalBerdsk.Web.Controllers
                     Value = item.Id.ToString(),
                     Text = item.Name
                 }),
-                Date = DateTime.UtcNow
+                Date = DateTime.UtcNow.AddHours(7)
             };
             return View(model);
         }
