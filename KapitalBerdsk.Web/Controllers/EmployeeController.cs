@@ -24,14 +24,22 @@ namespace KapitalBerdsk.Web.Controllers
         // GET: Employee
         public async Task<ActionResult> Index()
         {
-            var employees = await _context.Employees.Include(item => item.PdSections).ToListAsync();
-            var model = employees.Select(item => new EmployeeListItemModel
-            {
-                FullName = item.FullName,
-                Id = item.Id,
-                Salary = item.Salary,
-                Accrued = item.Salary + item.PdSections.Sum(s => s.Price)
-            });
+            var employees = await _context.Employees
+                .Include(item => item.PdSections)
+                .Include(item => item.FundsFlows)
+                .ToListAsync();
+
+            var model = from item in employees
+                        let accured = item.Salary + item.PdSections.Sum(s => s.Price)
+                        let outgo = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value)
+                        select new EmployeeListItemModel
+                        {
+                            FullName = item.FullName,
+                            Id = item.Id,
+                            Salary = item.Salary,
+                            Accrued = accured,
+                            Balance = accured - outgo
+                        };
 
             return View(model);
         }

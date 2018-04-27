@@ -20,5 +20,8 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
 
         [Display(Name = "Начислено")]
         public decimal Accrued { get; set; }
+
+        [Display(Name = "Остаток")]
+        public decimal Balance { get; set; }
     }
 }
