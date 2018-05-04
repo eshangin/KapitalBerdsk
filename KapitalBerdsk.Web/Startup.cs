@@ -44,6 +44,7 @@ namespace KapitalBerdsk.Web
                     };
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddErrorDescriber<RuIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
 
             services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
