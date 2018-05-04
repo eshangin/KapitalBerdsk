@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Encodings.Web;
@@ -9,10 +9,10 @@ namespace KapitalBerdsk.Web.Services
 {
     public static class EmailSenderExtensions
     {
-        public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
+        public static Task SendEmailInvitationAsync(this IEmailSender emailSender, string email, string userPassword)
         {
-            return emailSender.SendEmailAsync(email, "Confirm your email",
-                $"Please confirm your account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>");
+            return emailSender.SendEmailAsync(email, "Вы были добавлены в систему",
+                $"Для Вас создан аккаунт в XXX. Ваш временный пароль {userPassword}");
         }
     }
 }

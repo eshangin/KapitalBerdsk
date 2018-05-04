@@ -25,6 +25,7 @@ namespace KapitalBerdsk.Web.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
+        private readonly IdentityOptions _identityOptions;
 
         private const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
         private const string RecoveryCodesKey = nameof(RecoveryCodesKey);
@@ -34,13 +35,15 @@ namespace KapitalBerdsk.Web.Controllers
           SignInManager<ApplicationUser> signInManager,
           IEmailSender emailSender,
           ILogger<ManageController> logger,
-          UrlEncoder urlEncoder)
+          UrlEncoder urlEncoder,
+          IOptions<IdentityOptions> identityOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
             _urlEncoder = urlEncoder;
+            _identityOptions = identityOptions.Value;
         }
 
         [TempData]
@@ -102,6 +105,62 @@ namespace KapitalBerdsk.Web.Controllers
             return RedirectToAction(nameof(ChangePassword));
         }
 
+        /// <summary>
+        /// Generates a Random Password
+        /// respecting the given strength requirements.
+        /// </summary>
+        /// <param name="opts">A valid PasswordOptions object
+        /// containing the password strength requirements.</param>
+        /// <returns>A random password</returns>
+        public string GenerateRandomPassword(PasswordOptions opts = null)
+        {
+            if (opts == null) opts = new PasswordOptions()
+            {
+                RequiredLength = 8,
+                RequiredUniqueChars = 4,
+                RequireDigit = true,
+                RequireLowercase = true,
+                RequireNonAlphanumeric = true,
+                RequireUppercase = true
+            };
+
+            string[] randomChars = new[] {
+                "ABCDEFGHJKLMNOPQRSTUVWXYZ",    // uppercase 
+                "abcdefghijkmnopqrstuvwxyz",    // lowercase
+                "0123456789",                   // digits
+                "!@$?_-"                        // non-alphanumeric
+            };
+
+            Random rand = new Random(Environment.TickCount);
+            List<char> chars = new List<char>();
+
+            if (opts.RequireUppercase)
+                chars.Insert(rand.Next(0, chars.Count),
+                    randomChars[0][rand.Next(0, randomChars[0].Length)]);
+
+            if (opts.RequireLowercase)
+                chars.Insert(rand.Next(0, chars.Count),
+                    randomChars[1][rand.Next(0, randomChars[1].Length)]);
+
+            if (opts.RequireDigit)
+                chars.Insert(rand.Next(0, chars.Count),
+                    randomChars[2][rand.Next(0, randomChars[2].Length)]);
+
+            if (opts.RequireNonAlphanumeric)
+                chars.Insert(rand.Next(0, chars.Count),
+                    randomChars[3][rand.Next(0, randomChars[3].Length)]);
+
+            for (int i = chars.Count; i < opts.RequiredLength
+                || chars.Distinct().Count() < opts.RequiredUniqueChars; i++)
+            {
+                string rcs = randomChars[rand.Next(0, randomChars.Length)];
+                chars.Insert(rand.Next(0, chars.Count),
+                    rcs[rand.Next(0, rcs.Length)]);
+            }
+
+            return new string(chars.ToArray());
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendInvitation(ManageIndexViewModel model)
@@ -111,6 +170,8 @@ namespace KapitalBerdsk.Web.Controllers
                 return View(nameof(ChangePassword), model);
             }
 
+            string pwd = GenerateRandomPassword(_identityOptions.Password);
+
             //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             //var result = await _userManager.CreateAsync(user, model.Password);
             //if (result.Succeeded)
@@ -118,6 +179,8 @@ namespace KapitalBerdsk.Web.Controllers
             //    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             //    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
             //    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+            await _emailSender.SendEmailInvitationAsync(model.UserInvitationViewModel.Email, pwd);
 
                 _logger.LogInformation($"Created new account with password for email {model.UserInvitationViewModel.Email}");
                   StatusMessage = "Приглашение отослано";

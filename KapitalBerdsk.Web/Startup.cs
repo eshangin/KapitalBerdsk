@@ -13,6 +13,7 @@ using KapitalBerdsk.Web.Models;
 using KapitalBerdsk.Web.Services;
 using Microsoft.EntityFrameworkCore.Migrations;
 using KapitalBerdsk.Web.Resources;
+using KapitalBerdsk.Web.Options;
 
 namespace KapitalBerdsk.Web
 {
@@ -44,6 +45,8 @@ namespace KapitalBerdsk.Web
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
