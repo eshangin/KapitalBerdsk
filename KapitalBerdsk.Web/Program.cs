@@ -19,6 +19,13 @@ namespace KapitalBerdsk.Web
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((builderContext, config) =>
+                {
+                    if (builderContext.HostingEnvironment.IsDevelopment())
+                    {
+                        config.AddJsonFile("appsettings.user.json", optional: true);
+                    }
+                })
                 .UseStartup<Startup>()
                 .Build();
     }
