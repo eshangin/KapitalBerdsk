@@ -27,6 +27,7 @@ namespace KapitalBerdsk.Web.Services
                 client.UseDefaultCredentials = false;
                 client.Credentials = new NetworkCredential(_smtpOptions.UserName, _smtpOptions.Password);
                 client.EnableSsl = _smtpOptions.EnableSsl;
+                client.Port = _smtpOptions.Port;
 
                 using (MailMessage mailMessage = new MailMessage())
                 {

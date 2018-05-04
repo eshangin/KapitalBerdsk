@@ -180,7 +180,7 @@ namespace KapitalBerdsk.Web.Controllers
             //    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
             //    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
-            await _emailSender.SendEmailInvitationAsync(model.UserInvitationViewModel.Email, pwd);
+            await _emailSender.SendEmailInvitationAsync(Request.Host.Value, model.UserInvitationViewModel.Email, pwd);
 
                 _logger.LogInformation($"Created new account with password for email {model.UserInvitationViewModel.Email}");
                   StatusMessage = "Приглашение отослано";
