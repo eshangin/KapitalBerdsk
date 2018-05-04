@@ -172,27 +172,26 @@ namespace KapitalBerdsk.Web.Controllers
 
             string pwd = GenerateRandomPassword(_identityOptions.Password);
 
-            //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-            //var result = await _userManager.CreateAsync(user, model.Password);
-            //if (result.Succeeded)
-            //{
-            //    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-            //    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-
-            await _emailSender.SendEmailInvitationAsync(Request.Host.Value, model.UserInvitationViewModel.Email, pwd);
+            var user = new ApplicationUser
+            {
+                UserName = model.UserInvitationViewModel.Email,
+                Email = model.UserInvitationViewModel.Email
+            };
+            var result = await _userManager.CreateAsync(user, pwd);
+            if (result.Succeeded)
+            {
+                await _emailSender.SendEmailInvitationAsync(Request.Host.Value, model.UserInvitationViewModel.Email, pwd);
 
                 _logger.LogInformation($"Created new account with password for email {model.UserInvitationViewModel.Email}");
-                  StatusMessage = "Приглашение отослано";
-            //    //return RedirectToLocal(returnUrl);
-            //}
-            //else
-            //{
-            //    AddErrors(result);
-            //      return View(model);
-            //}
+                StatusMessage = "Приглашение отослано";
 
-            return RedirectToAction(nameof(ChangePassword));
+                return RedirectToAction(nameof(ChangePassword));
+            }
+            else
+            {
+                AddErrors(result);
+                return View(nameof(ChangePassword), model);
+            }
         }
 
         #region Helpers
