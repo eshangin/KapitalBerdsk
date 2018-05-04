@@ -61,7 +61,13 @@ namespace KapitalBerdsk.Web.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new ChangePasswordViewModel { StatusMessage = StatusMessage };
+            var model = new ManageIndexViewModel
+            {
+                ChangePasswordViewModel = new ChangePasswordViewModel(),
+                UserInvitationViewModel = new UserInvitationViewModel(),
+                StatusMessage = StatusMessage
+            };
+
             return View(model);
         }
 
@@ -92,6 +98,36 @@ namespace KapitalBerdsk.Web.Controllers
             await _signInManager.SignInAsync(user, isPersistent: false);
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Пароль был изменен.";
+
+            return RedirectToAction(nameof(ChangePassword));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendInvitation(ManageIndexViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(nameof(ChangePassword), model);
+            }
+
+            //var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+            //var result = await _userManager.CreateAsync(user, model.Password);
+            //if (result.Succeeded)
+            //{
+            //    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+            //    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+
+                _logger.LogInformation($"Created new account with password for email {model.UserInvitationViewModel.Email}");
+                  StatusMessage = "Приглашение отослано";
+            //    //return RedirectToLocal(returnUrl);
+            //}
+            //else
+            //{
+            //    AddErrors(result);
+            //      return View(model);
+            //}
 
             return RedirectToAction(nameof(ChangePassword));
         }

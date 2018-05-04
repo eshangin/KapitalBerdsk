@@ -9,5 +9,6 @@ namespace KapitalBerdsk.Web.Resources
     {
         public const string Required = "Required";
         public const string Currency = "Currency";
+        public const string EmailInvalid = "EmailInvalid";
     }
 }

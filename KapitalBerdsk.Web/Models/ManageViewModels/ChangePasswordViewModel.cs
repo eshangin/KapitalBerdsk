@@ -18,7 +18,5 @@ namespace KapitalBerdsk.Web.Models.ManageViewModels
         [Display(Name = "Повторите новый пароль")]
         [Compare("NewPassword", ErrorMessage = "Новый пароль и его подтверждение не совпадают")]
         public string ConfirmPassword { get; set; }
-
-        public string StatusMessage { get; set; }
     }
 }

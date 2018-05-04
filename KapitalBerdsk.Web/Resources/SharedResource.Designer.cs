@@ -70,6 +70,15 @@ namespace KapitalBerdsk.Web.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Неверный формат email.
+        /// </summary>
+        public static string EmailInvalid {
+            get {
+                return ResourceManager.GetString("EmailInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Поле не может быть пустым.
         /// </summary>
         public static string Required {
