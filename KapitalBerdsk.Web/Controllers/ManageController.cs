@@ -174,7 +174,8 @@ namespace KapitalBerdsk.Web.Controllers
             var result = await _userManager.CreateAsync(user, pwd);
             if (result.Succeeded)
             {
-                await _emailSender.SendEmailInvitationAsync(Request.Host.Value, model.UserInvitationViewModel.Email, pwd);
+                string appUrl = $"{Request.Scheme}://{Request.Host}";
+                await _emailSender.SendEmailInvitationAsync(appUrl, model.UserInvitationViewModel.Email, pwd);
 
                 _logger.LogInformation($"Created new account with password for email {model.UserInvitationViewModel.Email}");
                 StatusMessage = "Приглашение отослано";
