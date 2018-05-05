@@ -11,9 +11,10 @@ using System;
 namespace KapitalBerdsk.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180505091209_ApplicationUser_DateCreated_DateUpdated")]
+    partial class ApplicationUser_DateCreated_DateUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
