@@ -13,7 +13,7 @@ namespace KapitalBerdsk.Web.Services
         public static Task SendEmailInvitationAsync(this IEmailSender emailSender, string appHost, string email, string userPassword)
         {
             return emailSender.SendEmailAsync(email, "Вы были добавлены в систему",
-                $"Для Вас создан аккаунт в {appHost}. Ваш временный пароль {userPassword}");
+                $"Для Вас создан аккаунт в {appHost}. Ваш временный пароль <b>{userPassword}<b>");
         }
     }
 }
