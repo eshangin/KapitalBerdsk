@@ -52,12 +52,6 @@ namespace KapitalBerdsk.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return RedirectToAction(nameof(ChangePassword));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ChangePassword()
-        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
@@ -76,11 +70,11 @@ namespace KapitalBerdsk.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword(ManageIndexViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View(nameof(Index), model);
             }
 
             var user = await _userManager.GetUserAsync(User);
@@ -89,20 +83,20 @@ namespace KapitalBerdsk.Web.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword);
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.ChangePasswordViewModel.NewPassword);
 
             var changePasswordResult = await _userManager.UpdateAsync(user);
             if (!changePasswordResult.Succeeded)
             {
                 AddErrors(changePasswordResult);
-                return View(model);
+                return View(nameof(Index), model);
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);
             _logger.LogInformation("User changed their password successfully.");
             StatusMessage = "Пароль был изменен.";
 
-            return RedirectToAction(nameof(ChangePassword));
+            return RedirectToAction(nameof(Index));
         }
 
         /// <summary>
@@ -167,7 +161,7 @@ namespace KapitalBerdsk.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(nameof(ChangePassword), model);
+                return View(nameof(Index), model);
             }
 
             string pwd = GenerateRandomPassword(_identityOptions.Password);
@@ -185,12 +179,12 @@ namespace KapitalBerdsk.Web.Controllers
                 _logger.LogInformation($"Created new account with password for email {model.UserInvitationViewModel.Email}");
                 StatusMessage = "Приглашение отослано";
 
-                return RedirectToAction(nameof(ChangePassword));
+                return RedirectToAction(nameof(Index));
             }
             else
             {
                 AddErrors(result);
-                return View(nameof(ChangePassword), model);
+                return View(nameof(Index), model);
             }
         }
 
