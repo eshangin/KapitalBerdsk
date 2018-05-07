@@ -5,14 +5,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using KapitalBerdsk.Web.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace KapitalBerdsk.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly SignInManager<ApplicationUser> _signInManager;
+
+        public HomeController(
+            SignInManager<ApplicationUser> signInManager)
+        {
+            _signInManager = signInManager;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            if (_signInManager.IsSignedIn(User))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction(nameof(AccountController.Login), 
+                    nameof(AccountController).Replace("controller", string.Empty, StringComparison.OrdinalIgnoreCase));
+            }
         }
 
         public IActionResult Error()
