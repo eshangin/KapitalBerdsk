@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("WindowsService1")]
+[assembly: AssemblyTitle("KapitalBerdsk.WindowsService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WindowsService1")]
+[assembly: AssemblyProduct("KapitalBerdsk.WindowsService")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("25a944f0-9bd7-4d9e-9d38-262b36c7c998")]
+[assembly: Guid("a079bb0e-ab38-4d72-9c59-89ff449f8d19")]
 
 // Version information for an assembly consists of the following four values:
 //
