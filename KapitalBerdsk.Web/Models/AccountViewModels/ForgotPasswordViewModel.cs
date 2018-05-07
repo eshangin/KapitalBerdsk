@@ -8,7 +8,7 @@ namespace KapitalBerdsk.Web.Models.AccountViewModels
 {
     public class ForgotPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [EmailAddress]
         public string Email { get; set; }
     }

@@ -17,5 +17,15 @@ namespace KapitalBerdsk.Web.Resources
             };
             return identityError;
         }
+
+        public override IdentityError InvalidToken()
+        {
+            IdentityError identityError = new IdentityError()
+            {
+                Code = base.InvalidToken().Code,
+                Description = $"Неверный токен"
+            };
+            return identityError;
+        }
     }
 }
