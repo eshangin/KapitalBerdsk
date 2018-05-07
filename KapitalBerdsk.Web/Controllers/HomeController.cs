@@ -23,7 +23,8 @@ namespace KapitalBerdsk.Web.Controllers
         {
             if (_signInManager.IsSignedIn(User))
             {
-                return View();
+                return RedirectToAction(nameof(FundsFlowController.Index),
+                    nameof(FundsFlowController).Replace("controller", string.Empty, StringComparison.OrdinalIgnoreCase));
             }
             else
             {
