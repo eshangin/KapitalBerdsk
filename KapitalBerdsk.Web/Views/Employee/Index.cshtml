@@ -6,7 +6,7 @@
 
 <h2>
     @ViewData["Title"]
-    <a class="btn btn-sm btn-default" asp-action="Create"><i class="glyphicon glyphicon-plus"></i></a>
+    <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
 <table class="table">
@@ -43,9 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Accrued)
             </td>
             <td>
-                <a class="btn btn-sm btn-default" asp-action="Edit" asp-route-id="@item.Id">
-                    <i class="glyphicon glyphicon-edit"></i>
-                </a>
+                <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
             </td>
         </tr>
 }
