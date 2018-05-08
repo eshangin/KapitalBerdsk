@@ -1,4 +1,5 @@
 ﻿@inject SignInManager<ApplicationUser> SignInManager
+@inject Microsoft.Extensions.Options.IOptions<KapitalBerdsk.Web.Options.YandexMetrikaOptions> YandexMetrikaOptions
 
 <!DOCTYPE html>
 <html>
@@ -7,9 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - KapitalBerdsk.Web</title>
 
+    @if (!string.IsNullOrWhiteSpace(YandexMetrikaOptions.Value.Code))
+    {
+        @Html.Raw(YandexMetrikaOptions.Value.Code)
+    }
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />        
+        <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -34,12 +40,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                @if (SignInManager.IsSignedIn(User))
-                {
-                    <li><a asp-area="" asp-controller="FundsFlow" asp-action="Index">Движение средств</a></li>
-                    <li><a asp-area="" asp-controller="Employee" asp-action="Index">Сотрудники</a></li>
-                    <li><a asp-area="" asp-controller="BuildingObject" asp-action="Index">Объекты</a></li>
-                }
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li><a asp-area="" asp-controller="FundsFlow" asp-action="Index">Движение средств</a></li>
+                        <li><a asp-area="" asp-controller="Employee" asp-action="Index">Сотрудники</a></li>
+                        <li><a asp-area="" asp-controller="BuildingObject" asp-action="Index">Объекты</a></li>
+                    }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>

@@ -48,6 +48,7 @@ namespace KapitalBerdsk.Web
                 .AddDefaultTokenProviders();
 
             services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
+            services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));            
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
