@@ -26,6 +26,10 @@
     margin: 15px;
 }
 
+.datepicker {
+    z-index: 1000000
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */

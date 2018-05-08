@@ -7,6 +7,7 @@ using KapitalBerdsk.Web.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Controllers
@@ -58,7 +59,9 @@ namespace KapitalBerdsk.Web.Controllers
         // GET: BuildingObject/Create
         public ActionResult Create()
         {
-            return View();
+            var model = new BuildingObjectModel();
+
+            return View(model);
         }
 
         // POST: BuildingObject/Create
@@ -75,14 +78,18 @@ namespace KapitalBerdsk.Web.Controllers
             {
                 await _context.BuildingObjects.AddAsync(new BuildingObject
                 {
-                    Name = model.Name
+                    Name = model.Name,
+                    ContractDateEnd = model.ContractDateEnd.Value,
+                    ContractDateStart = model.ContractDateStart.Value,
+                    IsClosed = model.IsClosed,
+                    Price = model.Price.Value
                 });
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View();
+            return View(model);
         }
 
         private async Task<BuildingObject> GetBuildingObjectByName(string buildingObjectName)
@@ -97,6 +104,10 @@ namespace KapitalBerdsk.Web.Controllers
             var model = new BuildingObjectModel
             {
                 Name = el.Name,
+                ContractDateEnd = el.ContractDateEnd,
+                ContractDateStart = el.ContractDateStart,
+                Price = el.Price,
+                IsClosed = el.IsClosed,
                 Id = el.Id
             };
             return View(model);
@@ -117,12 +128,16 @@ namespace KapitalBerdsk.Web.Controllers
             {
                 BuildingObject el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == model.Id);
                 el.Name = model.Name;
+                el.IsClosed = model.IsClosed;
+                el.Price = model.Price.Value;
+                el.ContractDateStart = model.ContractDateStart.Value;
+                el.ContractDateEnd = model.ContractDateEnd.Value;
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View();
+            return View(model);
         }
 
         // GET: BuildingObject/Delete/5
