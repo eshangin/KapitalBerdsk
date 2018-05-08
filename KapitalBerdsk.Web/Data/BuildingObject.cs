@@ -25,6 +25,8 @@ namespace KapitalBerdsk.Web.Data
 
         public List<PdSection> PdSections { get; set; }
 
+        public List<FundsFlow> FundsFlows { get; set; }
+
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }

@@ -25,10 +25,21 @@ namespace KapitalBerdsk.Web.Controllers
         // GET: BuildingObject
         public async Task<ActionResult> Index()
         {
-            var model = (await _context.BuildingObjects.ToListAsync()).Select(item => new BuildingObjectModel
+            var objects = await _context.BuildingObjects
+                .Include(item => item.PdSections)
+                .Include(item => item.FundsFlows)
+                .ToListAsync();
+
+            var model = objects.Select(item => new BuildingObjectListItemModel
             {
                 Id = item.Id,
-                Name = item.Name
+                Name = item.Name,
+                ContractDateStart = item.ContractDateStart,
+                ContractDateEnd = item.ContractDateEnd,
+                CostPrice = item.PdSections.Sum(ps => ps.Price),
+                Price = item.Price,
+                RealPrice = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value),
+                PaidByCustomer = item.FundsFlows.Where(ff => ff.Income.HasValue).Sum(ff => ff.Income.Value)
             });
 
             return View(model);
@@ -51,7 +62,9 @@ namespace KapitalBerdsk.Web.Controllers
                     Id = item.Id,
                     Price = item.Price,
                     EmployeeName = item.Employee.FullName
-                })
+                }),
+                ContractDateStart = el.ContractDateStart,
+                ContractDateEnd = el.ContractDateEnd
             };
             return View(model);
         }

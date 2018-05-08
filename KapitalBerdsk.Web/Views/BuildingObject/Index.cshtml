@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KapitalBerdsk.Web.Models.BusinessObjectModels.BuildingObjectModel>
+﻿@model IEnumerable<KapitalBerdsk.Web.Models.BusinessObjectModels.BuildingObjectListItemModel>
 
 @{
     ViewData["Title"] = "Объекты";
@@ -12,9 +12,30 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CostPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RealPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaidByCustomer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContractDateStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContractDateEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsClosed)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -22,7 +43,28 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>                
+                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RealPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaidByCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContractDateStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContractDateEnd)
+            </td>
+            <td>
+                @(item.IsClosed ? "Закрыт" : "В работе")
             </td>
             <td>
                 <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>

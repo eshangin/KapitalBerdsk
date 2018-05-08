@@ -26,7 +26,7 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
         public string Name { get; set; }
 
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
-        [Display(Name = "Цена")]
+        [Display(Name = "Стоимость (цена) контракта")]
         public decimal? Price { get; set; }
 
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
