@@ -20,11 +20,11 @@ namespace KapitalBerdsk.Web.Services
             _smtpOptions = smtpOptions.Value;
         }
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(string toAddress, string subject, string message)
         {
             var mailMessage = new MimeMessage();
             mailMessage.From.Add(new MailboxAddress("", _smtpOptions.From));
-            mailMessage.To.Add(new MailboxAddress("", email));
+            mailMessage.To.Add(new MailboxAddress("", toAddress));
             mailMessage.Subject = subject;
 
             mailMessage.Body = new TextPart("html")

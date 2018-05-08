@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace KapitalBerdsk.Web.Services
 {
-    public interface IEmailSender
+    public interface IBuildingObjectClosingContractsChecker
     {
-        Task SendEmailAsync(string toAddress, string subject, string message);
+        void Check();
     }
 }

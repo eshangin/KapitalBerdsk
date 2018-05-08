@@ -53,6 +53,7 @@ namespace KapitalBerdsk.Web
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();            
 
             services.AddMvc()
                 .AddDataAnnotationsLocalization(options =>
@@ -108,16 +109,11 @@ namespace KapitalBerdsk.Web
             ScheduleHangfireJobs();
         }
 
-        private void ScheduleHangfireJobs()
+        public void ScheduleHangfireJobs()
         {
-            RecurringJob.AddOrUpdate("Check Building Object Closing Contracts",
-                () => CheckBuildingObjectClosingContracts(),
+            RecurringJob.AddOrUpdate<IBuildingObjectClosingContractsChecker>("Check Building Object Closing Contracts",
+                (s) => s.Check(),
                 "0 4 * * 1-5");
-        }
-
-        public void CheckBuildingObjectClosingContracts()
-        {
-
         }
     }
 }
