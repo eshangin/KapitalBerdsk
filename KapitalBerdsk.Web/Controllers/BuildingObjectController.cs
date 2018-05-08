@@ -59,7 +59,10 @@ namespace KapitalBerdsk.Web.Controllers
         // GET: BuildingObject/Create
         public ActionResult Create()
         {
-            var model = new BuildingObjectModel();
+            var model = new BuildingObjectModel()
+            {
+                ContractDateStart = DateTime.UtcNow.AddHours(7)
+            };
 
             return View(model);
         }
