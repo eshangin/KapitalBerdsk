@@ -14,6 +14,7 @@ using KapitalBerdsk.Web.Services;
 using Microsoft.EntityFrameworkCore.Migrations;
 using KapitalBerdsk.Web.Resources;
 using KapitalBerdsk.Web.Options;
+using Hangfire;
 
 namespace KapitalBerdsk.Web
 {
@@ -59,6 +60,8 @@ namespace KapitalBerdsk.Web
                     options.DataAnnotationLocalizerProvider = (type, factory) =>
                         factory.Create(typeof(SharedResource));
                 });
+
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -98,6 +101,23 @@ namespace KapitalBerdsk.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+
+            ScheduleHangfireJobs();
+        }
+
+        private void ScheduleHangfireJobs()
+        {
+            RecurringJob.AddOrUpdate("Check Building Object Closing Contracts",
+                () => CheckBuildingObjectClosingContracts(),
+                "0 4 * * 1-5");
+        }
+
+        public void CheckBuildingObjectClosingContracts()
+        {
+
         }
     }
 }
