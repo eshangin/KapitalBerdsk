@@ -15,6 +15,14 @@ namespace KapitalBerdsk.Web.Data
         [MaxLength(500)]
         public string Name { get; set; }
 
+        public decimal Price { get; set; }
+
+        public DateTime ContractDateStart { get; set; }
+
+        public DateTime ContractDateEnd { get; set; }
+
+        public bool IsClosed { get; set; }
+
         public List<PdSection> PdSections { get; set; }
 
         public DateTime DateCreated { get; set; }
