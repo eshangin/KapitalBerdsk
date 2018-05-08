@@ -10,9 +10,8 @@ namespace KapitalBerdsk.Web.Models.BusinessObjectModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Оклад")]
-        public decimal Salary { get; set; }
+        public decimal? Salary { get; set; }
 
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "ФИО")]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Data;
+using KapitalBerdsk.Web.Extensions;
 using KapitalBerdsk.Web.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -30,13 +31,13 @@ namespace KapitalBerdsk.Web.Controllers
                 .ToListAsync();
 
             var model = from item in employees
-                        let accured = item.Salary + item.PdSections.Sum(s => s.Price)
+                        let accured = item.Salary.ToDecimal() + item.PdSections.Sum(s => s.Price)
                         let outgo = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value)
                         select new EmployeeListItemModel
                         {
                             FullName = item.FullName,
                             Id = item.Id,
-                            Salary = item.Salary,
+                            Salary = item.Salary.ToDecimal(),
                             Accrued = accured,
                             Balance = accured - outgo
                         };
@@ -55,7 +56,7 @@ namespace KapitalBerdsk.Web.Controllers
             var model = new EmployeeDetailsModel
             {
                 FullName = emp.FullName,
-                Salary = emp.Salary,
+                Salary = emp.Salary.ToDecimal(),
                 Id = emp.Id,
                 BuildingObjects = emp.PdSections.GroupBy(item => item.BuildingObjectId)
                                         .Select(item => new EmployeeDetailsModel.BuildingObjectDetail

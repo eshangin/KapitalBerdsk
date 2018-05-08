@@ -15,7 +15,7 @@ namespace KapitalBerdsk.Web.Data
         [MaxLength(70)]
         public string FullName { get; set; }
 
-        public decimal Salary { get; set; }
+        public decimal? Salary { get; set; }
 
         public List<PdSection> PdSections { get; set; }
 
