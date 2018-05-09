@@ -105,14 +105,7 @@ namespace KapitalBerdsk.Web.Classes
                 Authorization = new[] { new DashboardAuthorizationFilter() }
             });
 
-            ScheduleHangfireJobs();
-        }
-
-        public void ScheduleHangfireJobs()
-        {
-            RecurringJob.AddOrUpdate<IBuildingObjectClosingContractsChecker>("Check Building Object Closing Contracts",
-                (s) => s.Check(),
-                "0 4 * * 1-5");
+            new JobsScheduler().ScheduleStartupJobs();
         }
     }
 }
