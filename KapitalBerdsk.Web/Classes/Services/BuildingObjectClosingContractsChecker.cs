@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
@@ -27,18 +28,8 @@ namespace KapitalBerdsk.Web.Classes.Services
         public async Task Check()
         {
             var today = DateTime.UtcNow.AddHours(7).Date;
-            var tillDate = today.AddDays(7);
 
-            var items = await (from bo in _context.BuildingObjects
-                               where !bo.IsClosed &&
-                                   bo.ContractDateEnd >= today &&
-                                   bo.ContractDateEnd <= tillDate
-                               orderby bo.ContractDateEnd
-                               select new
-                               {
-                                   bo.Name,
-                                   bo.ContractDateEnd
-                               }).ToListAsync();
+            var items = await GetBuildingObjectWithClosingContracts();
 
             if (items.Any())
             {
@@ -68,6 +59,22 @@ namespace KapitalBerdsk.Web.Classes.Services
                 message += "</ul>";
                 await _emailSender.SendEmailAsync(emails, "Окончание контрактов", message);
             }
+        }
+
+        public async Task<List<BuildingObject>> GetBuildingObjectWithClosingContracts()
+        {
+            var today = DateTime.UtcNow.AddHours(7).Date;
+            var tillDate = today.AddDays(7);
+
+            var items = await (
+                from bo in _context.BuildingObjects
+                where !bo.IsClosed &&
+                      bo.ContractDateEnd >= today &&
+                      bo.ContractDateEnd <= tillDate
+                orderby bo.ContractDateEnd
+                select bo).ToListAsync();
+
+            return items;
         }
     }
 }

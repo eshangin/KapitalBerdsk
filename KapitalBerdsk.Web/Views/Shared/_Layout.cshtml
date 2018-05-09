@@ -1,5 +1,6 @@
 ﻿@using KapitalBerdsk.Web.Classes.Models
 @using KapitalBerdsk.Web.Classes.Options
+@using KapitalBerdsk.Web.Classes.ViewComponents
 @inject SignInManager<ApplicationUser> SignInManager
 @inject Microsoft.Extensions.Options.IOptions<YandexMetrikaOptions> YandexMetrikaOptions
 
@@ -53,15 +54,12 @@
             </div>
         </div>
     </nav>
-<div class="container body-content">
-    <div class="alert alert-warning alert-sm alert-dismissible" style="margin-top: 20px">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        Приближается время сдачи объектов: <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="1">Ленина</a>
+    <div class="container body-content">
+        @await Component.InvokeAsync(nameof(NotificationArea))
+        @RenderBody()
+        <hr />
+        <footer></footer>
     </div>
-    @RenderBody()
-    <hr/>
-    <footer></footer>
-</div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

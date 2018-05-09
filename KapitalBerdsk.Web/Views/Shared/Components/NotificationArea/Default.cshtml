@@ -1,0 +1,13 @@
+﻿@model List<KapitalBerdsk.Web.Classes.Data.BuildingObject>
+
+@if (Model.Any())
+{
+<div class="alert alert-warning alert-sm alert-dismissible" style="margin-top: 20px">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Приближается время сдачи объектов:
+    @foreach (var item in Model)
+    {
+        <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="@item.Id">@item.Name</a>@(Model[Model.Count - 1] != item ? "," : "")
+    }
+</div>
+}
