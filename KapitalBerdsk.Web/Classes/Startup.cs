@@ -1,22 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Hangfire;
+﻿using Hangfire;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Models;
 using KapitalBerdsk.Web.Classes.Options;
 using KapitalBerdsk.Web.Classes.Resources;
 using KapitalBerdsk.Web.Classes.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace KapitalBerdsk.Web
+namespace KapitalBerdsk.Web.Classes
 {
     public class Startup
     {
