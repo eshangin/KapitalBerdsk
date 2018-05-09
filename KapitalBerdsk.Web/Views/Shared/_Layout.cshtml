@@ -53,11 +53,15 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer></footer>
+<div class="container body-content">
+    <div class="alert alert-warning alert-sm alert-dismissible" style="margin-top: 20px">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        Приближается время сдачи объектов: <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="1">Ленина</a>
     </div>
+    @RenderBody()
+    <hr/>
+    <footer></footer>
+</div>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

@@ -30,6 +30,14 @@
     z-index: 1000000
 }
 
+.alert-sm {
+    padding: 10px;
+}
+
+.alert-sm.alert-dismissible {
+    padding-right: 35px;
+}
+
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
     /* Hide captions */
