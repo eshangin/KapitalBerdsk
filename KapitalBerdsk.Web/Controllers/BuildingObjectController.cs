@@ -39,7 +39,8 @@ namespace KapitalBerdsk.Web.Controllers
                 CostPrice = item.PdSections.Sum(ps => ps.Price),
                 Price = item.Price,
                 RealPrice = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value),
-                PaidByCustomer = item.FundsFlows.Where(ff => ff.Income.HasValue).Sum(ff => ff.Income.Value)
+                PaidByCustomer = item.FundsFlows.Where(ff => ff.Income.HasValue).Sum(ff => ff.Income.Value),
+                IsClosed = item.IsClosed
             });
 
             return View(model);

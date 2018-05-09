@@ -7,6 +7,6 @@ namespace KapitalBerdsk.Web.Services
 {
     public interface IBuildingObjectClosingContractsChecker
     {
-        void Check();
+        Task Check();
     }
 }

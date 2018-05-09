@@ -22,9 +22,17 @@ namespace KapitalBerdsk.Web.Services
 
         public Task SendEmailAsync(string toAddress, string subject, string message)
         {
+            return SendEmailAsync(new List<string>() { toAddress }, subject, message);
+        }
+
+        public Task SendEmailAsync(IEnumerable<string> toAddresses, string subject, string message)
+        {
             var mailMessage = new MimeMessage();
             mailMessage.From.Add(new MailboxAddress("", _smtpOptions.From));
-            mailMessage.To.Add(new MailboxAddress("", toAddress));
+            foreach (var to in toAddresses)
+            {
+                mailMessage.To.Add(new MailboxAddress("", to));
+            }
             mailMessage.Subject = subject;
 
             mailMessage.Body = new TextPart("html")

@@ -8,5 +8,6 @@ namespace KapitalBerdsk.Web.Services
     public interface IEmailSender
     {
         Task SendEmailAsync(string toAddress, string subject, string message);
+        Task SendEmailAsync(IEnumerable<string> toAddresses, string subject, string message);
     }
 }
