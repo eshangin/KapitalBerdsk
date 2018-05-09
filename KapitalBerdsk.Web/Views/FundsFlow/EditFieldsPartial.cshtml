@@ -35,7 +35,7 @@
 </div>
 <div class="form-group">
     <label asp-for="PayType" class="control-label"></label>
-    <select asp-for="PayType" asp-items="Html.GetEnumSelectList<KapitalBerdsk.Web.Data.FundsFlow.PaymentType>()" class="form-control"></select>
+    <select asp-for="PayType" asp-items="Html.GetEnumSelectList<KapitalBerdsk.Web.Classes.Data.FundsFlow.PaymentType>()" class="form-control"></select>
     <span asp-validation-for="PayType" class="text-danger"></span>
 </div>
 <div class="form-group">
