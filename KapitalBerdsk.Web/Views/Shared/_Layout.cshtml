@@ -55,7 +55,10 @@
         </div>
     </nav>
     <div class="container body-content">
-        @await Component.InvokeAsync(nameof(NotificationArea))
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @await Component.InvokeAsync(nameof(NotificationArea))
+        }
         @RenderBody()
         <hr />
         <footer></footer>
