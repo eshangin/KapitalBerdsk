@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using KapitalBerdsk.Web.Models;
 using KapitalBerdsk.Web.Models.ManageViewModels;
 using KapitalBerdsk.Web.Services;
+using KapitalBerdsk.Web.Classes;
 
 namespace KapitalBerdsk.Web.Controllers
 {
@@ -171,7 +172,10 @@ namespace KapitalBerdsk.Web.Controllers
                 UserName = model.UserInvitationViewModel.Email,
                 Email = model.UserInvitationViewModel.Email
             };
+
             var result = await _userManager.CreateAsync(user, pwd);
+            await _userManager.AddToRoleAsync(user, Constants.Roles.Manager);
+
             if (result.Succeeded)
             {
                 string appUrl = $"{Request.Scheme}://{Request.Host}";

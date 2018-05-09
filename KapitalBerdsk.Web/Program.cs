@@ -26,10 +26,11 @@ namespace KapitalBerdsk.Web
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 var dbInitializerLogger = services.GetRequiredService<ILogger<DbInitializer>>();
+                var roleManager = services.GetService<RoleManager<IdentityRole>>();
 
                 try
                 {
-                    new DbInitializer().Initialize(context, userManager, dbInitializerLogger).Wait();
+                    new DbInitializer().Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
                 }
                 catch (Exception ex)
                 {
