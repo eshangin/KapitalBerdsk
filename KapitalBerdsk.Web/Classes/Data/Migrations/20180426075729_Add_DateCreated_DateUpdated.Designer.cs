@@ -19,7 +19,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.BuildingObject", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.BuildingObject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -37,7 +37,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.ToTable("BuildingObjects");
                 });
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.Employee", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -57,7 +57,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.FundsFlow", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.FundsFlow", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -89,7 +89,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.ToTable("FundsFlows");
                 });
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.PdSection", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.PdSection", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -276,27 +276,27 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.FundsFlow", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.FundsFlow", b =>
                 {
-                    b.HasOne("KapitalBerdsk.Web.Data.BuildingObject", "BuildingObject")
+                    b.HasOne("KapitalBerdsk.Web.Classes.Data.BuildingObject", "BuildingObject")
                         .WithMany()
                         .HasForeignKey("BuildingObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("KapitalBerdsk.Web.Data.Employee", "Employee")
+                    b.HasOne("KapitalBerdsk.Web.Classes.Data.Employee", "Employee")
                         .WithMany()
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.PdSection", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.PdSection", b =>
                 {
-                    b.HasOne("KapitalBerdsk.Web.Data.BuildingObject", "BuildingObject")
+                    b.HasOne("KapitalBerdsk.Web.Classes.Data.BuildingObject", "BuildingObject")
                         .WithMany("PdSections")
                         .HasForeignKey("BuildingObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("KapitalBerdsk.Web.Data.Employee", "Employee")
+                    b.HasOne("KapitalBerdsk.Web.Classes.Data.Employee", "Employee")
                         .WithMany("PdSections")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);

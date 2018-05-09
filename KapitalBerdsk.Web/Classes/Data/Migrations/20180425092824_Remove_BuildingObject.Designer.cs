@@ -19,7 +19,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("KapitalBerdsk.Web.Data.Employee", b =>
+            modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.Employee", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
