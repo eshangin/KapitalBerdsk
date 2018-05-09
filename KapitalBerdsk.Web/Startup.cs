@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using KapitalBerdsk.Web.Data;
-using KapitalBerdsk.Web.Models;
-using KapitalBerdsk.Web.Services;
 using Microsoft.EntityFrameworkCore.Migrations;
-using KapitalBerdsk.Web.Resources;
-using KapitalBerdsk.Web.Options;
 using Hangfire;
+using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Models;
+using KapitalBerdsk.Web.Classes.Options;
+using KapitalBerdsk.Web.Classes.Resources;
+using KapitalBerdsk.Web.Classes.Services;
 
 namespace KapitalBerdsk.Web
 {
