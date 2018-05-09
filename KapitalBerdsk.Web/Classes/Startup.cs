@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Hangfire;
 using KapitalBerdsk.Web.Classes.Models;
 using KapitalBerdsk.Web.Classes.Options;
 using KapitalBerdsk.Web.Classes.Resources;
@@ -99,7 +100,10 @@ namespace KapitalBerdsk.Web.Classes
             });
 
             app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new DashboardAuthorizationFilter() }
+            });
 
             ScheduleHangfireJobs();
         }
