@@ -45,11 +45,13 @@ namespace KapitalBerdsk.Web.Classes
                 .AddDefaultTokenProviders();
 
             services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
-            services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));            
+            services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));
+            services.Configure<GeneralOptions>(Configuration.GetSection("GeneralOptions"));            
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();            
+            services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();
+            services.AddTransient<IPingWebAppService, PingWebAppService>();
 
             services.AddMvc()
                 .AddDataAnnotationsLocalization(options =>
