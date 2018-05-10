@@ -13,7 +13,7 @@ namespace KapitalBerdsk.Web.Classes.Hangfire
         {
             RecurringJob.AddOrUpdate<IBuildingObjectClosingContractsChecker>("Check Building Object Closing Contracts",
                 (s) => s.Check(),
-                "0 4 * * 1-5");
+                "0 3 * * 1-5");
         }
     }
 }
