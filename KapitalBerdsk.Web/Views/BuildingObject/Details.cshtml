@@ -1,5 +1,4 @@
-﻿@using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
-@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectModel
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectModel
 
 @{
     ViewData["Title"] = Model.Name;
@@ -10,39 +9,54 @@
     <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@Model.Id">редактировать</a>
 </h2>
 
-<div>
-    <h4>
-        Разделы ПД
-        <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Create" asp-route-objectId="@Model.Id">добавить</a>
-    </h4>
-    <table class="table">
-        <thead>
+<div class="row">
+    <div class="col-md-4">
+        <div class="well">
+            <dl class="dl-horizontal m-b-0">
+                <dt title="Стоимость (цена) контракта">Стоимость (цена) контракта</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.Price)</dd>
+                <dt>Начало контракта</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.ContractDateStart)</dd>
+                <dt>Окончание контракта</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.ContractDateEnd)</dd>
+                <dt>Статус</dt>
+                <dd>@(Model.IsClosed ? "Закрыто" : "В работе")</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h4>
+            Разделы ПД
+            <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Create" asp-route-objectId="@Model.Id">добавить</a>
+        </h4>
+        <table class="table">
+            <thead>
             <tr>
                 <th>Название</th>
                 <th>Сотрудник</th>
                 <th>Цена</th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.PdSections)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmployeeName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.PdSections)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmployeeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 </div>
-

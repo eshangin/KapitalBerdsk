@@ -13,7 +13,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     [Authorize]
     public class BuildingObjectController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public BuildingObjectController(ApplicationDbContext context)
         {
@@ -63,7 +63,9 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     EmployeeName = item.Employee.FullName
                 }),
                 ContractDateStart = el.ContractDateStart,
-                ContractDateEnd = el.ContractDateEnd
+                ContractDateEnd = el.ContractDateEnd,
+                Price = el.Price,
+                IsClosed = el.IsClosed
             };
             return View(model);
         }
