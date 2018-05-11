@@ -117,7 +117,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         // GET: BuildingObject/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == id);
+            var el = await _context.BuildingObjects
+                .Include(item => item.PdSections)
+                .ThenInclude(item => item.Employee)
+                .FirstOrDefaultAsync(item => item.Id == id);
             var model = new BuildingObjectModel
             {
                 Name = el.Name,
@@ -125,7 +128,14 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 ContractDateStart = el.ContractDateStart,
                 Price = el.Price,
                 IsClosed = el.IsClosed,
-                Id = el.Id
+                Id = el.Id,
+                PdSections = el.PdSections.Select(item => new PdSectionModel
+                {
+                    Name = item.Name,
+                    Id = item.Id,
+                    Price = item.Price,
+                    EmployeeName = item.Employee.FullName
+                })
             };
             return View(model);
         }
@@ -154,6 +164,14 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            model.PdSections = (await _context.PdSections.Include(item => item.Employee).Where(item => item.BuildingObjectId == model.Id).ToListAsync())
+                .Select(item => new PdSectionModel
+                {
+                    Name = item.Name,
+                    Id = item.Id,
+                    Price = item.Price,
+                    EmployeeName = item.Employee.FullName
+                });
             return View(model);
         }
 

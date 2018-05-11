@@ -1,5 +1,4 @@
-﻿@using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
-@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectModel
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectModel
 
 @{
     ViewData["Title"] = "Редактирование объекта";
@@ -13,5 +12,8 @@
             <input type="hidden" asp-for="Id" />
             @Html.Partial("EditFieldsPartial")
         </form>
+    </div>
+    <div class="col-md-8">
+        @Html.Partial("PdSectionsListPartial", Model)
     </div>
 </div>
