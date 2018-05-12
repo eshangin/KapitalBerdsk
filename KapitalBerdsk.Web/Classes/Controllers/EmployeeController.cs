@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Extensions;
@@ -141,27 +142,15 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View();
         }
 
-        // GET: Employee/Delete/5
-        public ActionResult Delete(int id)
+        [HttpPost]
+        public ActionResult UpdateOrder([FromBody] UpdateOrderModel model)
         {
-            return View();
+            return Ok(model);
         }
 
-        // POST: Employee/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public class UpdateOrderModel
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            public IEnumerable<int> Ids { get; set; }
         }
     }
 }
