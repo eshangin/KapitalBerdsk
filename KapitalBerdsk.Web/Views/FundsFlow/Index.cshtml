@@ -1,5 +1,4 @@
-﻿@using Microsoft.CodeAnalysis
-@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListModel
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListModel
 
 @{
     ViewData["Title"] = "Движение средств";
@@ -43,7 +42,11 @@
             </th>
             <th class="table-filter-cell"></th>
             <th class="table-filter-cell"></th>
-            <th class="table-filter-cell"></th>
+            <th class="table-filter-cell">
+                <select data-filter="BuildingObject" asp-items="Model.BuildingObjects" class="form-control input-sm">
+                    <option value=""></option>
+                </select>
+            </th>
             <th class="table-filter-cell"></th>
         </tr>
     </thead>
@@ -68,8 +71,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Outgo)
                 </td>
-
-                <td>
+                <td data-col="BuildingObject">
                     @Html.DisplayFor(modelItem => item.BuildingObjectName)
                 </td>
                 <td>
@@ -82,22 +84,48 @@
 
 @section Scripts
 {
-<script type="text/javascript">
+    <script type="text/javascript">
         $(document).ready(function() {
+            var currentFilters = { };
             $("[data-filter]").change(function() {
                 var filter = $(this).attr('data-filter');
                 var filterValue = $(this).parent().find("option:selected").text();
-                console.log(filter, filterValue);
-                $('#funds-flow-table tbody tr').each(function () {
-                    var $row = $(this);
-                    var $col = $row.find('[data-col="' + filter + '"]');
-                    if (filterValue === '' || $col.is(':contains("' + filterValue + '")')) {
-                        $row.show();
-                    } else {
-                        $row.hide();
-                    }
-                });
+
+                if (filterValue === '') {
+                    removeFilter(filter);
+                } else {
+                    applyFilter(filter, filterValue);
+                }
             });
+
+            function removeFilter(filter) {
+                delete currentFilters[filter];
+                applyCurrentFilters();
+            }
+
+            function applyCurrentFilters() {
+                $('#funds-flow-table tbody tr').each(function() {
+                    $(this).show();
+                });
+
+                for (var filter in currentFilters) {
+                    if (currentFilters.hasOwnProperty(filter)) {
+                        var filterValue = currentFilters[filter];
+                        $('#funds-flow-table tbody tr').each(function () {
+                            var $row = $(this);
+                            var $col = $row.find('[data-col="' + filter + '"]');
+                            if (!$col.is(':contains("' + filterValue + '")')) {
+                                $row.hide();
+                            }
+                        });
+                    }
+                }
+            }
+
+            function applyFilter(filter, filterValue) {
+                currentFilters[filter] = filterValue;
+                applyCurrentFilters();
+            }
         });
-</script>
+    </script>
 }

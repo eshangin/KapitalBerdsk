@@ -11,5 +11,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public IEnumerable<FundsFlowListItemModel> Items { get; set; }
 
         public IEnumerable<SelectListItem> Employees { get; set; }
+
+        public IEnumerable<SelectListItem> BuildingObjects { get; set; }
     }
 }

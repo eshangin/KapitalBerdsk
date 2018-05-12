@@ -49,7 +49,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     {
                         Text = item.FullName,
                         Value = item.Id.ToString()
-                    })
+                    }),
+                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                })
             };
 
 
