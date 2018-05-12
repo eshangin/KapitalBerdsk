@@ -1,75 +1,103 @@
-﻿@using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
-@model IEnumerable<KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListItemModel>
+﻿@using Microsoft.CodeAnalysis
+@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListModel
 
 @{
     ViewData["Title"] = "Движение средств";
 }
+
+<style>
+    .table-header-cell {
+        border-bottom: 0 !important;
+        padding-bottom: 1px !important;
+    }
+
+    .table-filter-cell {
+        border-top: 0 !important;
+        padding-top: 1px !important;
+    }
+</style>
 
 <h2>
     @ViewData["Title"]
     <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
-<table class="table">
+<table id="funds-flow-table" class="table table-bordered">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
+            <th class="table-header-cell">Дата</th>
+            <th class="table-header-cell">Описание</th>
+            <th class="table-header-cell">Сотрудник</th>
+            <th class="table-header-cell">Приход</th>
+            <th class="table-header-cell">Расход</th>
+            <th class="table-header-cell">Объект</th>
+            <th class="table-header-cell">Нал/безнал</th>
+        </tr>
+        <tr>
+            <th class="table-filter-cell"></th>
+            <th class="table-filter-cell"></th>
+            <th class="table-filter-cell">
+                <select data-filter="Employee" asp-items="Model.Employees" class="form-control input-sm">
+                    <option value=""></option>
+                </select>
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmployeeName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Income)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Outgo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BuildingObjectName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PayType)
-            </th>
-            <th></th>
+            <th class="table-filter-cell"></th>
+            <th class="table-filter-cell"></th>
+            <th class="table-filter-cell"></th>
+            <th class="table-filter-cell"></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
-                    @Html.DisplayFor(modelItem => item.EmployeeName)
-                </a>                
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Income)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Outgo)
-            </td>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td data-col="Employee">
+                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
+                        @Html.DisplayFor(modelItem => item.EmployeeName)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Income)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Outgo)
+                </td>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.BuildingObjectName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PayType)
-            </td>
-            <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.BuildingObjectName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PayType)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section Scripts
+{
+<script type="text/javascript">
+        $(document).ready(function() {
+            $("[data-filter]").change(function() {
+                var filter = $(this).attr('data-filter');
+                var filterValue = $(this).parent().find("option:selected").text();
+                console.log(filter, filterValue);
+                $('#funds-flow-table tbody tr').each(function () {
+                    var $row = $(this);
+                    var $col = $row.find('[data-col="' + filter + '"]');
+                    if (filterValue === '' || $col.is(':contains("' + filterValue + '")')) {
+                        $row.show();
+                    } else {
+                        $row.hide();
+                    }
+                });
+            });
+        });
+</script>
+}

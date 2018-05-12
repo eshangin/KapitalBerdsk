@@ -14,7 +14,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     [Authorize]
     public class FundsFlowController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public FundsFlowController(ApplicationDbContext context)
         {
@@ -24,7 +24,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         // GET: FundsFlow
         public async Task<ActionResult> Index()
         {
-            var model = (await _context.FundsFlows
+            var items = (await _context.FundsFlows
                 .Include(item => item.Employee)
                 .Include(item => item.BuildingObject)
                 .OrderByDescending(item => item.Id)
@@ -40,6 +40,18 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 EmployeeId = item.EmployeeId,
                 BuildingObjectName = item.BuildingObject.Name
             });
+
+            var model = new FundsFlowListModel
+            {
+                Items = items,
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
+                    new SelectListItem
+                    {
+                        Text = item.FullName,
+                        Value = item.Id.ToString()
+                    })
+            };
+
 
             return View(model);
         }
