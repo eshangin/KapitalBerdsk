@@ -24,7 +24,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             var model = new EditPdSectionModel
             {
-                Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
@@ -67,7 +67,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Text = item.Name,
                 Selected = item.Id == objectId
             });
-            model.Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
@@ -86,7 +86,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Name = pdSection.Name,
                 Price = pdSection.Price,
                 EmployeeId = pdSection.EmployeeId,
-                Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
@@ -127,7 +127,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Text = item.Name,
                 Selected = item.Id == model.SelectedBuildingObjectId
             });
-            model.Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()

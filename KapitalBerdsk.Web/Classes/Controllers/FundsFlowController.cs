@@ -44,18 +44,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
-        // GET: FundsFlow/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: FundsFlow/Create
         public async Task<ActionResult> Create()
         {
             var model = new EditFundsFlowModel
             {
-                Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
@@ -97,7 +91,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            model.Employees = (await _context.Employees.ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
@@ -109,52 +103,6 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             });
 
             return View(model);
-        }
-
-        // GET: FundsFlow/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: FundsFlow/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: FundsFlow/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: FundsFlow/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }
