@@ -27,6 +27,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var employees = await _context.Employees
                 .Include(item => item.PdSections)
                 .Include(item => item.FundsFlows)
+                .OrderBy(item => item.OrderNumber)
                 .ToListAsync();
 
             var model = from item in employees
@@ -143,9 +144,20 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateOrder([FromBody] UpdateOrderModel model)
+        public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderModel model)
         {
-            return Ok(model);
+            List<Employee> employees = await _context.Employees.ToListAsync();
+
+            for (int i = 0; i < model.Ids.Count(); i++)
+            {
+                int id = model.Ids.ElementAt(i);
+                Employee emp = employees.Find(item => item.Id == id);
+                emp.OrderNumber = i;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
         public class UpdateOrderModel

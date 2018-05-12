@@ -15,6 +15,8 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public decimal? Salary { get; set; }
 
+        public int OrderNumber { get; set; }
+
         public List<PdSection> PdSections { get; set; }
 
         public List<FundsFlow> FundsFlows { get; set; }
