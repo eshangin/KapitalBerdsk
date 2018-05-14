@@ -11,47 +11,47 @@
 
 <table class="table table-bordered" id="employee-table">
     <thead>
-    <tr>
-        <th></th>
-        <th>
-            @Html.DisplayNameFor(model => model.FullName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Salary)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Balance)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Accrued)
-        </th>
-        <th></th>
-    </tr>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Salary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Accrued)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+            <th></th>
+        </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-    <tr data-employeeRow="@item.Id">
-        <td>
-            <span data-portletHandler style="width: 10px; height: 10px; display: inline-block; cursor: pointer">
-                <i class="glyphicon glyphicon-option-vertical"></i>
-            </span>
-        </td>
-        <td>
-            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.FullName)</a>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Salary)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Balance)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Accrued)
-        </td>
-        <td>
-            <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-        </td>
-    </tr>
+        <tr data-employeeRow="@item.Id">
+            <td>
+                <span data-portletHandler style="width: 10px; height: 10px; display: inline-block; cursor: pointer">
+                    <i class="glyphicon glyphicon-option-vertical"></i>
+                </span>
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.FullName)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Accrued)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+            </td>
+        </tr>
 }
     </tbody>
 </table>
