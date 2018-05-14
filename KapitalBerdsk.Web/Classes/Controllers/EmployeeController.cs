@@ -32,7 +32,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             var model = from item in employees
                         let accured = item.Salary.ToDecimal() + item.PdSections.Sum(s => s.Price)
-                        let outgo = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value)
+                        let outgo = item.FundsFlows.Where(ff => ff.Outgo != null &&
+                                                                ff.OrganizationId == null).Sum(ff => ff.Outgo.Value)
                         select new EmployeeListItemModel
                         {
                             FullName = item.FullName,
