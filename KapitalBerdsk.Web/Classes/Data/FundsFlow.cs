@@ -31,6 +31,9 @@ namespace KapitalBerdsk.Web.Classes.Data
         public int BuildingObjectId { get; set; }
         public BuildingObject BuildingObject { get; set; }
 
+        public int? OrganizationId { get; set; }
+        public Organization Organization { get; set; }
+
         public PaymentType PayType { get; set; }
 
         public DateTime DateCreated { get; set; }

@@ -15,6 +15,7 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DbSet<BuildingObject> BuildingObjects { get; set; }
         public DbSet<PdSection> PdSections { get; set; }
         public DbSet<FundsFlow> FundsFlows { get; set; }
+        public DbSet<Organization> Organizations { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
