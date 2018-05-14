@@ -36,7 +36,12 @@
                 <th class="table-header-cell"></th>
             </tr>
             <tr>
-                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <span class="input-group date" data-bdatepicker>
+                        <input data-filter="Date" type="text" class="form-control input-sm" />
+                        <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                    </span>
+                </th>
                 <th class="table-filter-cell">
                     <input data-filter="Description" type="text" class="form-control input-sm" />
                 </th>
@@ -74,7 +79,7 @@
                 foreach (FundsFlowListItemModel item in itemsByMonth)
                 {
                     <tr>
-                        <td>
+                        <td data-col="Date">
                             @Html.DisplayFor(modelItem => item.Date)
                         </td>
                         <td data-col="Description">
@@ -116,7 +121,11 @@
             var currentFilters = {};
             $("[data-filter]").on('change input', function () {
                 var filter = $(this).attr('data-filter');
-                var filterValue = $(this).is('input') ? $(this).val() : $(this).parent().find("option:selected").text();
+                var filterValue = $(this).is('input')
+                    ? $(this).val()
+                    : $(this).parent().find("option:selected").text();
+
+                console.log(filterValue);
 
                 if (filterValue === '') {
                     removeFilter(filter);
