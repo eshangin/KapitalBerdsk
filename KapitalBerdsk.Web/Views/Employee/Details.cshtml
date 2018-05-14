@@ -4,7 +4,10 @@
     ViewData["Title"] = Model.FullName;
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2>
+    @ViewData["Title"]
+    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@Model.Id">редактировать</a>
+</h2>
 
 <div>
     <hr />
