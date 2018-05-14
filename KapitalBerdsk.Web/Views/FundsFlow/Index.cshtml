@@ -1,4 +1,5 @@
-﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListModel
+﻿@using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
+@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListModel
 
 @{
     ViewData["Title"] = "Движение средств";
@@ -53,36 +54,45 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Items)
+        @foreach (var itemsByMonth in Model.Items.GroupBy(item => new { item.Date.Year, item.Date.Month }))
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td data-col="Employee">
-                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
-                        @Html.DisplayFor(modelItem => item.EmployeeName)
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Income)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Outgo)
-                </td>
-                <td data-col="BuildingObject">
-                    @Html.DisplayFor(modelItem => item.BuildingObjectName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PayType)
-                </td>
-                <td>
-                    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-                </td>
+                <td colspan="3">@itemsByMonth.First().Date.ToString("MM.yyyy")</td>
+                <td>@itemsByMonth.Sum(item => item.Income)</td>
+                <td>@itemsByMonth.Sum(item => item.Outgo)</td>
+                <td colspan="3"></td>
             </tr>
+            foreach (FundsFlowListItemModel item in itemsByMonth)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td data-col="Employee">
+                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
+                            @Html.DisplayFor(modelItem => item.EmployeeName)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Income)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Outgo)
+                    </td>
+                    <td data-col="BuildingObject">
+                        @Html.DisplayFor(modelItem => item.BuildingObjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PayType)
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
