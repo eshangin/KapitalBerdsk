@@ -50,9 +50,25 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         public async Task<ActionResult> Details(int id)
         {
             Employee emp = await _context.Employees
+                .Include(item => item.FundsFlows)
                 .Include(item => item.PdSections)
                 .ThenInclude(item => item.BuildingObject)
                 .FirstOrDefaultAsync(item => item.Id == id);
+
+            //var accuredItems =
+            //    from pd in emp.PdSections
+            //    group pd by pd.BuildingObjectId
+            //    into item
+            //    let buildingObject = item.First().BuildingObject
+            //    let accured = item.Sum(pd => pd.Price)
+            //    select new EmployeeDetailsModel.BuildingObjectDetail
+            //    {
+            //        Name = buildingObject.Name,
+            //        Id = buildingObject.Id,
+            //        Accrued = accured,
+            //        Issued = 0,
+            //        Balance = 0
+            //    };
 
             var model = new EmployeeDetailsModel
             {
@@ -65,9 +81,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     into item
                     let buildingObject = item.First().BuildingObject
                     let issued = (
-                        from ff in _context.FundsFlows
+                        from ff in emp.FundsFlows
                         where ff.BuildingObjectId == buildingObject.Id &&
-                              ff.EmployeeId == id &&
                               ff.Outgo != null
                         select ff.Outgo.Value).Sum()
                     let accured = item.Sum(pd => pd.Price)
