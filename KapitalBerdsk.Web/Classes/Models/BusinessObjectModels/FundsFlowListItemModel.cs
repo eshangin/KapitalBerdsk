@@ -29,6 +29,8 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Объект")]
         public string BuildingObjectName { get; set; }
 
+        public int BuildingObjectId { get; set; }
+
         [Display(Name = "Нал/Безнал")]
         public FundsFlow.PaymentType PayType { get; set; }
     }

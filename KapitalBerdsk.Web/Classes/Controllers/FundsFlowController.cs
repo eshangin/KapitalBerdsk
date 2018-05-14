@@ -39,7 +39,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Id = item.Id,
                 EmployeeName = item.Employee.FullName,
                 EmployeeId = item.EmployeeId,
-                BuildingObjectName = item.BuildingObject.Name
+                BuildingObjectName = item.BuildingObject.Name,
+                BuildingObjectId = item.BuildingObjectId
             });
 
             var model = new FundsFlowListModel

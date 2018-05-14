@@ -83,7 +83,9 @@
                         @Html.DisplayFor(modelItem => item.Outgo)
                     </td>
                     <td data-col="BuildingObject">
-                        @Html.DisplayFor(modelItem => item.BuildingObjectName)
+                        <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="@item.BuildingObjectId">
+                            @Html.DisplayFor(modelItem => item.BuildingObjectName)
+                        </a>                        
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PayType)
