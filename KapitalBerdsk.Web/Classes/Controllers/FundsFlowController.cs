@@ -151,28 +151,37 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
-        //// POST: Employee/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Edit(EmployeeModel model)
-        //{
-        //    var objectByName = await GetEmployeeByName(model.FullName);
-        //    if (objectByName != null && objectByName.Id != model.Id)
-        //    {
-        //        ModelState.AddModelError("", "Сотрудник с таким ФИО уже есть в системе");
-        //    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(EditFundsFlowModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == model.Id);
+                ff.Date = model.Date.Value;
+                ff.BuildingObjectId = model.BuildingObjectId.Value;
+                ff.Description = model.Description;
+                ff.EmployeeId = model.EmployeeId.Value;
+                ff.Income = model.Income;
+                ff.Outgo = model.Outgo;
+                ff.PayType = model.PayType;
+                await _context.SaveChangesAsync();
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
-        //        emp.FullName = model.FullName;
-        //        emp.Salary = model.Salary;
-        //        await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
 
-        //        return RedirectToAction(nameof(Index));
-        //    }
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            {
+                Text = item.FullName,
+                Value = item.Id.ToString()
+            });
+            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            {
+                Value = item.Id.ToString(),
+                Text = item.Name
+            });
 
-        //    return View();
-        //}
+            return View(model);
+        }
     }
 }
