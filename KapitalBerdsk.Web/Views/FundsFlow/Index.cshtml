@@ -22,101 +22,117 @@
     <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
-<table id="funds-flow-table" class="table table-bordered">
-    <thead>
-        <tr>
-            <th class="table-header-cell">Дата</th>
-            <th class="table-header-cell">Описание</th>
-            <th class="table-header-cell">Сотрудник</th>
-            <th class="table-header-cell">Приход</th>
-            <th class="table-header-cell">Расход</th>
-            <th class="table-header-cell">Объект</th>
-            <th class="table-header-cell">Нал/безнал</th>
-            <th class="table-header-cell"></th>
-        </tr>
-        <tr>
-            <th class="table-filter-cell"></th>
-            <th class="table-filter-cell"></th>
-            <th class="table-filter-cell">
-                <select data-filter="Employee" asp-items="Model.Employees" class="form-control input-sm">
-                    <option value=""></option>
-                </select>
-            </th>
-            <th class="table-filter-cell"></th>
-            <th class="table-filter-cell"></th>
-            <th class="table-filter-cell">
-                <select data-filter="BuildingObject" asp-items="Model.BuildingObjects" class="form-control input-sm">
-                    <option value=""></option>
-                </select>
-            </th>
-            <th class="table-filter-cell"></th>
-            <th class="table-filter-cell"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var itemsByMonth in Model.Items.GroupBy(item => new { item.Date.Year, item.Date.Month }))
-        {
+<form id="table-form">
+    <table id="funds-flow-table" class="table table-bordered">
+        <thead>
             <tr>
-                <td colspan="3">@itemsByMonth.First().Date.ToString("MMMM yyyy")</td>
-                <td>@itemsByMonth.Sum(item => item.Income)</td>
-                <td>@itemsByMonth.Sum(item => item.Outgo)</td>
-                <td colspan="3"></td>
+                <th class="table-header-cell">Дата</th>
+                <th class="table-header-cell">Описание</th>
+                <th class="table-header-cell">Сотрудник</th>
+                <th class="table-header-cell">Приход</th>
+                <th class="table-header-cell">Расход</th>
+                <th class="table-header-cell">Объект</th>
+                <th class="table-header-cell">Нал/безнал</th>
+                <th class="table-header-cell"></th>
             </tr>
-            foreach (FundsFlowListItemModel item in itemsByMonth)
+            <tr>
+                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <select data-filter="Employee" asp-items="Model.Employees" class="form-control input-sm">
+                        <option value=""></option>
+                    </select>
+                </th>
+                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <select data-filter="BuildingObject" asp-items="Model.BuildingObjects" class="form-control input-sm">
+                        <option value=""></option>
+                    </select>
+                </th>
+                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <button type="button" style="display: none" class="btn btn-sm btn-default" id="btn-reset-filter">Сбросить фильтр</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var itemsByMonth in Model.Items.GroupBy(item => new { item.Date.Year, item.Date.Month }))
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td data-col="Employee">
-                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
-                            @Html.DisplayFor(modelItem => item.EmployeeName)
-                        </a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Income)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Outgo)
-                    </td>
-                    <td data-col="BuildingObject">
-                        <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="@item.BuildingObjectId">
-                            @Html.DisplayFor(modelItem => item.BuildingObjectName)
-                        </a>                        
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PayType)
-                    </td>
-                    <td>
-                        <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-                    </td>
+                    <td colspan="3">@itemsByMonth.First().Date.ToString("MMMM yyyy")</td>
+                    <td>@itemsByMonth.Sum(item => item.Income)</td>
+                    <td>@itemsByMonth.Sum(item => item.Outgo)</td>
+                    <td colspan="3"></td>
                 </tr>
+                foreach (FundsFlowListItemModel item in itemsByMonth)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td data-col="Employee">
+                            <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
+                                @Html.DisplayFor(modelItem => item.EmployeeName)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Income)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Outgo)
+                        </td>
+                        <td data-col="BuildingObject">
+                            <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="@item.BuildingObjectId">
+                                @Html.DisplayFor(modelItem => item.BuildingObjectName)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PayType)
+                        </td>
+                        <td>
+                            <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                        </td>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</form>
 
 @section Scripts
 {
     <script type="text/javascript">
         $(document).ready(function() {
-            var currentFilters = { };
+            var currentFilters = {};
             $("[data-filter]").change(function() {
                 var filter = $(this).attr('data-filter');
                 var filterValue = $(this).parent().find("option:selected").text();
 
                 if (filterValue === '') {
                     removeFilter(filter);
-                } else {
+                } else {                    
                     applyFilter(filter, filterValue);
+                    $('#btn-reset-filter').show();
                 }
+            });
+
+            $('#btn-reset-filter').click(function () {
+                $('#table-form')[0].reset();
+                removeAllFilters();
+                $('#btn-reset-filter').hide();
             });
 
             function removeFilter(filter) {
                 delete currentFilters[filter];
+                applyCurrentFilters();
+            }
+
+            function removeAllFilters() {
+                currentFilters = {};
                 applyCurrentFilters();
             }
 
@@ -128,7 +144,7 @@
                 for (var filter in currentFilters) {
                     if (currentFilters.hasOwnProperty(filter)) {
                         var filterValue = currentFilters[filter];
-                        $('#funds-flow-table tbody tr').each(function () {
+                        $('#funds-flow-table tbody tr').each(function() {
                             var $row = $(this);
                             var $col = $row.find('[data-col="' + filter + '"]');
                             if (!$col.is(':contains("' + filterValue + '")')) {
