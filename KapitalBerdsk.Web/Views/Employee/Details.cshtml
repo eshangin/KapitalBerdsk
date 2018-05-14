@@ -4,6 +4,13 @@
     ViewData["Title"] = Model.FullName;
 }
 
+<style>
+    .sum-symbol {
+        position: relative;
+        top: -2px;
+    }
+</style>
+
 <h2>
     @ViewData["Title"]
     <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@Model.Id">редактировать</a>
@@ -21,9 +28,21 @@
         <thead>
             <tr>
                 <th>Название</th>
-                <th>Начислено</th>
-                <th>Выдано</th>
-                <th>Остаток</th>
+                <th>
+                    <span>Начислено</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @Model.BuildingObjects.Sum(item => item.Accrued)</span>
+                    <span class="clearfix"></span>
+                </th>
+                <th>                    
+                    <span>Выдано</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @Model.BuildingObjects.Sum(item => item.Issued)</span>
+                    <span class="clearfix"></span>
+                </th>
+                <th>                    
+                    <span>Остаток</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @Model.BuildingObjects.Sum(item => item.Balance)</span>
+                    <span class="clearfix"></span>
+                </th>
             </tr>
         </thead>
         <tbody>
