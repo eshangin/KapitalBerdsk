@@ -9,7 +9,9 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         {
             public int Id { get; set; }
             public string Name { get; set; }
-            public decimal Total { get; set; }
+            public decimal Accrued { get; set; }
+            public decimal Issued { get; set; }
+            public decimal Balance { get; set; }
         }
 
         public int Id { get; set; }

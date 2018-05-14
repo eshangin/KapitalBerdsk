@@ -20,12 +20,10 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>
-                    Название
-                </th>
-                <th>
-                    Всего
-                </th>
+                <th>Название</th>
+                <th>Начислено</th>
+                <th>Выдано</th>
+                <th>Остаток</th>
             </tr>
         </thead>
         <tbody>
@@ -36,7 +34,13 @@
                     <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Total)
+                    @Html.DisplayFor(modelItem => item.Accrued)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Issued)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Balance)
                 </td>
             </tr>
         }

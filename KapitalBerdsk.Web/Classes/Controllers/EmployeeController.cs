@@ -59,13 +59,26 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 FullName = emp.FullName,
                 Salary = emp.Salary.ToDecimal(),
                 Id = emp.Id,
-                BuildingObjects = emp.PdSections.GroupBy(item => item.BuildingObjectId)
-                                        .Select(item => new EmployeeDetailsModel.BuildingObjectDetail
-                                        {
-                                            Name = item.First().BuildingObject.Name,
-                                            Id = item.First().BuildingObject.Id,
-                                            Total = item.Sum(pd => pd.Price)
-                                        })
+                BuildingObjects =
+                    from pd in emp.PdSections
+                    group pd by pd.BuildingObjectId
+                    into item
+                    let buildingObject = item.First().BuildingObject
+                    let issued = (
+                        from ff in _context.FundsFlows
+                        where ff.BuildingObjectId == buildingObject.Id &&
+                              ff.EmployeeId == id &&
+                              ff.Outgo != null
+                        select ff.Outgo.Value).Sum()
+                    let accured = item.Sum(pd => pd.Price)
+                    select new EmployeeDetailsModel.BuildingObjectDetail
+                    {
+                        Name = buildingObject.Name,
+                        Id = buildingObject.Id,
+                        Accrued = accured,
+                        Issued = issued,
+                        Balance = accured - issued
+                    },
             };
 
             return View(model);
