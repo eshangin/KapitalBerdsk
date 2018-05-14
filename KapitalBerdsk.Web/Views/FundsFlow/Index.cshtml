@@ -57,7 +57,7 @@
         @foreach (var itemsByMonth in Model.Items.GroupBy(item => new { item.Date.Year, item.Date.Month }))
         {
             <tr>
-                <td colspan="3">@itemsByMonth.First().Date.ToString("MM.yyyy")</td>
+                <td colspan="3">@itemsByMonth.First().Date.ToString("MMMM yyyy")</td>
                 <td>@itemsByMonth.Sum(item => item.Income)</td>
                 <td>@itemsByMonth.Sum(item => item.Outgo)</td>
                 <td colspan="3"></td>
