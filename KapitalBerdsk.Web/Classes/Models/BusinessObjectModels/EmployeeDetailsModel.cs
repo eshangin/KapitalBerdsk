@@ -11,7 +11,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
             public string Name { get; set; }
             public decimal Accrued { get; set; }
             public decimal Issued { get; set; }
-            public decimal Balance { get; set; }
+            public decimal Balance => Accrued - Issued;
         }
 
         public int Id { get; set; }
