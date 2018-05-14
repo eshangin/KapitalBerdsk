@@ -37,14 +37,20 @@
             </tr>
             <tr>
                 <th class="table-filter-cell"></th>
-                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <input data-filter="Description" type="text" class="form-control input-sm" />
+                </th>
                 <th class="table-filter-cell">
                     <select data-filter="Employee" asp-items="Model.Employees" class="form-control input-sm">
                         <option value=""></option>
                     </select>
                 </th>
-                <th class="table-filter-cell"></th>
-                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <input data-filter="Income" type="text" class="form-control input-sm" />
+                </th>
+                <th class="table-filter-cell">
+                    <input data-filter="Outgo" type="text" class="form-control input-sm" />
+                </th>
                 <th class="table-filter-cell">
                     <select data-filter="BuildingObject" asp-items="Model.BuildingObjects" class="form-control input-sm">
                         <option value=""></option>
@@ -71,7 +77,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Date)
                         </td>
-                        <td>
+                        <td data-col="Description">
                             @Html.DisplayFor(modelItem => item.Description)
                         </td>
                         <td data-col="Employee">
@@ -79,10 +85,10 @@
                                 @Html.DisplayFor(modelItem => item.EmployeeName)
                             </a>
                         </td>
-                        <td>
+                        <td data-col="Income">
                             @Html.DisplayFor(modelItem => item.Income)
                         </td>
-                        <td>
+                        <td data-col="Outgo">
                             @Html.DisplayFor(modelItem => item.Outgo)
                         </td>
                         <td data-col="BuildingObject">
@@ -108,14 +114,19 @@
     <script type="text/javascript">
         $(document).ready(function() {
             var currentFilters = {};
-            $("[data-filter]").change(function() {
+            $("[data-filter]").on('change input', function () {
                 var filter = $(this).attr('data-filter');
-                var filterValue = $(this).parent().find("option:selected").text();
+                var filterValue = $(this).is('input') ? $(this).val() : $(this).parent().find("option:selected").text();
 
                 if (filterValue === '') {
                     removeFilter(filter);
                 } else {                    
-                    applyFilter(filter, filterValue);
+                    applyFilter(filter, filterValue);                    
+                }
+
+                if ($.isEmptyObject(currentFilters)) {
+                    $('#btn-reset-filter').hide();
+                } else {
                     $('#btn-reset-filter').show();
                 }
             });
