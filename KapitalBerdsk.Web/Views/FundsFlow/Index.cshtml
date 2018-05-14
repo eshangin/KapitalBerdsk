@@ -31,6 +31,7 @@
             <th class="table-header-cell">Расход</th>
             <th class="table-header-cell">Объект</th>
             <th class="table-header-cell">Нал/безнал</th>
+            <th class="table-header-cell"></th>
         </tr>
         <tr>
             <th class="table-filter-cell"></th>
@@ -47,6 +48,7 @@
                     <option value=""></option>
                 </select>
             </th>
+            <th class="table-filter-cell"></th>
             <th class="table-filter-cell"></th>
         </tr>
     </thead>
@@ -76,6 +78,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PayType)
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
                 </td>
             </tr>
         }

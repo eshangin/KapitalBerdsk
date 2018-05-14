@@ -122,5 +122,57 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             return View(model);
         }
+
+        public async Task<ActionResult> Edit(int id)
+        {
+            FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == id);
+            var model = new EditFundsFlowModel
+            {
+                Id = ff.Id,
+                BuildingObjectId = ff.BuildingObjectId,
+                Date = ff.Date,
+                Description = ff.Description,
+                EmployeeId = ff.EmployeeId,
+                Income = ff.Income,
+                Outgo = ff.Outgo,
+                PayType = ff.PayType,
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+                {
+                    Text = item.FullName,
+                    Value = item.Id.ToString()
+                }),
+                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                })
+            };
+
+            return View(model);
+        }
+
+        //// POST: Employee/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Edit(EmployeeModel model)
+        //{
+        //    var objectByName = await GetEmployeeByName(model.FullName);
+        //    if (objectByName != null && objectByName.Id != model.Id)
+        //    {
+        //        ModelState.AddModelError("", "Сотрудник с таким ФИО уже есть в системе");
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
+        //        emp.FullName = model.FullName;
+        //        emp.Salary = model.Salary;
+        //        await _context.SaveChangesAsync();
+
+        //        return RedirectToAction(nameof(Index));
+        //    }
+
+        //    return View();
+        //}
     }
 }
