@@ -8,5 +8,6 @@ namespace KapitalBerdsk.Web.Classes.Options
     public class GeneralOptions
     {
         public string AppBaseUrl { get; set; }
+        public string DataProtectionKeysPath { get; set; }
     }
 }

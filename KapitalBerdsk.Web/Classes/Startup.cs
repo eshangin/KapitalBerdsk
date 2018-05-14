@@ -1,4 +1,6 @@
-﻿using Hangfire;
+﻿using System;
+using System.IO;
+using Hangfire;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Hangfire;
 using KapitalBerdsk.Web.Classes.Models;
@@ -6,6 +8,7 @@ using KapitalBerdsk.Web.Classes.Options;
 using KapitalBerdsk.Web.Classes.Resources;
 using KapitalBerdsk.Web.Classes.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,12 +49,19 @@ namespace KapitalBerdsk.Web.Classes
 
             services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
             services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));
-            services.Configure<GeneralOptions>(Configuration.GetSection("GeneralOptions"));            
+            services.Configure<GeneralOptions>(Configuration.GetSection("GeneralOptions"));
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();
             services.AddTransient<IPingWebAppService, PingWebAppService>();
+
+            var generalOptions = new GeneralOptions();
+            Configuration.GetSection("GeneralOptions").Bind(generalOptions);
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(generalOptions.DataProtectionKeysPath))
+                .SetApplicationName("KapitalBerdsk.Web");
 
             services.AddMvc()
                 .AddDataAnnotationsLocalization(options =>
