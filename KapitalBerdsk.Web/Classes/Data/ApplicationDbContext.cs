@@ -33,6 +33,7 @@ namespace KapitalBerdsk.Web.Classes.Data
 
             builder.Entity<Employee>().HasIndex(u => u.FullName).IsUnique();
             builder.Entity<BuildingObject>().HasIndex(u => u.Name).IsUnique();
+            builder.Entity<Organization>().HasIndex(u => u.Name).IsUnique();
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)

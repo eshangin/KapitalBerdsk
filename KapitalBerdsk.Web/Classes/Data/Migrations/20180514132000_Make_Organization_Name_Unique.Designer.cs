@@ -11,9 +11,10 @@ using System;
 namespace KapitalBerdsk.Web.Classes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180514132000_Make_Organization_Name_Unique")]
+    partial class Make_Organization_Name_Unique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
