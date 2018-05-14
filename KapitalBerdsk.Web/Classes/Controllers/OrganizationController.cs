@@ -53,27 +53,32 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
-        // GET: Organization/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var el = await _context.Organizations
+                .FirstOrDefaultAsync(item => item.Id == id);
+            var model = new OrganizationModel()
+            {
+                Name = el.Name,
+                Id = el.Id
+            };
+            return View(model);
         }
 
-        // POST: Organization/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(OrganizationModel model)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                var el = await _context.Organizations.FirstOrDefaultAsync(item => item.Id == model.Id);
+                el.Name = model.Name;
+                await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(model);
         }
     }
 }
