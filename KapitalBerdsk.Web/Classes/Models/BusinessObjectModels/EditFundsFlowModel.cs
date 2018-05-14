@@ -30,9 +30,11 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Нал/Безнал")]
         public FundsFlow.PaymentType PayType { get; set; }
 
-        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Сотрудник")]
         public int? EmployeeId { get; set; }
+
+        [Display(Name = "Организация")]
+        public int? OrganizationId { get; set; }
 
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Объект")]
@@ -41,5 +43,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public IEnumerable<SelectListItem> Employees { get; set; }
 
         public IEnumerable<SelectListItem> BuildingObjects { get; set; }
+
+        public IEnumerable<SelectListItem> Organizations { get; set; }
     }
 }

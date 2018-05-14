@@ -30,6 +30,7 @@
                 <th class="table-header-cell">Дата</th>
                 <th class="table-header-cell">Описание</th>
                 <th class="table-header-cell">Сотрудник</th>
+                <th class="table-header-cell">Организация</th>
                 <th class="table-header-cell">Приход</th>
                 <th class="table-header-cell">Расход</th>
                 <th class="table-header-cell">Объект</th>
@@ -48,6 +49,11 @@
                 </th>
                 <th class="table-filter-cell">
                     <select data-filter="Employee" asp-items="Model.Employees" class="form-control input-sm">
+                        <option value=""></option>
+                    </select>
+                </th>
+                <th class="table-filter-cell">
+                    <select data-filter="OrganizationName" asp-items="Model.Organizations" class="form-control input-sm">
                         <option value=""></option>
                     </select>
                 </th>
@@ -76,7 +82,7 @@
             @foreach (var itemsByMonth in Model.Items.GroupBy(item => new { item.Date.Year, item.Date.Month }))
             {
                 <tr>
-                    <td colspan="3">@itemsByMonth.First().Date.ToString("MMMM yyyy")</td>
+                    <td colspan="4">@itemsByMonth.First().Date.ToString("MMMM yyyy")</td>
                     <td>@itemsByMonth.Sum(item => item.Income)</td>
                     <td>@itemsByMonth.Sum(item => item.Outgo)</td>
                     <td colspan="3"></td>
@@ -94,6 +100,9 @@
                             <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
                                 @Html.DisplayFor(modelItem => item.EmployeeName)
                             </a>
+                        </td>
+                        <td data-col="OrganizationName">
+                            @Html.DisplayFor(modelItem => item.OrganizationName)
                         </td>
                         <td data-col="Income">
                             @Html.DisplayFor(modelItem => item.Income)

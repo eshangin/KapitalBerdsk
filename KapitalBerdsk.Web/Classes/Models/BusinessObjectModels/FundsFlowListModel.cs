@@ -13,5 +13,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public IEnumerable<SelectListItem> Employees { get; set; }
 
         public IEnumerable<SelectListItem> BuildingObjects { get; set; }
+
+        public IEnumerable<SelectListItem> Organizations { get; set; }
     }
 }

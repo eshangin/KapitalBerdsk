@@ -25,7 +25,7 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public decimal? Outgo { get; set; }
 
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
         public int BuildingObjectId { get; set; }

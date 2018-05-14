@@ -27,6 +27,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var items = (await _context.FundsFlows
                 .Include(item => item.Employee)
                 .Include(item => item.BuildingObject)
+                .Include(item => item.Organization)
                 .OrderByDescending(item => item.Date)
                 .ThenByDescending(item => item.Id)
                 .ToListAsync()).Select(item => new FundsFlowListItemModel
@@ -37,8 +38,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Outgo = item.Outgo,
                 PayType = item.PayType,
                 Id = item.Id,
-                EmployeeName = item.Employee.FullName,
+                EmployeeName = item.Employee?.FullName,
                 EmployeeId = item.EmployeeId,
+                OrganizationName = item.Organization?.Name,
+                OrganizationId = item.OrganizationId,
                 BuildingObjectName = item.BuildingObject.Name,
                 BuildingObjectId = item.BuildingObjectId
             });
@@ -53,6 +56,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                         Value = item.Id.ToString()
                     }),
                 BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                }),
+                Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
@@ -78,6 +86,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Value = item.Id.ToString(),
                     Text = item.Name
                 }),
+                Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                }),
                 Date = DateTime.UtcNow.AddHours(7)
             };
             return View(model);
@@ -92,6 +105,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 ModelState.AddModelError("", "Приход или расход должны быть указаны");
             }
+            if (model.EmployeeId == null && model.OrganizationId == null)
+            {
+                ModelState.AddModelError("", "Сотрудник и/или организация должны быть указаны");
+            }
 
             if (ModelState.IsValid)
             {
@@ -100,7 +117,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     BuildingObjectId = model.BuildingObjectId.Value,
                     Date = model.Date.Value,
                     Description = model.Description,
-                    EmployeeId = model.EmployeeId.Value,
+                    EmployeeId = model.EmployeeId,
+                    OrganizationId = model.OrganizationId,
                     PayType = model.PayType,
                     Income = model.Income,
                     Outgo = model.Outgo
@@ -120,6 +138,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Value = item.Id.ToString(),
                 Text = item.Name
             });
+            model.Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+            {
+                Value = item.Id.ToString(),
+                Text = item.Name
+            });
 
             return View(model);
         }
@@ -134,6 +157,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Date = ff.Date,
                 Description = ff.Description,
                 EmployeeId = ff.EmployeeId,
+                OrganizationId = ff.OrganizationId,
                 Income = ff.Income,
                 Outgo = ff.Outgo,
                 PayType = ff.PayType,
@@ -146,7 +170,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
-                })
+                }),
+                Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+                {
+                    Value = item.Id.ToString(),
+                    Text = item.Name
+                }),
             };
 
             return View(model);
@@ -156,13 +185,23 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditFundsFlowModel model)
         {
+            if (model.Income == null && model.Outgo == null)
+            {
+                ModelState.AddModelError("", "Приход или расход должны быть указаны");
+            }
+            if (model.EmployeeId == null && model.OrganizationId == null)
+            {
+                ModelState.AddModelError("", "Сотрудник и/или организация должны быть указаны");
+            }
+
             if (ModelState.IsValid)
             {
                 FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == model.Id);
                 ff.Date = model.Date.Value;
                 ff.BuildingObjectId = model.BuildingObjectId.Value;
                 ff.Description = model.Description;
-                ff.EmployeeId = model.EmployeeId.Value;
+                ff.EmployeeId = model.EmployeeId;
+                ff.OrganizationId = model.OrganizationId;
                 ff.Income = model.Income;
                 ff.Outgo = model.Outgo;
                 ff.PayType = model.PayType;
@@ -177,6 +216,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Value = item.Id.ToString()
             });
             model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            {
+                Value = item.Id.ToString(),
+                Text = item.Name
+            });
+            model.Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
