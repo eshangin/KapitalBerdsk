@@ -61,7 +61,11 @@
                         <option value=""></option>
                     </select>
                 </th>
-                <th class="table-filter-cell"></th>
+                <th class="table-filter-cell">
+                    <select data-filter="PayType" asp-items="Html.GetEnumSelectList<KapitalBerdsk.Web.Classes.Data.FundsFlow.PaymentType>()" class="form-control input-sm">
+                        <option value=""></option>
+                    </select>
+                </th>
                 <th class="table-filter-cell">
                     <button type="button" style="display: none" class="btn btn-sm btn-default" id="btn-reset-filter">Сбросить фильтр</button>
                 </th>
@@ -101,7 +105,7 @@
                                 @Html.DisplayFor(modelItem => item.BuildingObjectName)
                             </a>
                         </td>
-                        <td>
+                        <td data-col="PayType">
                             @Html.DisplayFor(modelItem => item.PayType)
                         </td>
                         <td>
