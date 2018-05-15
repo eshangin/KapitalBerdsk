@@ -51,7 +51,14 @@
     </select>
     <span asp-validation-for="BuildingObjectId" class="text-danger"></span>
 </div>
+@Html.HiddenFor(model => model.IsCreateMode)
 <div class="form-group">
     <a class="btn btn-default" asp-controller="FundsFlow" asp-action="Index">Отмена</a>
     <input type="submit" value="Сохранить" class="btn btn-primary" />
+    @if (!Model.IsCreateMode)
+    {
+        <div class="pull-right">
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-link">Удалить</a>
+        </div>
+    }
 </div>

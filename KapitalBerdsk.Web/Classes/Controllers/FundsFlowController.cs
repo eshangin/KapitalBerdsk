@@ -91,7 +91,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Value = item.Id.ToString(),
                     Text = item.Name
                 }),
-                Date = DateTime.UtcNow.AddHours(7)
+                Date = DateTime.UtcNow.AddHours(7),
+                IsCreateMode = true
             };
             return View(model);
         }
@@ -237,7 +238,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .Include(item => item.Organization)
                 .OrderByDescending(item => item.Date)
                 .ThenByDescending(item => item.Id)
-                .Select((item) => new FundsFlowListItemModel
+                .Where(item => item.Id == id)
+                .Select(item => new FundsFlowListItemModel
                 {
                     Date = item.Date,
                     Description = item.Description,
