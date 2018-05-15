@@ -1,0 +1,37 @@
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.PdSectionModel
+
+@{
+    ViewData["Title"] = "Удаление раздела ПД";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+
+<h3>Подтвердите удаление</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeName)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-default">Отмена</a>
+        <input type="submit" value="Удалить" class="btn btn-primary" />
+    </form>
+</div>

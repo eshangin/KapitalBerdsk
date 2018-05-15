@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +37,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Selected = item.Id == objectId
                 }),
                 BuildingObjectId = objectId,
-                SelectedBuildingObjectId = objectId
+                SelectedBuildingObjectId = objectId,
+                IsCreateMode = true
             };
             return View(model);
         }
@@ -134,6 +136,32 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             });
 
             return View(model);
+        }
+
+        public async Task<ActionResult> Delete(int id)
+        {
+            var model = await _context.PdSections
+                    .Include(item => item.Employee)
+                    .Select(item => new PdSectionModel
+                    {
+                        Name = item.Name,
+                        Id = item.Id,
+                        Price = item.Price,
+                        EmployeeName = item.Employee.FullName
+                    })
+                    .FirstOrDefaultAsync(item => item.Id == id);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        {
+            var itemToDelete = new PdSection() { Id = id };
+            _context.Entry(itemToDelete).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(BuildingObjectController.Index), nameof(BuildingObjectController).Replace("Controller", string.Empty));
         }
     }
 }

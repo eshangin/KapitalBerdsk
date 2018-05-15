@@ -1,5 +1,4 @@
-﻿@using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
-@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.EditPdSectionModel
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.EditPdSectionModel
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <input type="hidden" asp-for="SelectedBuildingObjectId" />
@@ -25,7 +24,14 @@
     <input asp-for="Price" class="form-control" />
     <span asp-validation-for="Price" class="text-danger"></span>
 </div>
+@Html.HiddenFor(model => model.IsCreateMode)
 <div class="form-group">
     <a class="btn btn-default" asp-controller="BuildingObject" asp-action="Details" asp-route-id="@Model.SelectedBuildingObjectId">Отмена</a>
     <input type="submit" value="Сохранить" class="btn btn-primary" />
+    @if (!Model.IsCreateMode)
+    {
+        <div class="pull-right">
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-link">Удалить</a>
+        </div>
+    }
 </div>

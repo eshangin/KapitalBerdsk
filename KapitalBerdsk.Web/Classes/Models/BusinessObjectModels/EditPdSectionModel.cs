@@ -30,5 +30,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public int SelectedBuildingObjectId { get; set; }
 
         public IEnumerable<SelectListItem> BuildingObjects { get; set; }
+
+        public bool IsCreateMode { get; set; }
     }
 }
