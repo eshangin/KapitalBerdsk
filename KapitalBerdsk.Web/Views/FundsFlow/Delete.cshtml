@@ -1,0 +1,66 @@
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.FundsFlowListItemModel
+
+@{
+    ViewData["Title"] = "Удаление движухи";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Подтвердите удаление</h3>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Income)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Income)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Outgo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Outgo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployeeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EmployeeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.OrganizationName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OrganizationName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BuildingObjectName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BuildingObjectName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PayType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PayType)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <a asp-action="Index" class="btn btn-default">Отмена</a>
+        <input type="submit" value="Удалить" class="btn btn-primary" />
+    </form>
+</div>

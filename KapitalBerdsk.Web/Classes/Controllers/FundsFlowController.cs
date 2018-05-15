@@ -31,20 +31,20 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .OrderByDescending(item => item.Date)
                 .ThenByDescending(item => item.Id)
                 .ToListAsync()).Select(item => new FundsFlowListItemModel
-            {
-                Date = item.Date,
-                Description = item.Description,
-                Income = item.Income,
-                Outgo = item.Outgo,
-                PayType = item.PayType,
-                Id = item.Id,
-                EmployeeName = item.Employee?.FullName,
-                EmployeeId = item.EmployeeId,
-                OrganizationName = item.Organization?.Name,
-                OrganizationId = item.OrganizationId,
-                BuildingObjectName = item.BuildingObject.Name,
-                BuildingObjectId = item.BuildingObjectId
-            });
+                {
+                    Date = item.Date,
+                    Description = item.Description,
+                    Income = item.Income,
+                    Outgo = item.Outgo,
+                    PayType = item.PayType,
+                    Id = item.Id,
+                    EmployeeName = item.Employee?.FullName,
+                    EmployeeId = item.EmployeeId,
+                    OrganizationName = item.Organization?.Name,
+                    OrganizationId = item.OrganizationId,
+                    BuildingObjectName = item.BuildingObject.Name,
+                    BuildingObjectId = item.BuildingObjectId
+                });
 
             var model = new FundsFlowListModel
             {
@@ -227,6 +227,44 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             });
 
             return View(model);
+        }
+
+        public async Task<ActionResult> Delete(int id)
+        {
+            var model = await _context.FundsFlows
+                .Include(item => item.Employee)
+                .Include(item => item.BuildingObject)
+                .Include(item => item.Organization)
+                .OrderByDescending(item => item.Date)
+                .ThenByDescending(item => item.Id)
+                .Select((item) => new FundsFlowListItemModel
+                {
+                    Date = item.Date,
+                    Description = item.Description,
+                    Income = item.Income,
+                    Outgo = item.Outgo,
+                    PayType = item.PayType,
+                    Id = item.Id,
+                    EmployeeName = item.Employee == null ? null : item.Employee.FullName,
+                    EmployeeId = item.EmployeeId,
+                    OrganizationName = item.Organization == null ? null : item.Organization.Name,
+                    OrganizationId = item.OrganizationId,
+                    BuildingObjectName = item.BuildingObject.Name,
+                    BuildingObjectId = item.BuildingObjectId
+                }).FirstOrDefaultAsync();
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
+        {
+            var itemToDelete = new FundsFlow() { Id = id };
+            _context.Entry(itemToDelete).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
