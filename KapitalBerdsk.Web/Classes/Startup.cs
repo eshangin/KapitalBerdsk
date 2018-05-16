@@ -10,6 +10,7 @@ using KapitalBerdsk.Web.Classes.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,8 @@ namespace KapitalBerdsk.Web.Classes
             services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
             services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));
             services.Configure<GeneralOptions>(Configuration.GetSection("GeneralOptions"));
+
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();

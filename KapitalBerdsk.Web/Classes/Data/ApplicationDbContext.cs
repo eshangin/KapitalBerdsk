@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,10 +20,14 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DbSet<FundsFlow> FundsFlows { get; set; }
         public DbSet<Organization> Organizations { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            IHttpContextAccessor httpContextAccessor)
             : base(options)
         {
-
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -38,31 +45,42 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            AddTimestamps();
+            FillAuditableFields();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
-            AddTimestamps();
+            FillAuditableFields();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
 
-        private void AddTimestamps()
+        private string GetCurrentUserId()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        }
+
+        private void FillAuditableFields()
         {
             var entities = ChangeTracker.Entries().Where(x => x.Entity is IAuditable &&
                 (x.State == EntityState.Added || x.State == EntityState.Modified));
 
-            foreach (var entity in entities)
+            if (entities.Count() > 0)
             {
-                if (entity.State == EntityState.Added)
+                string currentUserId = GetCurrentUserId();
+                foreach (var entity in entities)
                 {
-                    ((IAuditable)entity.Entity).DateCreated = DateTime.UtcNow;
-                    ((IAuditable)entity.Entity).DateUpdated = ((IAuditable)entity.Entity).DateCreated;
-                }
-                else if (entity.State == EntityState.Modified)
-                {
-                    ((IAuditable)entity.Entity).DateUpdated = DateTime.UtcNow;
+                    var auditable = ((IAuditable)entity.Entity);
+                    if (entity.State == EntityState.Added)
+                    {
+                        auditable.CreatedById = currentUserId;
+                        auditable.DateCreated = DateTime.UtcNow;
+                        auditable.DateUpdated = auditable.DateCreated;
+                    }
+                    else if (entity.State == EntityState.Modified)
+                    {
+                        auditable.DateUpdated = DateTime.UtcNow;
+                    }
                 }
             }
         }
