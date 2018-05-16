@@ -52,8 +52,6 @@ namespace KapitalBerdsk.Web.Classes
             services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));
             services.Configure<GeneralOptions>(Configuration.GetSection("GeneralOptions"));
 
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();
