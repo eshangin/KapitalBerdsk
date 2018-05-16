@@ -29,8 +29,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<DateTime>("ContractDateStart");
 
-                    b.Property<string>("CreatedById")
-                        .IsRequired();
+                    b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -38,8 +37,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<bool>("IsClosed");
 
-                    b.Property<string>("ModifiedById")
-                        .IsRequired();
+                    b.Property<string>("ModifiedById");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -64,8 +62,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedById")
-                        .IsRequired();
+                    b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -75,8 +72,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(70);
 
-                    b.Property<string>("ModifiedById")
-                        .IsRequired();
+                    b.Property<string>("ModifiedById");
 
                     b.Property<int>("OrderNumber");
 
@@ -101,8 +97,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<int>("BuildingObjectId");
 
-                    b.Property<string>("CreatedById")
-                        .IsRequired();
+                    b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("Date");
 
@@ -116,8 +111,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<decimal?>("Income");
 
-                    b.Property<string>("ModifiedById")
-                        .IsRequired();
+                    b.Property<string>("ModifiedById");
 
                     b.Property<int?>("OrganizationId");
 
@@ -145,15 +139,13 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("CreatedById")
-                        .IsRequired();
+                    b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<DateTime>("DateUpdated");
 
-                    b.Property<string>("ModifiedById")
-                        .IsRequired();
+                    b.Property<string>("ModifiedById");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -178,8 +170,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<int>("BuildingObjectId");
 
-                    b.Property<string>("CreatedById")
-                        .IsRequired();
+                    b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -187,8 +178,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<int>("EmployeeId");
 
-                    b.Property<string>("ModifiedById")
-                        .IsRequired();
+                    b.Property<string>("ModifiedById");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -219,8 +209,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("CreatedById")
-                        .IsRequired();
+                    b.Property<string>("CreatedById");
 
                     b.Property<DateTime>("DateCreated");
 
@@ -235,8 +224,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("ModifiedById")
-                        .IsRequired();
+                    b.Property<string>("ModifiedById");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -386,26 +374,22 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                 {
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "ModifiedBy")
                         .WithMany()
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.Employee", b =>
                 {
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "ModifiedBy")
                         .WithMany()
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.FundsFlow", b =>
@@ -417,8 +401,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Data.Employee", "Employee")
                         .WithMany("FundsFlows")
@@ -426,8 +409,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "ModifiedBy")
                         .WithMany()
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModifiedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Data.Organization", "Organization")
                         .WithMany("FundsFlows")
@@ -438,13 +420,11 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                 {
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "ModifiedBy")
                         .WithMany()
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("KapitalBerdsk.Web.Classes.Data.PdSection", b =>
@@ -456,8 +436,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "CreatedBy")
                         .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Data.Employee", "Employee")
                         .WithMany("PdSections")
@@ -466,21 +445,18 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "ModifiedBy")
                         .WithMany()
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("KapitalBerdsk.Web.Classes.Models.ApplicationUser", b =>
                 {
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedByMe")
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CreatedById");
 
                     b.HasOne("KapitalBerdsk.Web.Classes.Models.ApplicationUser", "ModifiedBy")
                         .WithMany("ModifiedByMe")
-                        .HasForeignKey("ModifiedById")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModifiedById");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
