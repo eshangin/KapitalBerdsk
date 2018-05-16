@@ -41,6 +41,9 @@ namespace KapitalBerdsk.Web.Classes.Data
             builder.Entity<Employee>().HasIndex(u => u.FullName).IsUnique();
             builder.Entity<BuildingObject>().HasIndex(u => u.Name).IsUnique();
             builder.Entity<Organization>().HasIndex(u => u.Name).IsUnique();
+
+            builder.Entity<ApplicationUser>().HasOne(u => u.CreatedBy).WithMany(u => u.CreatedByMe);
+            builder.Entity<ApplicationUser>().HasOne(u => u.ModifiedBy).WithMany(u => u.ModifiedByMe);
         }
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -74,11 +77,13 @@ namespace KapitalBerdsk.Web.Classes.Data
                     if (entity.State == EntityState.Added)
                     {
                         auditable.CreatedById = currentUserId;
+                        auditable.ModifiedById = currentUserId;
                         auditable.DateCreated = DateTime.UtcNow;
                         auditable.DateUpdated = auditable.DateCreated;
                     }
                     else if (entity.State == EntityState.Modified)
                     {
+                        auditable.ModifiedById = currentUserId;
                         auditable.DateUpdated = DateTime.UtcNow;
                     }
                 }

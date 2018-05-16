@@ -9,5 +9,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Interfaces
         DateTime DateUpdated { get; set; }
         string CreatedById { get; set; }
         ApplicationUser CreatedBy { get; set; }
+        string ModifiedById { get; set; }
+        ApplicationUser ModifiedBy { get; set; }
     }
 }

@@ -42,5 +42,7 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
+        public string ModifiedById { get; set; }
+        public ApplicationUser ModifiedBy { get; set; }
     }
 }

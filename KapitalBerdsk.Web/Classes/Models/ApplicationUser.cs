@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,5 +13,10 @@ namespace KapitalBerdsk.Web.Classes.Models
 
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
+        public string ModifiedById { get; set; }
+        public ApplicationUser ModifiedBy { get; set; }
+
+        public List<ApplicationUser> CreatedByMe { get; set; }
+        public List<ApplicationUser> ModifiedByMe { get; set; }
     }
 }
