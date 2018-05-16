@@ -9,5 +9,8 @@ namespace KapitalBerdsk.Web.Classes.Models
     {
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
+
+        public string CreatedById { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
     }
 }

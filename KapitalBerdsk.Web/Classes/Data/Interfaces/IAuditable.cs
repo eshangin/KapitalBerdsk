@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KapitalBerdsk.Web.Classes.Models;
+using System;
 
 namespace KapitalBerdsk.Web.Classes.Data.Interfaces
 {
@@ -6,5 +7,7 @@ namespace KapitalBerdsk.Web.Classes.Data.Interfaces
     {
         DateTime DateCreated { get; set; }
         DateTime DateUpdated { get; set; }
+        string CreatedById { get; set; }
+        ApplicationUser CreatedBy { get; set; }
     }
 }
