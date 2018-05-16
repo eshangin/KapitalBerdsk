@@ -25,8 +25,11 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
 
+        [Required]
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
+
+        [Required]
         public string ModifiedById { get; set; }
         public ApplicationUser ModifiedBy { get; set; }
     }

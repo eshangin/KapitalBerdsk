@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -11,8 +12,11 @@ namespace KapitalBerdsk.Web.Classes.Models
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
 
+        [Required]
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
+
+        [Required]
         public string ModifiedById { get; set; }
         public ApplicationUser ModifiedBy { get; set; }
 
