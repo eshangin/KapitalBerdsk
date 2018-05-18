@@ -45,6 +45,7 @@ namespace KapitalBerdsk.Web.Classes.Data
             builder.Entity<Organization>().HasIndex(u => u.Name).IsUnique();
 
             builder.Entity<FundsFlow>().Property(u => u.OutgoType).HasDefaultValue(OutgoType.Regular);
+            builder.Entity<BuildingObject>().Property(u => u.Status).HasDefaultValue(BuildingObjectStatus.Active);
 
             builder.Entity<ApplicationUser>().HasOne(u => u.CreatedBy).WithMany(u => u.CreatedByMe);
             builder.Entity<ApplicationUser>().HasOne(u => u.ModifiedBy).WithMany(u => u.ModifiedByMe);

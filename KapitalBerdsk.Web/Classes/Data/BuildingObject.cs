@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Models;
 
@@ -21,6 +22,8 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DateTime ContractDateEnd { get; set; }
 
         public bool IsClosed { get; set; }
+
+        public BuildingObjectStatus Status { get; set; }
 
         public List<PdSection> PdSections { get; set; }
 
