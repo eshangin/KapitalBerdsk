@@ -107,11 +107,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                                     emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
                 Id = emp.Id,
                 BuildingObjects = combined,
-                EmployeePayrolls = emp.EmployeePayrolls.Select(item => new EmployeePayrollModel
+                MonthlyEmployeePayrolls = emp.EmployeePayrolls.Select(item => new MonthlyEmployeePayrollModel
                 {
-                    Id = item.Id,
-                    Value = item.Value,
-                    Date = item.DateCreated
+                    Accured = item.Value,
+                    Issued = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Salary).Sum(ff => ff.Outgo.Value),
+                    Year = item.DateCreated.Year,
+                    Month = item.DateCreated.Month
                 })
             };
 

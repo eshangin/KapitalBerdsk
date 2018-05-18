@@ -34,17 +34,17 @@
                 <th></th>
                 <th>
                     <span>Начислено</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Accrued) + Model.EmployeePayrolls.Sum(item => item.Value))</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Accrued) + Model.MonthlyEmployeePayrolls.Sum(item => item.Accured))</span>
                     <span class="clearfix"></span>
                 </th>
                 <th>
                     <span>Выдано</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @Model.BuildingObjects.Sum(item => item.Issued)</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Issued) + Model.MonthlyEmployeePayrolls.Sum(item => item.Issued))</span>
                     <span class="clearfix"></span>
                 </th>
                 <th>
                     <span>Остаток</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @Model.BuildingObjects.Sum(item => item.Balance)</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Balance) + Model.MonthlyEmployeePayrolls.Sum(item => item.Balance))</span>
                     <span class="clearfix"></span>
                 </th>
             </tr>
@@ -53,17 +53,15 @@
             <tr class="active">
                 <td colspan="4">Начисления</td>
             </tr>
-            @foreach (var item in Model.EmployeePayrolls)
+            @foreach (var item in Model.MonthlyEmployeePayrolls.OrderByDescending(el => el.Year).ThenByDescending(el => el.Month))
             {
                 <tr>
                     <td>
-                        @item.Date.ToString("MMMM yyyy")
+                        @(new DateTime(item.Year, item.Month, 1).ToString("MMMM yyyy"))
                     </td>
-                    <td>
-                        @item.Value
-                    </td>
-                    <td></td>
-                    <td></td>
+                    <td>@item.Accured</td>
+                    <td>@item.Issued</td>
+                    <td>@item.Balance</td>
                 </tr>
             }
             <tr class="active">
