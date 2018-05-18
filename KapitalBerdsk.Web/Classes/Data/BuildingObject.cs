@@ -27,6 +27,9 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public List<FundsFlow> FundsFlows { get; set; }
 
+        public int? ResponsibleEmployeeId { get; set; }
+        public Employee ResponsibleEmployee { get; set; }
+
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
 
