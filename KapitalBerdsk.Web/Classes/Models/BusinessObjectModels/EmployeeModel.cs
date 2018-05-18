@@ -12,5 +12,9 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "ФИО")]
         public string FullName { get; set; }
+
+        [MaxLength(256)]
+        [EmailAddress(ErrorMessage = Resources.ResourceKeys.EmailInvalid)]
+        public string Email { get; set; }
     }
 }

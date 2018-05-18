@@ -10,6 +10,8 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "ФИО")]
         public string FullName { get; set; }
 
+        public string Email { get; set; }
+
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Оклад")]
         public decimal Salary { get; set; }

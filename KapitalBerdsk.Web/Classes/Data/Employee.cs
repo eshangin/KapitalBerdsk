@@ -16,6 +16,9 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public decimal? Salary { get; set; }
 
+        [MaxLength(256)]
+        public string Email { get; set; }
+
         public int OrderNumber { get; set; }
 
         public List<PdSection> PdSections { get; set; }

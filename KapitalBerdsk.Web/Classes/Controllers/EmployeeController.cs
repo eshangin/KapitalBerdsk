@@ -29,6 +29,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .Include(item => item.PdSections)
                 .Include(item => item.FundsFlows)
                 .OrderBy(item => item.OrderNumber)
+                .ThenByDescending(item => item.Id)
                 .ToListAsync();
 
             var model = from item in employees
@@ -45,7 +46,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                             Salary = item.Salary.ToDecimal(),
                             Accrued = accured,
                             Balance = accured - outgo,
-                            AccountableBalance = accountable - writeOffAccountable
+                            AccountableBalance = accountable - writeOffAccountable,
+                            Email = item.Email
                         };
 
             return View(model);
@@ -102,6 +104,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = new EmployeeDetailsModel
             {
                 FullName = emp.FullName,
+                Email = emp.Email,
                 Salary = emp.Salary.ToDecimal(),
                 AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
                                     emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
@@ -140,7 +143,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 await _context.Employees.AddAsync(new Employee
                 {
                     FullName = model.FullName,
-                    Salary = model.Salary
+                    Salary = model.Salary,
+                    Email = model.Email
                 });
                 await _context.SaveChangesAsync();
 
@@ -163,6 +167,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 FullName = emp.FullName,
                 Salary = emp.Salary,
+                Email = emp.Email,
                 Id = emp.Id
             };
             return View(model);
@@ -184,6 +189,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
                 emp.FullName = model.FullName;
                 emp.Salary = model.Salary;
+                emp.Email = model.Email;
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
