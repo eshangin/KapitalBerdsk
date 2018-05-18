@@ -73,7 +73,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             var issuedItems = (
                 from ff in emp.FundsFlows
-                where ff.Outgo != null
+                where ff.Outgo != null &&
+                        ff.OutgoType == OutgoType.Regular
                 group ff by ff.BuildingObjectId into g
                 select new
                 {
@@ -101,6 +102,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 FullName = emp.FullName,
                 Salary = emp.Salary.ToDecimal(),
+                AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
+                                    emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
                 Id = emp.Id,
                 BuildingObjects = combined
             };

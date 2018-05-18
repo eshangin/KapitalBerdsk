@@ -19,6 +19,9 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Оклад")]
         public decimal Salary { get; set; }
 
+        [Display(Name = "Подотчет")]
+        public decimal AccountableBalance { get; set; }
+
         public string FullName { get; set; }
 
         public IEnumerable<BuildingObjectDetail> BuildingObjects { get; set; }
