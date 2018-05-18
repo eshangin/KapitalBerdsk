@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Объекты";
+    var inProgressObjects = Model.Where(el => el.Status != KapitalBerdsk.Web.Classes.Data.Enums.BuildingObjectStatus.Closed);
+    var closedObjects = Model.Where(el => el.Status == KapitalBerdsk.Web.Classes.Data.Enums.BuildingObjectStatus.Closed);
 }
 
 <h2>
@@ -40,36 +42,75 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaidByCustomer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CostPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RealPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContractDateStart)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContractDateEnd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in inProgressObjects)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaidByCustomer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RealPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContractDateStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContractDateEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                </td>
+            </tr>
+        }
+        @if (closedObjects.Any())
+        {
+            <tr class="active">
+                <td colspan="9">Закрытые</td>
+            </tr>
+            @foreach (var item in closedObjects)
+            {
+                <tr>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaidByCustomer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CostPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RealPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContractDateStart)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContractDateEnd)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                    </td>
+                </tr>
+            }
+        }
     </tbody>
 </table>
