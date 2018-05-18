@@ -34,7 +34,7 @@
                 @Html.DisplayNameFor(model => model.ContractDateEnd)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsClosed)
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -64,7 +64,7 @@
                 @Html.DisplayFor(modelItem => item.ContractDateEnd)
             </td>
             <td>
-                @(item.IsClosed ? "Закрыт" : "В работе")
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
                 <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>

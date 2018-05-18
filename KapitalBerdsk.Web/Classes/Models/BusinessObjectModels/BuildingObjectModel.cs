@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
@@ -38,7 +39,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public DateTime? ContractDateEnd { get; set; }
 
         [Display(Name = "Статус")]
-        public bool IsClosed { get; set; }
+        public BuildingObjectStatus Status { get; set; }
 
         public IEnumerable<PdSectionModel> PdSections { get; set; }
 

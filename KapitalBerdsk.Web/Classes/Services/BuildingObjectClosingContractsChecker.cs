@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -68,7 +69,7 @@ namespace KapitalBerdsk.Web.Classes.Services
 
             var items = await (
                 from bo in _context.BuildingObjects
-                where !bo.IsClosed &&
+                where bo.Status == BuildingObjectStatus.Active &&
                       bo.ContractDateEnd >= today &&
                       bo.ContractDateEnd <= tillDate
                 orderby bo.ContractDateEnd

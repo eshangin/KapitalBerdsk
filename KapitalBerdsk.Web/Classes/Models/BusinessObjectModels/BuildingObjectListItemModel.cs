@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KapitalBerdsk.Web.Classes.Data.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
@@ -32,6 +33,6 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public decimal PaidByCustomer { get; set; }
 
         [Display(Name = "Статус")]
-        public bool IsClosed { get; set; }
+        public BuildingObjectStatus Status { get; set; }
     }
 }

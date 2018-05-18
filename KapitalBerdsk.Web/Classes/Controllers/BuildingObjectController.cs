@@ -39,7 +39,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Price = item.Price,
                 RealPrice = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value),
                 PaidByCustomer = item.FundsFlows.Where(ff => ff.Income.HasValue).Sum(ff => ff.Income.Value),
-                IsClosed = item.IsClosed
+                Status = item.Status
             });
 
             return View(model);
@@ -66,7 +66,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 ContractDateStart = el.ContractDateStart,
                 ContractDateEnd = el.ContractDateEnd,
                 Price = el.Price,
-                IsClosed = el.IsClosed
+                Status = el.Status
             };
             return View(model);
         }
@@ -99,7 +99,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Name = model.Name,
                     ContractDateEnd = model.ContractDateEnd.Value,
                     ContractDateStart = model.ContractDateStart.Value,
-                    IsClosed = model.IsClosed,
+                    Status = model.Status,
                     Price = model.Price.Value
                 });
                 await _context.SaveChangesAsync();
@@ -128,7 +128,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 ContractDateEnd = el.ContractDateEnd,
                 ContractDateStart = el.ContractDateStart,
                 Price = el.Price,
-                IsClosed = el.IsClosed,
+                Status = el.Status,
                 Id = el.Id,
                 PdSections = el.PdSections.Select(item => new PdSectionModel
                 {
@@ -156,7 +156,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 BuildingObject el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == model.Id);
                 el.Name = model.Name;
-                el.IsClosed = model.IsClosed;
+                el.Status = model.Status;
                 el.Price = model.Price.Value;
                 el.ContractDateStart = model.ContractDateStart.Value;
                 el.ContractDateEnd = model.ContractDateEnd.Value;

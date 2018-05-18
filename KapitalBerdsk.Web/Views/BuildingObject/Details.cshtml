@@ -20,7 +20,7 @@
                 <dt>Окончание контракта</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.ContractDateEnd)</dd>
                 <dt>Статус</dt>
-                <dd>@(Model.IsClosed ? "Закрыто" : "В работе")</dd>
+                <dd>@Html.DisplayFor(modelItem => Model.Status)</dd>
             </dl>
         </div>
     </div>

@@ -21,8 +21,6 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public DateTime ContractDateEnd { get; set; }
 
-        public bool IsClosed { get; set; }
-
         public BuildingObjectStatus Status { get; set; }
 
         public List<PdSection> PdSections { get; set; }
