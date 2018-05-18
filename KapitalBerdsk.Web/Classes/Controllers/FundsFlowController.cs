@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
@@ -24,13 +25,20 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         // GET: FundsFlow
         public async Task<ActionResult> Index()
         {
-            var items = (await _context.FundsFlows
-                .Include(item => item.Employee)
-                .Include(item => item.BuildingObject)
-                .Include(item => item.Organization)
-                .OrderByDescending(item => item.Date)
-                .ThenByDescending(item => item.Id)
-                .ToListAsync()).Select(item => new FundsFlowListItemModel
+            IQueryable<FundsFlow> query = from ff in _context.FundsFlows
+                                                        .Include(item => item.Employee)
+                                                        .Include(item => item.BuildingObject)
+                                                        .Include(item => item.Organization)
+                                          orderby ff.Date descending, ff.Id descending
+                                          select ff;
+
+            if (!User.IsInRole(Constants.Roles.Admin))
+            {
+                string userId = GetCurrentUserId();
+                query = query.Where(ff => ff.CreatedById == userId);
+            }
+
+            var items = (await query.ToListAsync()).Select(item => new FundsFlowListItemModel
                 {
                     Date = item.Date,
                     Description = item.Description,
@@ -70,6 +78,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
 
             return View(model);
+        }
+
+        private string GetCurrentUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
         // GET: FundsFlow/Create
