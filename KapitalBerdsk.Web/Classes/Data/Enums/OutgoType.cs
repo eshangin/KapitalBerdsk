@@ -5,7 +5,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data.Enums
 {
-    public enum OutgoType
+    public enum OutgoType : byte
     {
         [Display(Name = "Обычный")]
         Regular = 1,

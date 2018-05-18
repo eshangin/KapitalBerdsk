@@ -5,7 +5,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data.Enums
 {
-    public enum PaymentType
+    public enum PaymentType : byte
     {
         [Display(Name = "Нал")]
         Cash = 1,

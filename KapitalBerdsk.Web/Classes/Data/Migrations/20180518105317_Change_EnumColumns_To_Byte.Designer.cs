@@ -12,9 +12,10 @@ using System;
 namespace KapitalBerdsk.Web.Classes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180518105317_Change_EnumColumns_To_Byte")]
+    partial class Change_EnumColumns_To_Byte
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
