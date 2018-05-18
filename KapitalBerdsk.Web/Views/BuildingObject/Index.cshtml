@@ -30,6 +30,9 @@
                 @Html.DisplayNameFor(model => model.RealPrice)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ResponsibleEmployeeName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ContractDateStart)
             </th>
             <th>
@@ -44,6 +47,46 @@
     <tbody>
         @foreach (var item in inProgressObjects)
         {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaidByCustomer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CostPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RealPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContractDateStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContractDateEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+            </td>
+        </tr>
+        }
+        @if (closedObjects.Any())
+        {
+            <tr class="active">
+                <td colspan="9">Закрытые</td>
+            </tr>
+            @foreach (var item in closedObjects)
+            {
             <tr>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
@@ -61,6 +104,9 @@
                     @Html.DisplayFor(modelItem => item.RealPrice)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.ContractDateStart)
                 </td>
                 <td>
@@ -73,43 +119,6 @@
                     <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
                 </td>
             </tr>
-        }
-        @if (closedObjects.Any())
-        {
-            <tr class="active">
-                <td colspan="9">Закрытые</td>
-            </tr>
-            @foreach (var item in closedObjects)
-            {
-                <tr>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PaidByCustomer)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CostPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RealPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ContractDateStart)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ContractDateEnd)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-                    </td>
-                </tr>
             }
         }
     </tbody>

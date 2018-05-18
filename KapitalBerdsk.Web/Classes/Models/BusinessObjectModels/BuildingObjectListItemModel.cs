@@ -34,5 +34,8 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 
         [Display(Name = "Статус")]
         public BuildingObjectStatus Status { get; set; }
+
+        [Display(Name = "Ответственный")]
+        public string ResponsibleEmployeeName { get; set; }
     }
 }

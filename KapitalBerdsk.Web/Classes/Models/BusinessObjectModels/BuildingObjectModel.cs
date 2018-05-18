@@ -38,11 +38,16 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [DisplayFormat(DataFormatString = "{0: dd.MM.yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? ContractDateEnd { get; set; }
 
+        [Display(Name = "Ответственный")]
+        public int? ResponsibleEmployeeId { get; set; }
+
         [Display(Name = "Статус")]
         public BuildingObjectStatus Status { get; set; }
 
         public IEnumerable<PdSectionModel> PdSections { get; set; }
 
         public IEnumerable<SelectListItem> Statuses { get; set; }
+
+        public IEnumerable<SelectListItem> Employees { get; set; }
     }
 }

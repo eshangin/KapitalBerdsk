@@ -6,6 +6,7 @@ using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Classes.Controllers
@@ -26,6 +27,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var objects = await _context.BuildingObjects
                 .Include(item => item.PdSections)
                 .Include(item => item.FundsFlows)
+                .Include(item => item.ResponsibleEmployee)
                 .OrderByDescending(item => item.Id)
                 .ToListAsync();
 
@@ -39,7 +41,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Price = item.Price,
                 RealPrice = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value),
                 PaidByCustomer = item.FundsFlows.Where(ff => ff.Income.HasValue).Sum(ff => ff.Income.Value),
-                Status = item.Status
+                Status = item.Status,
+                ResponsibleEmployeeName = item.ResponsibleEmployee?.FullName
             });
 
             return View(model);
@@ -72,11 +75,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         }
 
         // GET: BuildingObject/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             var model = new BuildingObjectModel()
             {
-                ContractDateStart = DateTime.UtcNow.AddHours(7)
+                ContractDateStart = DateTime.UtcNow.AddHours(7),
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
+                    new SelectListItem
+                    {
+                        Text = item.FullName,
+                        Value = item.Id.ToString()
+                    })
             };
 
             return View(model);
@@ -100,12 +109,19 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     ContractDateEnd = model.ContractDateEnd.Value,
                     ContractDateStart = model.ContractDateStart.Value,
                     Status = model.Status,
-                    Price = model.Price.Value
+                    Price = model.Price.Value,
+                    ResponsibleEmployeeId = model.ResponsibleEmployeeId
                 });
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
+
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            {
+                Text = item.FullName,
+                Value = item.Id.ToString()
+            });
 
             return View(model);
         }
@@ -136,7 +152,14 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Id = item.Id,
                     Price = item.Price,
                     EmployeeName = item.Employee.FullName
-                })
+                }),
+                ResponsibleEmployeeId = el.ResponsibleEmployeeId,
+                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
+                    new SelectListItem
+                    {
+                        Text = item.FullName,
+                        Value = item.Id.ToString()
+                    })
             };
             return View(model);
         }
@@ -160,6 +183,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 el.Price = model.Price.Value;
                 el.ContractDateStart = model.ContractDateStart.Value;
                 el.ContractDateEnd = model.ContractDateEnd.Value;
+                el.ResponsibleEmployeeId = model.ResponsibleEmployeeId;
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -173,6 +197,13 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Price = item.Price,
                     EmployeeName = item.Employee.FullName
                 });
+
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            {
+                Text = item.FullName,
+                Value = item.Id.ToString()
+            });
+
             return View(model);
         }
     }
