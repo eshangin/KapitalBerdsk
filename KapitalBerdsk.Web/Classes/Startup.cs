@@ -56,6 +56,7 @@ namespace KapitalBerdsk.Web.Classes
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();
             services.AddTransient<IPingWebAppService, PingWebAppService>();
+            services.AddTransient<IPayEmployeePayrollService, PayEmployeePayrollService>();
 
             var generalOptions = new GeneralOptions();
             Configuration.GetSection("GeneralOptions").Bind(generalOptions);

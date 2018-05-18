@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Models;
+using KapitalBerdsk.Web.Classes.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -14,7 +15,8 @@ namespace KapitalBerdsk.Web.Classes.Data
             ApplicationDbContext context, 
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
-            ILogger logger)
+            ILogger logger,
+            IPayEmployeePayrollService payEmployeePayrollService)
         {
             if (!context.Users.Any())
             {
@@ -42,17 +44,7 @@ namespace KapitalBerdsk.Web.Classes.Data
 
             if (!context.EmployeePayrolls.Any())
             {
-                List<Employee> employees = await context.Employees.Where(e => e.Salary.HasValue &&
-                                                                                e.Salary.Value > 0).ToListAsync();
-                foreach (var emp in employees)
-                {
-                    await context.EmployeePayrolls.AddAsync(new EmployeePayroll()
-                    {
-                        EmployeeId = emp.Id,
-                        Value = emp.Salary.Value
-                    });
-                }
-                await context.SaveChangesAsync();
+                await payEmployeePayrollService.PayToAllEmployees();
             }
         }
 

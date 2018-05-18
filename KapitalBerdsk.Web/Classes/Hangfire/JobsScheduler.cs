@@ -20,6 +20,10 @@ namespace KapitalBerdsk.Web.Classes.Hangfire
             RecurringJob.AddOrUpdate<IPingWebAppService>("Ping web app request",
                 (service) => service.Ping(),
                 "0/5 * * * *");
+
+            RecurringJob.AddOrUpdate<IPayEmployeePayrollService>("Pay employee payroll",
+                (service) => service.PayToAllEmployees(),
+                "0 0 1 * *");
         }
     }
 }

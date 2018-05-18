@@ -1,6 +1,7 @@
 ﻿using System;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Models;
+using KapitalBerdsk.Web.Classes.Services;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -23,10 +24,12 @@ namespace KapitalBerdsk.Web.Classes
                 var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                 var dbInitializerLogger = services.GetRequiredService<ILogger<DbInitializer>>();
                 var roleManager = services.GetService<RoleManager<IdentityRole>>();
+                var payEmployeePayrollService = services.GetService<IPayEmployeePayrollService>();
 
                 try
                 {
-                    new DbInitializer().Initialize(context, userManager, roleManager, dbInitializerLogger).Wait();
+                    new DbInitializer().Initialize(context, userManager, roleManager, 
+                        dbInitializerLogger, payEmployeePayrollService).Wait();
                 }
                 catch (Exception ex)
                 {
