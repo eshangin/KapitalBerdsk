@@ -26,6 +26,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var objects = await _context.BuildingObjects
                 .Include(item => item.PdSections)
                 .Include(item => item.FundsFlows)
+                .OrderByDescending(item => item.Id)
                 .ToListAsync();
 
             var model = objects.Select(item => new BuildingObjectListItemModel
