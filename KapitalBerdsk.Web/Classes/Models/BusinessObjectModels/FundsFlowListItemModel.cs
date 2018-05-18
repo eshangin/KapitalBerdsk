@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 {
@@ -37,6 +38,6 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public int BuildingObjectId { get; set; }
 
         [Display(Name = "Нал/Безнал")]
-        public FundsFlow.PaymentType PayType { get; set; }
+        public PaymentType PayType { get; set; }
     }
 }

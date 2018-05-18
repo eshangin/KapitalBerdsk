@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Models;
 
@@ -7,15 +8,6 @@ namespace KapitalBerdsk.Web.Classes.Data
 {
     public class FundsFlow : IAuditable
     {
-        public enum PaymentType
-        {
-            [Display(Name = "Нал")]
-            Cash = 1,
-
-            [Display(Name = "Безнал")]
-            NonCash = 2
-        }
-
         public int Id { get; set; }
 
         public DateTime Date { get; set; }
@@ -25,6 +17,8 @@ namespace KapitalBerdsk.Web.Classes.Data
         public decimal? Income { get; set; }
 
         public decimal? Outgo { get; set; }
+
+        public OutgoType OutgoType { get; set; }
 
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }

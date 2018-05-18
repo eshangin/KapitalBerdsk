@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Models;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,8 @@ namespace KapitalBerdsk.Web.Classes.Data
             builder.Entity<Employee>().HasIndex(u => u.FullName).IsUnique();
             builder.Entity<BuildingObject>().HasIndex(u => u.Name).IsUnique();
             builder.Entity<Organization>().HasIndex(u => u.Name).IsUnique();
+
+            builder.Entity<FundsFlow>().Property(u => u.OutgoType).HasDefaultValue(OutgoType.Regular);
 
             builder.Entity<ApplicationUser>().HasOne(u => u.CreatedBy).WithMany(u => u.CreatedByMe);
             builder.Entity<ApplicationUser>().HasOne(u => u.ModifiedBy).WithMany(u => u.ModifiedByMe);

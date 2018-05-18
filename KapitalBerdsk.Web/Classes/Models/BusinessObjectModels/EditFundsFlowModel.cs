@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
@@ -27,8 +28,11 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Расход")]
         public decimal? Outgo { get; set; }
 
+        [Display(Name = "Тип расходов")]
+        public OutgoType OutgoType { get; set; }
+
         [Display(Name = "Нал/Безнал")]
-        public FundsFlow.PaymentType PayType { get; set; }
+        public PaymentType PayType { get; set; }
 
         [Display(Name = "Сотрудник")]
         public int? EmployeeId { get; set; }

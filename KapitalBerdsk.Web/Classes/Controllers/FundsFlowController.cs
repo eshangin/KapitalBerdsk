@@ -122,7 +122,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     OrganizationId = model.OrganizationId,
                     PayType = model.PayType,
                     Income = model.Income,
-                    Outgo = model.Outgo
+                    Outgo = model.Outgo,
+                    OutgoType = model.OutgoType
                 });
                 await _context.SaveChangesAsync();
 
@@ -161,6 +162,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 OrganizationId = ff.OrganizationId,
                 Income = ff.Income,
                 Outgo = ff.Outgo,
+                OutgoType = ff.OutgoType,
                 PayType = ff.PayType,
                 Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
                 {
@@ -205,6 +207,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 ff.OrganizationId = model.OrganizationId;
                 ff.Income = model.Income;
                 ff.Outgo = model.Outgo;
+                ff.OutgoType = model.OutgoType;
                 ff.PayType = model.PayType;
                 await _context.SaveChangesAsync();
 
