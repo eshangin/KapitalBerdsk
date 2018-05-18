@@ -25,5 +25,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         public string FullName { get; set; }
 
         public IEnumerable<BuildingObjectDetail> BuildingObjects { get; set; }
+
+        public IEnumerable<EmployeePayrollModel> EmployeePayrolls { get; set; }
     }
 }

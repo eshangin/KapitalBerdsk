@@ -55,6 +55,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         public async Task<ActionResult> Details(int id)
         {
             Employee emp = await _context.Employees
+                .Include(item => item.EmployeePayrolls)
                 .Include(item => item.FundsFlows)
                 .ThenInclude(item => item.BuildingObject)
                 .Include(item => item.PdSections)
@@ -105,7 +106,13 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
                                     emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
                 Id = emp.Id,
-                BuildingObjects = combined
+                BuildingObjects = combined,
+                EmployeePayrolls = emp.EmployeePayrolls.Select(item => new EmployeePayrollModel
+                {
+                    Id = item.Id,
+                    Value = item.Value,
+                    Date = item.DateCreated
+                })
             };
 
             return View(model);

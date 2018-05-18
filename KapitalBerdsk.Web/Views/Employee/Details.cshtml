@@ -31,10 +31,10 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Название</th>
+                <th></th>
                 <th>
                     <span>Начислено</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @Model.BuildingObjects.Sum(item => item.Accrued)</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Accrued) + Model.EmployeePayrolls.Sum(item => item.Value))</span>
                     <span class="clearfix"></span>
                 </th>
                 <th>
@@ -53,6 +53,19 @@
             <tr class="active">
                 <td colspan="4">Начисления</td>
             </tr>
+            @foreach (var item in Model.EmployeePayrolls)
+            {
+                <tr>
+                    <td>
+                        @item.Date.ToString("MMMM yyyy")
+                    </td>
+                    <td>
+                        @item.Value
+                    </td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            }
             <tr class="active">
                 <td colspan="4">Объекты</td>
             </tr>

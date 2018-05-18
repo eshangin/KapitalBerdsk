@@ -14,6 +14,9 @@ namespace KapitalBerdsk.Web.Classes.Data.Enums
         Accountable = 2,
 
         [Display(Name = "Списать с подотчета")]
-        WriteOffAccountable = 3
+        WriteOffAccountable = 3,
+
+        [Display(Name = "Оклад")]
+        Salary = 4
     }
 }
