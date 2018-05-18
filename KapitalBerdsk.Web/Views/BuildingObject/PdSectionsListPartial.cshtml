@@ -1,8 +1,8 @@
-﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectModel
+﻿@model Tuple<int, IEnumerable<KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.PdSectionModel>>
 
 <h4>
     Разделы ПД
-    <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Create" asp-route-objectId="@Model.Id">добавить</a>
+    <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Create" asp-route-objectId="@Model.Item1">добавить</a>
 </h4>
 <table class="table table-bordered">
     <thead>
@@ -14,7 +14,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model.PdSections)
+    @foreach (var item in Model.Item2)
     {
         <tr>
             <td>

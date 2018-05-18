@@ -52,10 +52,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var el = await _context.BuildingObjects
+                    .Include(item => item.ResponsibleEmployee)
                     .Include(item => item.PdSections)
                     .ThenInclude(item => item.Employee)
                     .FirstOrDefaultAsync(item => item.Id == id);
-            var model = new BuildingObjectModel
+            var model = new BuildingObjectDetailsModel
             {
                 Name = el.Name,
                 Id = el.Id,
@@ -69,7 +70,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 ContractDateStart = el.ContractDateStart,
                 ContractDateEnd = el.ContractDateEnd,
                 Price = el.Price,
-                Status = el.Status
+                Status = el.Status,
+                ResponsibleEmployeeName = el.ResponsibleEmployee?.FullName
             };
             return View(model);
         }

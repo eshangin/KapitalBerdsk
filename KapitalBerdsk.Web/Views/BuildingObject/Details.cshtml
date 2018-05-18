@@ -1,4 +1,4 @@
-﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectModel
+﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectDetailsModel
 
 @{
     ViewData["Title"] = Model.Name;
@@ -15,6 +15,8 @@
             <dl class="dl-horizontal m-b-0">
                 <dt title="Стоимость (цена) контракта">Стоимость (цена) контракта</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.Price)</dd>
+                <dt>@Html.DisplayNameFor(modelItem => Model.ResponsibleEmployeeName)</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.ResponsibleEmployeeName)</dd>
                 <dt>Начало контракта</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.ContractDateStart)</dd>
                 <dt>Окончание контракта</dt>
@@ -25,6 +27,6 @@
         </div>
     </div>
     <div class="col-md-8">
-        @Html.Partial("PdSectionsListPartial", Model)
+        @Html.Partial("PdSectionsListPartial", new Tuple<int, IEnumerable<PdSectionModel>>(Model.Id, Model.PdSections))
     </div>
 </div>
