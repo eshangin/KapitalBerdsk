@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Models;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,7 @@ namespace KapitalBerdsk.Web.Classes.Data
                 await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Admin));
                 await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Manager));
 
-                var users = await context.Users.ToListAsync();
+                List<ApplicationUser> users = await context.Users.ToListAsync();
                 foreach (var u in users)
                 {
                     if (u.Email == "admin@admin.com")
@@ -37,6 +38,21 @@ namespace KapitalBerdsk.Web.Classes.Data
                         await userManager.AddToRoleAsync(u, Constants.Roles.Manager);
                     }
                 }
+            }
+
+            if (!context.EmployeePayrolls.Any())
+            {
+                List<Employee> employees = await context.Employees.Where(e => e.Salary.HasValue &&
+                                                                                e.Salary.Value > 0).ToListAsync();
+                foreach (var emp in employees)
+                {
+                    await context.EmployeePayrolls.AddAsync(new EmployeePayroll()
+                    {
+                        EmployeeId = emp.Id,
+                        Value = emp.Salary.Value
+                    });
+                }
+                await context.SaveChangesAsync();
             }
         }
 

@@ -64,6 +64,11 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         private string GetCurrentUserId()
         {
+            if (_httpContextAccessor.HttpContext == null)
+            {
+                return null;
+            }
+
             return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
