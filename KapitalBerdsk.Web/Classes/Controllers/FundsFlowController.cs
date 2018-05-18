@@ -43,7 +43,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     EmployeeId = item.EmployeeId,
                     OrganizationName = item.Organization?.Name,
                     OrganizationId = item.OrganizationId,
-                    BuildingObjectName = item.BuildingObject.Name,
+                    BuildingObjectName = item.BuildingObject?.Name,
                     BuildingObjectId = item.BuildingObjectId
                 });
 
@@ -116,7 +116,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 await _context.FundsFlows.AddAsync(new FundsFlow
                 {
-                    BuildingObjectId = model.BuildingObjectId.Value,
+                    BuildingObjectId = model.BuildingObjectId,
                     Date = model.Date.Value,
                     Description = model.Description,
                     EmployeeId = model.EmployeeId,
@@ -202,7 +202,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == model.Id);
                 ff.Date = model.Date.Value;
-                ff.BuildingObjectId = model.BuildingObjectId.Value;
+                ff.BuildingObjectId = model.BuildingObjectId;
                 ff.Description = model.Description;
                 ff.EmployeeId = model.EmployeeId;
                 ff.OrganizationId = model.OrganizationId;
@@ -255,7 +255,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     EmployeeId = item.EmployeeId,
                     OrganizationName = item.Organization == null ? null : item.Organization.Name,
                     OrganizationId = item.OrganizationId,
-                    BuildingObjectName = item.BuildingObject.Name,
+                    BuildingObjectName = item.BuildingObject == null ? null : item.BuildingObject.Name,
                     BuildingObjectId = item.BuildingObjectId
                 }).FirstOrDefaultAsync();
 

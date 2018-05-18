@@ -40,7 +40,6 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Организация")]
         public int? OrganizationId { get; set; }
 
-        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Объект")]
         public int? BuildingObjectId { get; set; }
 

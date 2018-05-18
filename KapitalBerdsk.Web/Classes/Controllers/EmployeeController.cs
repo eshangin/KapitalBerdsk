@@ -83,7 +83,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 }).ToList();
 
             var combined = new List<EmployeeDetailsModel.BuildingObjectDetail>();
-            IEnumerable<BuildingObject> combinedBuildingObjects = emp.FundsFlows.Select(ff => ff.BuildingObject)
+            IEnumerable<BuildingObject> combinedBuildingObjects = emp.FundsFlows.Where(ff => ff.BuildingObject != null).Select(ff => ff.BuildingObject)
                 .Union(emp.PdSections.Select(ps => ps.BuildingObject));
             foreach (BuildingObject buildingObject in combinedBuildingObjects)
             {

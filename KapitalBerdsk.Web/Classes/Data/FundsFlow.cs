@@ -23,7 +23,7 @@ namespace KapitalBerdsk.Web.Classes.Data
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
-        public int BuildingObjectId { get; set; }
+        public int? BuildingObjectId { get; set; }
         public BuildingObject BuildingObject { get; set; }
 
         public int? OrganizationId { get; set; }
