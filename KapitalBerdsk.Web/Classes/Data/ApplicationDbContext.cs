@@ -20,6 +20,7 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DbSet<PdSection> PdSections { get; set; }
         public DbSet<FundsFlow> FundsFlows { get; set; }
         public DbSet<Organization> Organizations { get; set; }
+        public DbSet<EmployeePayroll> EmployeePayrolls { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
