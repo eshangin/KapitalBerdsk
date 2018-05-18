@@ -109,6 +109,10 @@
                         </td>
                         <td data-col="Outgo">
                             @Html.DisplayFor(modelItem => item.Outgo)
+                            @if (item.OutgoType == KapitalBerdsk.Web.Classes.Data.Enums.OutgoType.Accountable)
+                            {
+                                <small>(подотчет)</small>
+                            }
                         </td>
                         <td data-col="BuildingObject">
                             <a asp-controller="BuildingObject" asp-action="Details" asp-route-id="@item.BuildingObjectId">

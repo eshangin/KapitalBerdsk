@@ -36,6 +36,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Description = item.Description,
                     Income = item.Income,
                     Outgo = item.Outgo,
+                    OutgoType = item.OutgoType,
                     PayType = item.PayType,
                     Id = item.Id,
                     EmployeeName = item.Employee?.FullName,

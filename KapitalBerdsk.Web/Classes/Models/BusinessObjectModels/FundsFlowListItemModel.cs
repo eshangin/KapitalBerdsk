@@ -22,6 +22,8 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Расход")]
         public decimal? Outgo { get; set; }
 
+        public OutgoType OutgoType { get; set; }
+
         [Display(Name = "Сотрудник")]
         public string EmployeeName { get; set; }
 
