@@ -14,6 +14,9 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Оклад")]
         public decimal Salary { get; set; }
 
+        [Display(Name = "Подотчет")]
+        public decimal AccountableBalance { get; set; }
+
         [Display(Name = "Начислено")]
         public decimal Accrued { get; set; }
 

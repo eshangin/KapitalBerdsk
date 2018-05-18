@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
@@ -33,14 +34,18 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = from item in employees
                         let accured = item.Salary.ToDecimal() + item.PdSections.Sum(s => s.Price)
                         let outgo = item.FundsFlows.Where(ff => ff.Outgo != null &&
+                                                                ff.OutgoType == OutgoType.Regular &&
                                                                 ff.OrganizationId == null).Sum(ff => ff.Outgo.Value)
+                        let accountable = item.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value)
+                        let writeOffAccountable = item.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value)
                         select new EmployeeListItemModel
                         {
                             FullName = item.FullName,
                             Id = item.Id,
                             Salary = item.Salary.ToDecimal(),
                             Accrued = accured,
-                            Balance = accured - outgo
+                            Balance = accured - outgo,
+                            AccountableBalance = accountable - writeOffAccountable
                         };
 
             return View(model);
