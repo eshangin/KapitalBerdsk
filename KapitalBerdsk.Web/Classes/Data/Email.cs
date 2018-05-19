@@ -19,6 +19,7 @@ namespace KapitalBerdsk.Web.Classes.Data
         [Required]
         public string Body { get; set; }
 
+        [Required]
         [MaxLength(256)]
         public string From { get; set; }
 
