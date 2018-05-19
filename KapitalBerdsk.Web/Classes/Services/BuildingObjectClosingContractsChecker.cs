@@ -34,17 +34,31 @@ namespace KapitalBerdsk.Web.Classes.Services
 
             if (items.Any())
             {
+                const string messageSubject = "Окончание контрактов";
                 IList<ApplicationUser> managers = await _userManager.GetUsersInRoleAsync(Constants.Roles.Manager);
-                IEnumerable<string> emails = managers.Select(m => m.Email);
-                string message = BuildMessageBody(items);
-                foreach (string email in emails)
+                IEnumerable<Employee> responsibleEmployees = from item in items
+                                                             where item.ResponsibleEmployee != null
+                                                             select item.ResponsibleEmployee;
+
+                string messageForManagers = BuildMessageBody(items);
+                foreach (ApplicationUser m in managers)
                 {
-                    await _emailSender.AddPendingEmail(email, "Окончание контрактов", message);
+                    await _emailSender.AddPendingEmail(m.Email, messageSubject, messageForManagers);
+                }
+
+                foreach (Employee emp in responsibleEmployees)
+                {
+                    if (!managers.Select(m => m.Email).Contains(emp.Email))
+                    {
+                        IEnumerable<BuildingObject> responsibleFor = items.Where(item => item.ResponsibleEmployeeId == emp.Id);
+                        string messageForResponsible = BuildMessageBody(responsibleFor);
+                        await _emailSender.AddPendingEmail(emp.Email, messageSubject, messageForResponsible);
+                    }
                 }
             }
         }
 
-        private string BuildMessageBody(List<BuildingObject> buildingObjectsWithClosingContracts)
+        private string BuildMessageBody(IEnumerable<BuildingObject> buildingObjectsWithClosingContracts)
         {
             DateTime today = DateTime.UtcNow.AddHours(7).Date;
 
@@ -79,7 +93,7 @@ namespace KapitalBerdsk.Web.Classes.Services
             var tillDate = today.AddDays(7);
 
             var items = await (
-                from bo in _context.BuildingObjects
+                from bo in _context.BuildingObjects.Include(item => item.ResponsibleEmployee)
                 where bo.Status == BuildingObjectStatus.Active &&
                       bo.ContractDateEnd >= today &&
                       bo.ContractDateEnd <= tillDate
