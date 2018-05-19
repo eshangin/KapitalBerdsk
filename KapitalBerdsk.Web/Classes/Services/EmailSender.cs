@@ -38,7 +38,9 @@ namespace KapitalBerdsk.Web.Classes.Services
                 }
             };
 
-            return (await AddPendingEmails(emails)).Single();
+            await AddPendingEmails(emails);
+
+            return emails[0].Id;
         }
 
         public async Task<int> AddPendingEmail(string to, string subject, string body)
