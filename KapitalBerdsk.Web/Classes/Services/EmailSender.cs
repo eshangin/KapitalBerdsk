@@ -26,20 +26,19 @@ namespace KapitalBerdsk.Web.Classes.Services
 
         public async Task<int> AddPendingEmail(string from, string to, string subject, string body)
         {
-            var email = new Email
+            var emails = new List<Email>()
             {
-                Body = body,
-                From = from,
-                ToCsv = to,
-                Subject = subject,
-                Status = Data.Enums.EmailStatus.Pending
+                new Email
+                {
+                    Body = body,
+                    From = from,
+                    ToCsv = to,
+                    Subject = subject,
+                    Status = Data.Enums.EmailStatus.Pending
+                }
             };
-            await _context.Emails.AddAsync(email);
-            await _context.SaveChangesAsync();
 
-            BackgroundJob.Enqueue<IEmailSender>(sender => sender.HandlePendingEmail(email.Id));
-
-            return email.Id;
+            return (await AddPendingEmails(emails)).Single();
         }
 
         public async Task<int> AddPendingEmail(string to, string subject, string body)
@@ -47,11 +46,12 @@ namespace KapitalBerdsk.Web.Classes.Services
             return await AddPendingEmail(null, to, subject, body);
         }
 
-        public async Task AddPendingEmails(IEnumerable<Email> emails)
+        public async Task<IEnumerable<int>> AddPendingEmails(IEnumerable<Email> emails)
         {
             foreach (var email in emails)
             {
                 email.Status = Data.Enums.EmailStatus.Pending;
+                email.From = email.From ?? _smtpOptions.From;
             }
             await _context.Emails.AddRangeAsync(emails);
             await _context.SaveChangesAsync();
@@ -59,7 +59,9 @@ namespace KapitalBerdsk.Web.Classes.Services
             foreach (var email in emails)
             {
                 BackgroundJob.Enqueue<IEmailSender>(sender => sender.HandlePendingEmail(email.Id));
-            }            
+            }
+
+            return emails.Select(item => item.Id);
         }
 
         public async Task HandlePendingEmail(int emailId)
@@ -74,11 +76,6 @@ namespace KapitalBerdsk.Web.Classes.Services
             await _context.SaveChangesAsync();
         }
 
-        private Task SendEmailAsync(string toAddress, string subject, string message)
-        {
-            return SendEmailAsync(null, toAddress, subject, message);
-        }
-
         private Task SendEmailAsync(string from, string toAddress, string subject, string message)
         {
             return SendEmailAsync(from, new List<string>() { toAddress }, subject, message);
@@ -87,7 +84,7 @@ namespace KapitalBerdsk.Web.Classes.Services
         private Task SendEmailAsync(string from, IEnumerable<string> toAddresses, string subject, string message)
         {
             var mailMessage = new MimeMessage();
-            mailMessage.From.Add(new MailboxAddress("", from ?? _smtpOptions.From));
+            mailMessage.From.Add(new MailboxAddress("", from));
             foreach (var to in toAddresses)
             {
                 mailMessage.To.Add(new MailboxAddress("", to));

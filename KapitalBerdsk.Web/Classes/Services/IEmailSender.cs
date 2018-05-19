@@ -8,7 +8,7 @@ namespace KapitalBerdsk.Web.Classes.Services
     {
         Task<int> AddPendingEmail(string from, string to, string subject, string body);
         Task<int> AddPendingEmail(string to, string subject, string body);
-        Task AddPendingEmails(IEnumerable<Email> emails);
+        Task<IEnumerable<int>> AddPendingEmails(IEnumerable<Email> emails);
         Task HandlePendingEmail(int emailId);
     }
 }
