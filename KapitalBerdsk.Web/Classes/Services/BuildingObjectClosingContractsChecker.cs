@@ -28,38 +28,46 @@ namespace KapitalBerdsk.Web.Classes.Services
 
         public async Task Check()
         {
-            var today = DateTime.UtcNow.AddHours(7).Date;
+            DateTime today = DateTime.UtcNow.AddHours(7).Date;
 
-            var items = await GetBuildingObjectWithClosingContracts();
+            List<BuildingObject> items = await GetBuildingObjectWithClosingContracts();
 
             if (items.Any())
             {
-                var managers = await _userManager.GetUsersInRoleAsync(Constants.Roles.Manager);
-                var emails = managers.Select(m => m.Email);
-                string message = "<h3>Приближается срок окончания контрактов:</h3><ul>";
-                foreach (var item in items)
-                {
-                    int dayBefore = (item.ContractDateEnd - today).Days;
-                    string dayBeforeStr;
-                    if (dayBefore.ToString().EndsWith("1"))
-                    {
-                        dayBeforeStr = "день";
-                    }
-                    else if (dayBefore.ToString().EndsWith("2") ||
-                        dayBefore.ToString().EndsWith("3") ||
-                        dayBefore.ToString().EndsWith("4"))
-                    {
-                        dayBeforeStr = "дня";
-                    }
-                    else
-                    {
-                        dayBeforeStr = "дней";
-                    }
-                    message += $"<li><b>{item.Name}</b> - до сдачи <b>{dayBefore} {dayBeforeStr}</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
-                }
-                message += "</ul>";
+                IList<ApplicationUser> managers = await _userManager.GetUsersInRoleAsync(Constants.Roles.Manager);
+                IEnumerable<string> emails = managers.Select(m => m.Email);
+                string message = BuildMessageBody(items);
                 await _emailSender.SendEmailAsync(emails, "Окончание контрактов", message);
             }
+        }
+
+        private string BuildMessageBody(List<BuildingObject> buildingObjectsWithClosingContracts)
+        {
+            DateTime today = DateTime.UtcNow.AddHours(7).Date;
+
+            string message = "<h3>Приближается срок окончания контрактов:</h3><ul>";
+            foreach (BuildingObject item in buildingObjectsWithClosingContracts)
+            {
+                int dayBefore = (item.ContractDateEnd - today).Days;
+                string dayBeforeStr;
+                if (dayBefore.ToString().EndsWith("1"))
+                {
+                    dayBeforeStr = "день";
+                }
+                else if (dayBefore.ToString().EndsWith("2") ||
+                    dayBefore.ToString().EndsWith("3") ||
+                    dayBefore.ToString().EndsWith("4"))
+                {
+                    dayBeforeStr = "дня";
+                }
+                else
+                {
+                    dayBeforeStr = "дней";
+                }
+                message += $"<li><b>{item.Name}</b> - до сдачи <b>{dayBefore} {dayBeforeStr}</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
+            }
+            message += "</ul>";
+            return message;
         }
 
         public async Task<List<BuildingObject>> GetBuildingObjectWithClosingContracts()
