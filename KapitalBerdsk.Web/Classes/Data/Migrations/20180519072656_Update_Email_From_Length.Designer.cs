@@ -12,9 +12,10 @@ using System;
 namespace KapitalBerdsk.Web.Classes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180519072656_Update_Email_From_Length")]
+    partial class Update_Email_From_Length
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -39,7 +39,7 @@ namespace KapitalBerdsk.Web.Classes.Services
                 string message = BuildMessageBody(items);
                 foreach (string email in emails)
                 {
-                    await _emailSender.AddPendingEmail(null, email, "Окончание контрактов", message);
+                    await _emailSender.AddPendingEmail(email, "Окончание контрактов", message);
                 }
             }
         }
