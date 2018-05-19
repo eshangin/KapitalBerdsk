@@ -5,7 +5,7 @@ namespace KapitalBerdsk.Web.Classes.Services
 {
     public interface IEmailSender
     {
-        Task SendEmailAsync(string toAddress, string subject, string message);
-        Task SendEmailAsync(IEnumerable<string> toAddresses, string subject, string message);
+        Task<int> AddPendingEmail(string from, string to, string subject, string body);
+        Task HandlePendingEmail(int emailId);
     }
 }

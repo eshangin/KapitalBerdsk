@@ -21,6 +21,7 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DbSet<FundsFlow> FundsFlows { get; set; }
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<EmployeePayroll> EmployeePayrolls { get; set; }
+        public DbSet<Email> Emails { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -75,7 +76,7 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         private void FillAuditableFields()
         {
-            var entities = ChangeTracker.Entries().Where(x => x.Entity is IAuditable &&
+            var entities = ChangeTracker.Entries().Where(x => x.Entity is IAuditableWithDates &&
                 (x.State == EntityState.Added || x.State == EntityState.Modified));
 
             if (entities.Count() > 0)
@@ -83,18 +84,24 @@ namespace KapitalBerdsk.Web.Classes.Data
                 string currentUserId = GetCurrentUserId();
                 foreach (var entity in entities)
                 {
-                    var auditable = ((IAuditable)entity.Entity);
+                    var auditable = ((IAuditableWithDates)entity.Entity);
                     if (entity.State == EntityState.Added)
                     {
-                        auditable.CreatedById = currentUserId;
-                        auditable.ModifiedById = currentUserId;
                         auditable.DateCreated = DateTime.UtcNow;
                         auditable.DateUpdated = auditable.DateCreated;
+                        if (auditable is IAuditable)
+                        {
+                            ((IAuditable)auditable).CreatedById = currentUserId;
+                            ((IAuditable)auditable).ModifiedById = currentUserId;
+                        }
                     }
                     else if (entity.State == EntityState.Modified)
                     {
-                        auditable.ModifiedById = currentUserId;
                         auditable.DateUpdated = DateTime.UtcNow;
+                        if (auditable is IAuditable)
+                        {
+                            ((IAuditable)auditable).ModifiedById = currentUserId;
+                        }
                     }
                 }
             }

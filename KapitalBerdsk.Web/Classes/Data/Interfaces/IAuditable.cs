@@ -3,10 +3,8 @@ using System;
 
 namespace KapitalBerdsk.Web.Classes.Data.Interfaces
 {
-    public interface IAuditable
+    public interface IAuditable : IAuditableWithDates
     {
-        DateTime DateCreated { get; set; }
-        DateTime DateUpdated { get; set; }
         string CreatedById { get; set; }
         ApplicationUser CreatedBy { get; set; }
         string ModifiedById { get; set; }

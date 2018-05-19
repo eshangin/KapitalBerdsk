@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
+using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Options;
 using MailKit.Net.Smtp;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
@@ -12,21 +16,58 @@ namespace KapitalBerdsk.Web.Classes.Services
     public class EmailSender : IEmailSender
     {
         private readonly SmtpOptions _smtpOptions;
+        private readonly ApplicationDbContext _context;
 
-        public EmailSender(IOptions<SmtpOptions> smtpOptions)
+        public EmailSender(IOptions<SmtpOptions> smtpOptions, ApplicationDbContext context)
         {
             _smtpOptions = smtpOptions.Value;
+            _context = context;
+        }
+
+        public async Task<int> AddPendingEmail(string from, string to, string subject, string body)
+        {
+            var email = new Email
+            {
+                Body = body,
+                From = from,
+                ToCsv = to,
+                Subject = subject,
+                Status = Data.Enums.EmailStatus.Pending
+            };
+            await _context.Emails.AddAsync(email);
+            await _context.SaveChangesAsync();
+
+            BackgroundJob.Enqueue<IEmailSender>(sender => sender.HandlePendingEmail(email.Id));
+
+            return email.Id;
+        }
+
+        public async Task HandlePendingEmail(int emailId)
+        {
+            Email email = await _context.Emails.SingleAsync(item => item.Id == emailId);
+            email.Status = Data.Enums.EmailStatus.InProgress;
+            await _context.SaveChangesAsync();
+
+            await SendEmailAsync(email.From, email.ToCsv.Split(","), email.Subject, email.Body);
+
+            email.Status = Data.Enums.EmailStatus.Sent;
+            await _context.SaveChangesAsync();
         }
 
         public Task SendEmailAsync(string toAddress, string subject, string message)
         {
-            return SendEmailAsync(new List<string>() { toAddress }, subject, message);
+            return SendEmailAsync(null, toAddress, subject, message);
         }
 
-        public Task SendEmailAsync(IEnumerable<string> toAddresses, string subject, string message)
+        public Task SendEmailAsync(string from, string toAddress, string subject, string message)
+        {
+            return SendEmailAsync(from, new List<string>() { toAddress }, subject, message);
+        }
+
+        public Task SendEmailAsync(string from, IEnumerable<string> toAddresses, string subject, string message)
         {
             var mailMessage = new MimeMessage();
-            mailMessage.From.Add(new MailboxAddress("", _smtpOptions.From));
+            mailMessage.From.Add(new MailboxAddress("", from ?? _smtpOptions.From));
             foreach (var to in toAddresses)
             {
                 mailMessage.To.Add(new MailboxAddress("", to));

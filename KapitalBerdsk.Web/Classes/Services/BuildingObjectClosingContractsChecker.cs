@@ -37,7 +37,10 @@ namespace KapitalBerdsk.Web.Classes.Services
                 IList<ApplicationUser> managers = await _userManager.GetUsersInRoleAsync(Constants.Roles.Manager);
                 IEnumerable<string> emails = managers.Select(m => m.Email);
                 string message = BuildMessageBody(items);
-                await _emailSender.SendEmailAsync(emails, "Окончание контрактов", message);
+                foreach (string email in emails)
+                {
+                    await _emailSender.AddPendingEmail(null, email, "Окончание контрактов", message);
+                }
             }
         }
 

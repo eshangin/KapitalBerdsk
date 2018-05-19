@@ -137,7 +137,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 // visit https://go.microsoft.com/fwlink/?LinkID=532713
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
-                await _emailSender.SendEmailAsync(model.Email, "Восстановление пароля",
+                await _emailSender.AddPendingEmail(null, model.Email, "Восстановление пароля",
                    $"Для восстановления перейдите по следующей ссылке: <a href='{callbackUrl}'>восстановить</a>");
                 return RedirectToAction(nameof(ForgotPasswordConfirmation));
             }
