@@ -40,10 +40,17 @@ namespace KapitalBerdsk.Web.Classes.Services
                                                              where item.ResponsibleEmployee != null
                                                              select item.ResponsibleEmployee;
 
+                var emails = new List<Email>();
+
                 string messageForManagers = BuildMessageBody(items);
                 foreach (ApplicationUser m in managers)
                 {
-                    await _emailSender.AddPendingEmail(m.Email, messageSubject, messageForManagers);
+                    emails.Add(new Email
+                    {
+                        ToCsv = m.Email,
+                        Subject = messageSubject,
+                        Body = messageForManagers
+                    });
                 }
 
                 foreach (Employee emp in responsibleEmployees)
@@ -52,9 +59,16 @@ namespace KapitalBerdsk.Web.Classes.Services
                     {
                         IEnumerable<BuildingObject> responsibleFor = items.Where(item => item.ResponsibleEmployeeId == emp.Id);
                         string messageForResponsible = BuildMessageBody(responsibleFor);
-                        await _emailSender.AddPendingEmail(emp.Email, messageSubject, messageForResponsible);
+                        emails.Add(new Email
+                        {
+                            ToCsv = emp.Email,
+                            Subject = messageSubject,
+                            Body = messageForResponsible
+                        });
                     }
                 }
+
+                await _emailSender.AddPendingEmails(emails);
             }
         }
 

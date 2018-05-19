@@ -47,6 +47,21 @@ namespace KapitalBerdsk.Web.Classes.Services
             return await AddPendingEmail(null, to, subject, body);
         }
 
+        public async Task AddPendingEmails(IEnumerable<Email> emails)
+        {
+            foreach (var email in emails)
+            {
+                email.Status = Data.Enums.EmailStatus.Pending;
+            }
+            await _context.Emails.AddRangeAsync(emails);
+            await _context.SaveChangesAsync();
+
+            foreach (var email in emails)
+            {
+                BackgroundJob.Enqueue<IEmailSender>(sender => sender.HandlePendingEmail(email.Id));
+            }            
+        }
+
         public async Task HandlePendingEmail(int emailId)
         {
             Email email = await _context.Emails.SingleAsync(item => item.Id == emailId);
