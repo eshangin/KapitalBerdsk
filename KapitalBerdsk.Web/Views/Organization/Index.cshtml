@@ -1,4 +1,4 @@
-﻿@model IEnumerable<KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.OrganizationModel>
+﻿@model IEnumerable<OrganizationListItemModel>
 
 @{
     ViewData["Title"] = "Организации";
@@ -15,20 +15,38 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Income)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Outgo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) 
 {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-        </td>
-    </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Income)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Outgo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Balance)
+            </td>
+            <td>
+                <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+            </td>
+        </tr>
 }
     </tbody>
 </table>

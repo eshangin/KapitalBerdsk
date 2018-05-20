@@ -21,10 +21,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var model = (await _context.Organizations.ToListAsync()).Select(item => new OrganizationModel
+            var model = (await _context.Organizations.Include(item => item.FundsFlows).ToListAsync()).Select(item => new OrganizationListItemModel
             {
                 Name = item.Name,
-                Id = item.Id
+                Id = item.Id,
+                Income = item.FundsFlows.Sum(ff => ff.Income ?? 0),
+                Outgo = item.FundsFlows.Sum(ff => ff.Outgo ?? 0)
             });
 
             return View(model);
