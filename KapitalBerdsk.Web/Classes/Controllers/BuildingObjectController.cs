@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
@@ -24,17 +25,36 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         // GET: BuildingObject
         public async Task<ActionResult> Index()
         {
-            var objects = await _context.BuildingObjects
+            IEnumerable<BuildingObjectListItemModel> model = await GetBuildingObjectListItems();
+
+            return View(model);
+        }
+
+        private async Task<IEnumerable<BuildingObjectListItemModel>> GetBuildingObjectListItems(int? id = null)
+        {
+            IQueryable<BuildingObject> query = _context.BuildingObjects
                 .Include(item => item.PdSections)
+                .ThenInclude(item => item.Employee)
                 .Include(item => item.FundsFlows)
                 .Include(item => item.ResponsibleEmployee)
-                .OrderByDescending(item => item.Id)
-                .ToListAsync();
+                .OrderByDescending(item => item.Id);
 
-            var model = objects.Select(item => new BuildingObjectListItemModel
+            if (id.HasValue)
+            {
+                query = query.Where(item => item.Id == id);
+            }
+
+            return (await query.ToListAsync()).Select(item => new BuildingObjectListItemModel
             {
                 Id = item.Id,
                 Name = item.Name,
+                PdSections = item.PdSections.Select(ps => new PdSectionModel
+                {
+                    Name = ps.Name,
+                    Id = ps.Id,
+                    Price = ps.Price,
+                    EmployeeName = ps.Employee.FullName
+                }),
                 ContractDateStart = item.ContractDateStart,
                 ContractDateEnd = item.ContractDateEnd,
                 CostPrice = item.PdSections.Sum(ps => ps.Price),
@@ -44,35 +64,13 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Status = item.Status,
                 ResponsibleEmployeeName = item.ResponsibleEmployee?.FullName
             });
-
-            return View(model);
         }
 
         // GET: BuildingObject/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            var el = await _context.BuildingObjects
-                    .Include(item => item.ResponsibleEmployee)
-                    .Include(item => item.PdSections)
-                    .ThenInclude(item => item.Employee)
-                    .FirstOrDefaultAsync(item => item.Id == id);
-            var model = new BuildingObjectDetailsModel
-            {
-                Name = el.Name,
-                Id = el.Id,
-                PdSections = el.PdSections.Select(item => new PdSectionModel
-                {
-                    Name = item.Name,
-                    Id = item.Id,
-                    Price = item.Price,
-                    EmployeeName = item.Employee.FullName
-                }),
-                ContractDateStart = el.ContractDateStart,
-                ContractDateEnd = el.ContractDateEnd,
-                Price = el.Price,
-                Status = el.Status,
-                ResponsibleEmployeeName = el.ResponsibleEmployee?.FullName
-            };
+            BuildingObjectListItemModel model = (await GetBuildingObjectListItems(id)).Single();
+
             return View(model);
         }
 

@@ -1,4 +1,4 @@
-﻿@model KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.BuildingObjectDetailsModel
+﻿@model BuildingObjectListItemModel
 
 @{
     ViewData["Title"] = Model.Name;
@@ -13,15 +13,19 @@
     <div class="col-md-4">
         <div class="well">
             <dl class="dl-horizontal m-b-0">
-                <dt title="Стоимость (цена) контракта">Стоимость (цена) контракта</dt>
+                <dt title="@Html.DisplayNameFor(modelItem => Model.Price)">@Html.DisplayNameFor(modelItem => Model.Price)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.Price)</dd>
+
                 <dt>@Html.DisplayNameFor(modelItem => Model.ResponsibleEmployeeName)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.ResponsibleEmployeeName)</dd>
-                <dt>Начало контракта</dt>
+
+                <dt>@Html.DisplayNameFor(modelItem => Model.ContractDateStart)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.ContractDateStart)</dd>
-                <dt>Окончание контракта</dt>
+
+                <dt>@Html.DisplayNameFor(modelItem => Model.ContractDateEnd)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.ContractDateEnd)</dd>
-                <dt>Статус</dt>
+
+                <dt>@Html.DisplayNameFor(modelItem => Model.Status)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.Status)</dd>
             </dl>
         </div>

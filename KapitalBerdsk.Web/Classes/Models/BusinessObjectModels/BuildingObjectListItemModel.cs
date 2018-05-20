@@ -1,5 +1,6 @@
 ﻿using KapitalBerdsk.Web.Classes.Data.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
@@ -37,5 +38,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 
         [Display(Name = "Ответственный")]
         public string ResponsibleEmployeeName { get; set; }
+
+        public IEnumerable<PdSectionModel> PdSections { get; set; }
     }
 }
