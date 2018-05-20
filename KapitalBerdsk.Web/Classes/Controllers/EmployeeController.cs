@@ -102,6 +102,23 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 });
             }
 
+            var model = new EmployeeDetailsModel
+            {
+                FullName = emp.FullName,
+                Email = emp.Email,
+                Salary = emp.Salary.ToDecimal(),
+                AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
+                                    emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
+                Id = emp.Id,
+                BuildingObjects = combined,
+                MonthlyEmployeePayrolls = GetEmployeeMonthlyPayrolls(emp)
+            };
+
+            return View(model);
+        }
+
+        private IEnumerable<MonthlyEmployeePayrollModel> GetEmployeeMonthlyPayrolls(Employee emp)
+        {
             var accruedPayrolls = emp.EmployeePayrolls.Select(item => new
             {
                 accrued = item.Value,
@@ -137,19 +154,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 });
             }
 
-            var model = new EmployeeDetailsModel
-            {
-                FullName = emp.FullName,
-                Email = emp.Email,
-                Salary = emp.Salary.ToDecimal(),
-                AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
-                                    emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
-                Id = emp.Id,
-                BuildingObjects = combined,
-                MonthlyEmployeePayrolls = monthlyPayrolls
-            };
-
-            return View(model);
+            return monthlyPayrolls;
         }
 
         // GET: Employee/Create
