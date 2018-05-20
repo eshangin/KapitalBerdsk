@@ -13,6 +13,10 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public decimal Value { get; set; }
 
+        public int Year { get; set; }
+
+        public int Month { get; set; }
+
         public int EmployeeId { get; set; }
         public Employee Employee { get; set; }
 
