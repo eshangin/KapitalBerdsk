@@ -64,7 +64,9 @@
                 @Html.DisplayFor(modelItem => item.RealPrice)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
+                    @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ContractDateStart)
@@ -104,7 +106,9 @@
                     @Html.DisplayFor(modelItem => item.RealPrice)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
+                        @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                    </a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ContractDateStart)

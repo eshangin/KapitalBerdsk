@@ -16,8 +16,21 @@
                 <dt title="@Html.DisplayNameFor(modelItem => Model.Price)">@Html.DisplayNameFor(modelItem => Model.Price)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.Price)</dd>
 
+                <dt title="@Html.DisplayNameFor(modelItem => Model.PaidByCustomer)">@Html.DisplayNameFor(modelItem => Model.PaidByCustomer)</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.PaidByCustomer)</dd>
+
+                <dt>@Html.DisplayNameFor(modelItem => Model.CostPrice)</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.CostPrice)</dd>
+
+                <dt>@Html.DisplayNameFor(modelItem => Model.RealPrice)</dt>
+                <dd>@Html.DisplayFor(modelItem => Model.RealPrice)</dd>
+
                 <dt>@Html.DisplayNameFor(modelItem => Model.ResponsibleEmployeeName)</dt>
-                <dd>@Html.DisplayFor(modelItem => Model.ResponsibleEmployeeName)</dd>
+                <dd>                    
+                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@Model.ResponsibleEmployeeId">
+                        @Html.DisplayFor(modelItem => Model.ResponsibleEmployeeName)
+                    </a>
+                </dd>
 
                 <dt>@Html.DisplayNameFor(modelItem => Model.ContractDateStart)</dt>
                 <dd>@Html.DisplayFor(modelItem => Model.ContractDateStart)</dd>

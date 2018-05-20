@@ -53,6 +53,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Name = ps.Name,
                     Id = ps.Id,
                     Price = ps.Price,
+                    EmployeeId = ps.EmployeeId,
                     EmployeeName = ps.Employee.FullName
                 }),
                 ContractDateStart = item.ContractDateStart,
@@ -62,6 +63,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 RealPrice = item.FundsFlows.Where(ff => ff.Outgo.HasValue).Sum(ff => ff.Outgo.Value),
                 PaidByCustomer = item.FundsFlows.Where(ff => ff.Income.HasValue).Sum(ff => ff.Income.Value),
                 Status = item.Status,
+                ResponsibleEmployeeId = item.ResponsibleEmployeeId,
                 ResponsibleEmployeeName = item.ResponsibleEmployee?.FullName
             });
         }
@@ -151,6 +153,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Name = item.Name,
                     Id = item.Id,
                     Price = item.Price,
+                    EmployeeId = item.EmployeeId,
                     EmployeeName = item.Employee.FullName
                 }),
                 ResponsibleEmployeeId = el.ResponsibleEmployeeId,
