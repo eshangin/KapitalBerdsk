@@ -102,6 +102,41 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 });
             }
 
+            var accruedPayrolls = emp.EmployeePayrolls.Select(item => new
+            {
+                accrued = item.Value,
+                year = item.Year,
+                month = item.Month
+            }).ToList();
+
+            var issuedPayrolls = (from ff in emp.FundsFlows
+                                  where ff.OutgoType == OutgoType.Salary && ff.Outgo.HasValue
+                                  group ff by new { ff.Date.Year, ff.Date.Month } into g
+                                  let first = g.First()
+                                  select new
+                                  {
+                                      issued = g.Sum(el => el.Outgo.Value),
+                                      year = first.Date.Year,
+                                      month = first.Date.Month
+                                  }).ToList();
+
+            var payrollPeriods = accruedPayrolls.Select(item => new { item.year, item.month })
+                .Union(issuedPayrolls.Select(item => new { item.year, item.month }));
+
+            var monthlyPayrolls = new List<MonthlyEmployeePayrollModel>();
+            foreach (var period in payrollPeriods)
+            {
+                decimal accrued = accruedPayrolls.FirstOrDefault(item => item.year == period.year && item.month == period.month)?.accrued ?? 0;
+                decimal issued = issuedPayrolls.FirstOrDefault(item => item.year == period.year && item.month == period.month)?.issued ?? 0;
+                monthlyPayrolls.Add(new MonthlyEmployeePayrollModel
+                {
+                    Year = period.year,
+                    Month = period.month,
+                    Accrued = accrued,
+                    Issued = issued
+                });
+            }
+
             var model = new EmployeeDetailsModel
             {
                 FullName = emp.FullName,
@@ -111,13 +146,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                                     emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
                 Id = emp.Id,
                 BuildingObjects = combined,
-                MonthlyEmployeePayrolls = emp.EmployeePayrolls.Select(item => new MonthlyEmployeePayrollModel
-                {
-                    Accured = item.Value,
-                    Issued = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Salary).Sum(ff => ff.Outgo.Value),
-                    Year = item.Year,
-                    Month = item.Month
-                })
+                MonthlyEmployeePayrolls = monthlyPayrolls
             };
 
             return View(model);

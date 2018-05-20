@@ -7,11 +7,11 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 {
     public class MonthlyEmployeePayrollModel
     {
-        public decimal Accured { get; set; }
+        public decimal Accrued { get; set; }
 
         public decimal Issued { get; set; }
 
-        public decimal Balance => Accured - Issued;
+        public decimal Balance => Accrued - Issued;
 
         public int Year { get; set; }
 
