@@ -26,6 +26,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         public async Task<ActionResult> Index()
         {
             var employees = await _context.Employees
+                .Include(item => item.EmployeePayrolls)
                 .Include(item => item.PdSections)
                 .Include(item => item.FundsFlows)
                 .OrderBy(item => item.OrderNumber)
@@ -33,7 +34,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .ToListAsync();
 
             var model = from item in employees
-                        let accured = item.Salary.ToDecimal() + item.PdSections.Sum(s => s.Price)
+                        let accured = item.EmployeePayrolls.Sum(ep => ep.Value) + item.PdSections.Sum(s => s.Price)
                         let outgo = item.FundsFlows.Where(ff => ff.Outgo != null &&
                                                                 ff.OutgoType == OutgoType.Regular &&
                                                                 ff.OrganizationId == null).Sum(ff => ff.Outgo.Value)
