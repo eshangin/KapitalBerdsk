@@ -115,8 +115,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 {
                     Accured = item.Value,
                     Issued = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Salary).Sum(ff => ff.Outgo.Value),
-                    Year = item.DateCreated.Year,
-                    Month = item.DateCreated.Month
+                    Year = item.Year,
+                    Month = item.Month
                 })
             };
 
