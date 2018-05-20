@@ -65,6 +65,23 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .ThenInclude(item => item.BuildingObject)
                 .FirstOrDefaultAsync(item => item.Id == id);
 
+            var model = new EmployeeDetailsModel
+            {
+                FullName = emp.FullName,
+                Email = emp.Email,
+                Salary = emp.Salary.ToDecimal(),
+                AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
+                                    emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
+                Id = emp.Id,
+                BuildingObjects = GetEmployeeBuildingObjectDetails(emp),
+                MonthlyEmployeePayrolls = GetEmployeeMonthlyPayrolls(emp)
+            };
+
+            return View(model);
+        }
+
+        private IEnumerable<EmployeeDetailsModel.BuildingObjectDetail> GetEmployeeBuildingObjectDetails(Employee emp)
+        {
             var accuredItems = (
                 from pd in emp.PdSections
                 group pd by pd.BuildingObjectId
@@ -102,19 +119,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 });
             }
 
-            var model = new EmployeeDetailsModel
-            {
-                FullName = emp.FullName,
-                Email = emp.Email,
-                Salary = emp.Salary.ToDecimal(),
-                AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
-                                    emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
-                Id = emp.Id,
-                BuildingObjects = combined,
-                MonthlyEmployeePayrolls = GetEmployeeMonthlyPayrolls(emp)
-            };
-
-            return View(model);
+            return combined;
         }
 
         private IEnumerable<MonthlyEmployeePayrollModel> GetEmployeeMonthlyPayrolls(Employee emp)
