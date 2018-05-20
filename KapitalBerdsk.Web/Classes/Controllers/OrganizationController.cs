@@ -21,13 +21,34 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var model = (await _context.Organizations.Include(item => item.FundsFlows).ToListAsync()).Select(item => new OrganizationListItemModel
+            IEnumerable<OrganizationListItemModel> model = await GetListItems();
+
+            return View(model);
+        }
+
+        private async Task<IEnumerable<OrganizationListItemModel>> GetListItems(int? id = null)
+        {
+            var query = _context.Organizations.Include(item => item.FundsFlows).Select(item => item);
+
+            if (id.HasValue)
+            {
+                query = query.Where(item => item.Id == id.Value);
+            }
+
+            var model = (await query.ToListAsync()).Select(item => new OrganizationListItemModel
             {
                 Name = item.Name,
                 Id = item.Id,
                 Income = item.FundsFlows.Sum(ff => ff.Income ?? 0),
                 Outgo = item.FundsFlows.Sum(ff => ff.Outgo ?? 0)
             });
+
+            return model;
+        }
+
+        public async Task<ActionResult> Details(int id)
+        {
+            OrganizationListItemModel model = (await GetListItems(id)).First();
 
             return View(model);
         }

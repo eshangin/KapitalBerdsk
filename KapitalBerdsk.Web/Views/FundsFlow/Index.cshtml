@@ -102,7 +102,9 @@
                             </a>
                         </td>
                         <td data-col="OrganizationName">
-                            @Html.DisplayFor(modelItem => item.OrganizationName)
+                            <a asp-controller="Organization" asp-action="Details" asp-route-id="@item.OrganizationId">
+                                @Html.DisplayFor(modelItem => item.OrganizationName)
+                            </a>
                         </td>
                         <td data-col="Income">
                             @Html.DisplayFor(modelItem => item.Income)

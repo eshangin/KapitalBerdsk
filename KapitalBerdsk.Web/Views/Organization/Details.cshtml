@@ -1,0 +1,41 @@
+﻿@model OrganizationListItemModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h2>
+    @ViewData["Title"]
+    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@Model.Id">редактировать</a>
+</h2>
+
+<hr />
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Income)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Income)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Outgo)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Outgo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Balance)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Balance)
+        </dd>
+    </dl>
+</div>
