@@ -6,5 +6,10 @@
         {
             return value.HasValue ? (decimal) value : 0;
         }
+
+        public static string Display(this decimal value)
+        {
+            return value.ToString("n");
+        }
     }
 }

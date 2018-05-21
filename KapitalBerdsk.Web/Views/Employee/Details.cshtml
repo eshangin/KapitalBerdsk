@@ -37,18 +37,21 @@
             <tr>
                 <th></th>
                 <th>
+                    @{ decimal accrued = Model.BuildingObjects.Sum(item => item.Accrued) + Model.MonthlyEmployeePayrolls.Sum(item => item.Accrued); }
                     <span>Начислено</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Accrued) + Model.MonthlyEmployeePayrolls.Sum(item => item.Accrued))</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @accrued.Display()</span>
                     <span class="clearfix"></span>
                 </th>
                 <th>
+                    @{ decimal issued = Model.BuildingObjects.Sum(item => item.Issued) + Model.MonthlyEmployeePayrolls.Sum(item => item.Issued); }
                     <span>Выдано</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Issued) + Model.MonthlyEmployeePayrolls.Sum(item => item.Issued))</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @issued.Display()</span>
                     <span class="clearfix"></span>
                 </th>
                 <th>
+                    @{ decimal balance = Model.BuildingObjects.Sum(item => item.Balance) + Model.MonthlyEmployeePayrolls.Sum(item => item.Balance); }
                     <span>Остаток</span>
-                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @(Model.BuildingObjects.Sum(item => item.Balance) + Model.MonthlyEmployeePayrolls.Sum(item => item.Balance))</span>
+                    <span class="pull-right"><span class="sum-symbol">&sum;</span> @balance.Display()</span>
                     <span class="clearfix"></span>
                 </th>
             </tr>
@@ -71,9 +74,9 @@
                         <td>
                             @(new DateTime(item.Year, item.Month, 1).ToString("MMMM yyyy"))
                         </td>
-                        <td>@item.Accrued</td>
-                        <td>@item.Issued</td>
-                        <td>@item.Balance</td>
+                        <td>@Html.DisplayFor(mi => item.Accrued)</td>
+                        <td>@Html.DisplayFor(mi => item.Issued)</td>
+                        <td>@Html.DisplayFor(mi => item.Balance)</td>
                     </tr>
                 }
             }
