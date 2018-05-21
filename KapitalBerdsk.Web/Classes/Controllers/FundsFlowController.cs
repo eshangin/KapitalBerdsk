@@ -60,15 +60,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = new FundsFlowListModel
             {
                 Items = items,
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
-                    new SelectListItem
-                    {
-                        Text = item.FullName,
-                        Value = item.Id.ToString()
-                    }),
                 BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
                 {
-                    Value = item.Id.ToString(),
                     Text = item.Name
                 }),
                 Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
@@ -78,6 +71,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 })
             };
 
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => item.FullName)
+                .Union(_context.FundsFlows.Where(ff => !string.IsNullOrWhiteSpace(ff.OneTimeEmployeeName)).Select(ff => ff.OneTimeEmployeeName)).Select(employeeName =>
+                    new SelectListItem
+                    {
+                        Text = employeeName
+                    });
 
             return View(model);
         }
