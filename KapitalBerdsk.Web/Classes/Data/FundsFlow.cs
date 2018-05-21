@@ -6,7 +6,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class FundsFlow : IAuditable
+    public class FundsFlow : IAuditable, IWithOneTimeEmployee
     {
         public int Id { get; set; }
 
@@ -22,6 +22,9 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
+
+        [MaxLength(70)]
+        public string OneTimeEmployeeName { get; set; }
 
         public int? BuildingObjectId { get; set; }
         public BuildingObject BuildingObject { get; set; }

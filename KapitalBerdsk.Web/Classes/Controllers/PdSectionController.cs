@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Extensions;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Extensions;
+using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +49,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     OutgoType = item.OutgoType,
                     PayType = item.PayType,
                     Id = item.Id,
-                    EmployeeName = item.Employee?.FullName,
+                    EmployeeName = item.Employee?.FullName ?? item.OneTimeEmployeeName,
                     EmployeeId = item.EmployeeId,
                     OrganizationName = item.Organization?.Name,
                     OrganizationId = item.OrganizationId,
@@ -116,29 +118,30 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(EditFundsFlowModel model)
         {
+            model.VerifyEmployeeSelection(ModelState);
+
             if (model.Income == null && model.Outgo == null)
             {
                 ModelState.AddModelError("", "Приход или расход должны быть указаны");
             }
-            if (model.EmployeeId == null && model.OrganizationId == null)
+            if (string.IsNullOrWhiteSpace(model.OneTimeEmployeeName) && model.EmployeeId == null && model.OrganizationId == null)
             {
                 ModelState.AddModelError("", "Сотрудник и/или организация должны быть указаны");
             }
 
             if (ModelState.IsValid)
             {
-                await _context.FundsFlows.AddAsync(new FundsFlow
-                {
-                    BuildingObjectId = model.BuildingObjectId,
-                    Date = model.Date.Value,
-                    Description = model.Description,
-                    EmployeeId = model.EmployeeId,
-                    OrganizationId = model.OrganizationId,
-                    PayType = model.PayType,
-                    Income = model.Income,
-                    Outgo = model.Outgo,
-                    OutgoType = model.OutgoType
-                });
+                var ff = new FundsFlow();
+                ff.Date = model.Date.Value;
+                ff.BuildingObjectId = model.BuildingObjectId;
+                ff.Description = model.Description;
+                ff.OrganizationId = model.OrganizationId;
+                ff.Income = model.Income;
+                ff.Outgo = model.Outgo;
+                ff.OutgoType = model.OutgoType;
+                ff.PayType = model.PayType;
+                ff.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
+                await _context.FundsFlows.AddAsync(ff);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -173,6 +176,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Date = ff.Date,
                 Description = ff.Description,
                 EmployeeId = ff.EmployeeId,
+                OneTimeEmployeeName = ff.OneTimeEmployeeName,
+                UseOneTimeEmployee = !string.IsNullOrWhiteSpace(ff.OneTimeEmployeeName),
                 OrganizationId = ff.OrganizationId,
                 Income = ff.Income,
                 Outgo = ff.Outgo,
@@ -202,11 +207,13 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditFundsFlowModel model)
         {
+            model.VerifyEmployeeSelection(ModelState);
+
             if (model.Income == null && model.Outgo == null)
             {
                 ModelState.AddModelError("", "Приход или расход должны быть указаны");
             }
-            if (model.EmployeeId == null && model.OrganizationId == null)
+            if (string.IsNullOrWhiteSpace(model.OneTimeEmployeeName) && model.EmployeeId == null && model.OrganizationId == null)
             {
                 ModelState.AddModelError("", "Сотрудник и/или организация должны быть указаны");
             }
@@ -217,12 +224,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 ff.Date = model.Date.Value;
                 ff.BuildingObjectId = model.BuildingObjectId;
                 ff.Description = model.Description;
-                ff.EmployeeId = model.EmployeeId;
                 ff.OrganizationId = model.OrganizationId;
                 ff.Income = model.Income;
                 ff.Outgo = model.Outgo;
                 ff.OutgoType = model.OutgoType;
                 ff.PayType = model.PayType;
+                ff.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));

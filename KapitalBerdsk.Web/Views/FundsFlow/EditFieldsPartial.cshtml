@@ -15,13 +15,14 @@
     <input asp-for="Description" class="form-control" />
     <span asp-validation-for="Description" class="text-danger"></span>
 </div>
-<div class="form-group">
+@*<div class="form-group">
     <label asp-for="EmployeeId" class="control-label"></label>
     <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-control">
         <option value="">-- Не выбран --</option>
     </select>
     <span asp-validation-for="EmployeeId" class="text-danger"></span>
-</div>
+</div>*@
+@await Component.InvokeAsync(nameof(OneTimeEmployeeSelection))
 <div class="form-group">
     <label asp-for="OrganizationId" class="control-label"></label>
     <select asp-for="OrganizationId" asp-items="Model.Organizations" class="form-control">

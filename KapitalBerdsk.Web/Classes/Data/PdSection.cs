@@ -33,19 +33,5 @@ namespace KapitalBerdsk.Web.Classes.Data
         public ApplicationUser CreatedBy { get; set; }
         public string ModifiedById { get; set; }
         public ApplicationUser ModifiedBy { get; set; }
-
-        public void SetEmployee(bool useOneTimeEmployee, int? employeeId, string oneTimeEmployeeName)
-        {
-            if (useOneTimeEmployee)
-            {
-                OneTimeEmployeeName = oneTimeEmployeeName;
-                EmployeeId = null;
-            }
-            else
-            {
-                OneTimeEmployeeName = null;
-                EmployeeId = employeeId.Value;
-            }
-        }
     }
 }

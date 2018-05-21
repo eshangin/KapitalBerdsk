@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Data.Enums;
+using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 {
-    public class EditFundsFlowModel
+    public class EditFundsFlowModel : IModelWithOneTimeEmployeeSelection
     {
         public int Id { get; set; }
 
@@ -36,6 +37,11 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 
         [Display(Name = "Сотрудник")]
         public int? EmployeeId { get; set; }
+
+        public bool UseOneTimeEmployee { get; set; }
+
+        [MaxLength(70)]
+        public string OneTimeEmployeeName { get; set; }
 
         [Display(Name = "Организация")]
         public int? OrganizationId { get; set; }
