@@ -268,7 +268,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Outgo = item.Outgo,
                     PayType = item.PayType,
                     Id = item.Id,
-                    EmployeeName = item.Employee == null ? null : item.Employee.FullName,
+                    EmployeeName = item.Employee == null ? item.OneTimeEmployeeName : item.Employee.FullName,
                     EmployeeId = item.EmployeeId,
                     OrganizationName = item.Organization == null ? null : item.Organization.Name,
                     OrganizationId = item.OrganizationId,
