@@ -37,7 +37,8 @@ namespace KapitalBerdsk.Web.Classes.Services
                 const string messageSubject = "Окончание контрактов";
                 IList<ApplicationUser> managers = await _userManager.GetUsersInRoleAsync(Constants.Roles.Manager);
                 IEnumerable<Employee> responsibleEmployees = from item in items
-                                                             where item.ResponsibleEmployee != null
+                                                             where item.ResponsibleEmployee != null &&
+                                                                !string.IsNullOrWhiteSpace(item.ResponsibleEmployee.Email)
                                                              select item.ResponsibleEmployee;
 
                 var emails = new List<Email>();
