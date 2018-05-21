@@ -11,133 +11,141 @@
     <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
-<table class="table table-bordered table-condensed filtarable-table">
-    <thead>
-        <tr>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.PaidByCustomer)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.CostPrice)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.RealPrice)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.ResponsibleEmployeeName)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.ContractDateStart)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.ContractDateEnd)
-            </th>
-            <th class="filtarable-table__header-cell">
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th class="filtarable-table__header-cell"></th>
-        </tr>
-        <tr>
-            <th class="filtarable-table__filter-cell">
-                <input data-filter="Name" type="text" class="form-control input-sm" />
-            </th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-            <th class="filtarable-table__filter-cell"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in inProgressObjects)
-        {
-        <tr>
-            <td data-col="Name">
-                <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaidByCustomer)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CostPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RealPrice)
-            </td>
-            <td>
-                <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
-                    @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
-                </a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContractDateStart)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContractDateEnd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-            </td>
-        </tr>
-        }
-        @if (closedObjects.Any())
-        {
-            <tr class="active">
-                <td colspan="10">Закрытые</td>
-            </tr>
-            @foreach (var item in closedObjects)
-            {
+<form class="filtarable-table">
+    <table class="table table-bordered table-condensed">
+        <thead>
             <tr>
-                <td data-col="Name">
-                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PaidByCustomer)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CostPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RealPrice)
-                </td>
-                <td>
-                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
-                        @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
-                    </a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ContractDateStart)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ContractDateEnd)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-                </td>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.PaidByCustomer)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.CostPrice)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.RealPrice)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.ResponsibleEmployeeName)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.ContractDateStart)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.ContractDateEnd)
+                </th>
+                <th class="filtarable-table__header-cell">
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th class="filtarable-table__header-cell"></th>
             </tr>
+            <tr>
+                <th class="filtarable-table__filter-cell">
+                    <input data-filter="Name" type="text" class="form-control input-sm" />
+                </th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell"></th>
+                <th class="filtarable-table__filter-cell">
+                    <select data-filter="Status" asp-items="Html.GetEnumSelectList<BuildingObjectStatus>()" class="form-control input-sm">
+                        <option value=""></option>
+                    </select>
+                </th>
+                <th class="filtarable-table__filter-cell">
+                    <button type="button" style="display: none" class="btn btn-sm btn-default" id="btn-reset-filter">Сбросить фильтр</button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in inProgressObjects)
+            {
+                <tr>
+                    <td data-col="Name">
+                        <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PaidByCustomer)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CostPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RealPrice)
+                    </td>
+                    <td>
+                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
+                            @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContractDateStart)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ContractDateEnd)
+                    </td>
+                    <td data-col="Status">
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                    </td>
+                </tr>
             }
-        }
-    </tbody>
-</table>
+            @if (closedObjects.Any())
+            {
+                <tr class="active">
+                    <td colspan="10">Закрытые</td>
+                </tr>
+                @foreach (var item in closedObjects)
+                {
+                    <tr>
+                        <td data-col="Name">
+                            <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaidByCustomer)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CostPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RealPrice)
+                        </td>
+                        <td>
+                            <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
+                                @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContractDateStart)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContractDateEnd)
+                        </td>
+                        <td data-col="Status">
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                        <td>
+                            <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</form>
