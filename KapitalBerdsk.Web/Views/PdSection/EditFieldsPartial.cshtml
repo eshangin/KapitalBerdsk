@@ -12,11 +12,19 @@
     <input asp-for="Name" class="form-control" />
     <span asp-validation-for="Name" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="EmployeeId" class="control-label"></label>
-    <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-control">
+<div class="form-group b-emp-selection">
+    <div class="clearfix">
+        <label asp-for="EmployeeId" class="control-label"></label>
+        <div class="pull-right checkbox m-0">
+            <label>
+                <input asp-for="UseOneTimeEmployee" type="checkbox" class="b-emp-selection__one-time-cbx"> <small>Разовый?</small>
+            </label>
+        </div>
+    </div>
+    <select asp-for="EmployeeId" asp-items="Model.Employees" class="form-control b-emp-selection__emp-input @(Model.UseOneTimeEmployee ? "hidden" : "")">
         <option value="">-- Не выбран --</option>
     </select>
+    <input asp-for="OneTimeEmployeeName" type="text" class="form-control b-emp-selection__one-time-emp-input @(Model.UseOneTimeEmployee ? "" : "hidden")" />
     <span asp-validation-for="EmployeeId" class="text-danger"></span>
 </div>
 <div class="form-group">

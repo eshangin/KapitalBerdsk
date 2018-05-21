@@ -100,6 +100,23 @@
             });
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        $(document).ready(function () {
+            $('.b-emp-selection .b-emp-selection__one-time-cbx').click(function () {
+                var isChecked = $(this).is(':checked');
+                console.log(isChecked);
+                var $block = $(this).closest('.b-emp-selection');
+
+                'b-emp-selection__emp-input'
+                if (isChecked) {
+                    $block.find('.b-emp-selection__emp-input').addClass('hidden');
+                    $block.find('.b-emp-selection__one-time-emp-input').removeClass('hidden');
+                } else {
+                    $block.find('.b-emp-selection__emp-input').removeClass('hidden');
+                    $block.find('.b-emp-selection__one-time-emp-input').addClass('hidden');
+                }
+            });
+        })
     </script>
     @RenderSection("Scripts", required: false)
 </body>

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.Interfaces;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
 {
-    public class EditPdSectionModel
+    public class EditPdSectionModel : IModelWithOneTimeEmployeeSelection
     {
         public int Id { get; set; }
 
@@ -13,9 +14,13 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Название")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Сотрудник")]
         public int? EmployeeId { get; set; }
+
+        public bool UseOneTimeEmployee { get; set; }
+
+        [MaxLength(70)]
+        public string OneTimeEmployeeName { get; set; }
 
         [Required(ErrorMessage = Resources.ResourceKeys.Required)]
         [Display(Name = "Объект")]

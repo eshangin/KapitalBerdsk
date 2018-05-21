@@ -12,7 +12,7 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Цена")]
         public decimal Price { get; set; }
 
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
 
         [Display(Name = "Сотрудник")]
         public string EmployeeName { get; set; }

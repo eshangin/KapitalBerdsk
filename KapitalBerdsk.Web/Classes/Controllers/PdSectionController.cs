@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -48,15 +49,14 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(int objectId, EditPdSectionModel model)
         {
+            model.VerifyEmployeeSelection(ModelState);
+
             if (ModelState.IsValid)
             {
-                await _context.PdSections.AddAsync(new PdSection
-                {
-                    Name = model.Name,
-                    BuildingObjectId = model.BuildingObjectId.Value,
-                    EmployeeId = model.EmployeeId.Value,
-                    Price = model.Price.Value
-                });
+                var pdSection = new PdSection();
+                UpdateValues(pdSection, model);
+
+                await _context.PdSections.AddAsync(pdSection);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(BuildingObjectController.Details), "BuildingObject", 
@@ -78,6 +78,14 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
+        private void UpdateValues(PdSection pdSection, EditPdSectionModel model)
+        {
+            pdSection.Name = model.Name;
+            pdSection.BuildingObjectId = model.BuildingObjectId.Value;
+            pdSection.Price = model.Price.Value;
+            pdSection.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
+        }
+
         // GET: PdSection/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
@@ -88,6 +96,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Name = pdSection.Name,
                 Price = pdSection.Price,
                 EmployeeId = pdSection.EmployeeId,
+                OneTimeEmployeeName = pdSection.OneTimeEmployeeName,
+                UseOneTimeEmployee = !string.IsNullOrWhiteSpace(pdSection.OneTimeEmployeeName),
                 Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
@@ -110,13 +120,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditPdSectionModel model)
         {
+            model.VerifyEmployeeSelection(ModelState);
+
             if (ModelState.IsValid)
             {
-                var pdSection = await _context.PdSections.FirstOrDefaultAsync(item => item.Id == model.Id);
-                pdSection.Name = model.Name;
-                pdSection.BuildingObjectId = model.BuildingObjectId.Value;
-                pdSection.EmployeeId = model.EmployeeId.Value;
-                pdSection.Price = model.Price.Value;
+                PdSection pdSection = await _context.PdSections.FirstOrDefaultAsync(item => item.Id == model.Id);
+                UpdateValues(pdSection, model);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(BuildingObjectController.Details), "BuildingObject",

@@ -20,10 +20,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
-            <td>                
-                <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
+            <td>
+                @if (item.EmployeeId.HasValue)
+                {
+                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.EmployeeId">
+                        @Html.DisplayFor(modelItem => item.EmployeeName)
+                    </a>
+                }
+                else
+                {
                     @Html.DisplayFor(modelItem => item.EmployeeName)
-                </a>
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)

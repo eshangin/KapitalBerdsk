@@ -54,7 +54,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Id = ps.Id,
                     Price = ps.Price,
                     EmployeeId = ps.EmployeeId,
-                    EmployeeName = ps.Employee.FullName
+                    EmployeeName = ps.EmployeeId.HasValue ? ps.Employee.FullName : ps.OneTimeEmployeeName
                 }),
                 ContractDateStart = item.ContractDateStart,
                 ContractDateEnd = item.ContractDateEnd,

@@ -8,7 +8,7 @@ namespace KapitalBerdsk.Web.Classes.Data
     /// <summary>
     /// Section of project documentation
     /// </summary>
-    public class PdSection : IAuditable
+    public class PdSection : IAuditable, IWithOneTimeEmployee
     {
         public int Id { get; set; }
 
@@ -16,8 +16,11 @@ namespace KapitalBerdsk.Web.Classes.Data
         [MaxLength(2000)]
         public string Name { get; set; }
 
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public Employee Employee { get; set; }
+
+        [MaxLength(70)]
+        public string OneTimeEmployeeName { get; set; }
 
         public int BuildingObjectId { get; set; }
         public BuildingObject BuildingObject { get; set; }
@@ -30,5 +33,19 @@ namespace KapitalBerdsk.Web.Classes.Data
         public ApplicationUser CreatedBy { get; set; }
         public string ModifiedById { get; set; }
         public ApplicationUser ModifiedBy { get; set; }
+
+        public void SetEmployee(bool useOneTimeEmployee, int? employeeId, string oneTimeEmployeeName)
+        {
+            if (useOneTimeEmployee)
+            {
+                OneTimeEmployeeName = oneTimeEmployeeName;
+                EmployeeId = null;
+            }
+            else
+            {
+                OneTimeEmployeeName = null;
+                EmployeeId = employeeId.Value;
+            }
+        }
     }
 }
