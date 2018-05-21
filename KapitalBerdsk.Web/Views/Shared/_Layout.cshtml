@@ -93,6 +93,14 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
+            // Make jQuery :contains Case-Insensitive
+            $.expr[':'].contains = function (a, i, m) {
+                return $(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+            };
+        });
+
+        $(document).ready(function () {
             $('[data-bdatepicker]').datepicker({
                 language: "ru",
                 autoclose: true
@@ -115,7 +123,71 @@
                     $block.find('.b-emp-selection__one-time-emp-input').addClass('hidden');
                 }
             });
-        })
+        });
+
+        $(document).ready(function () {
+            var currentFilters = {};
+            $("[data-filter]").on('change input', function () {
+                var filter = $(this).attr('data-filter');
+                var filterValue = $(this).is('input')
+                    ? $(this).val()
+                    : $(this).parent().find("option:selected").text();
+
+                console.log(filterValue);
+
+                if (filterValue === '') {
+                    removeFilter(filter);
+                } else {
+                    applyFilter(filter, filterValue);
+                }
+
+                if ($.isEmptyObject(currentFilters)) {
+                    $('#btn-reset-filter').hide();
+                } else {
+                    $('#btn-reset-filter').show();
+                }
+            });
+
+            $('#btn-reset-filter').click(function () {
+                $('#table-form')[0].reset();
+                removeAllFilters();
+                $('#btn-reset-filter').hide();
+            });
+
+            function removeFilter(filter) {
+                delete currentFilters[filter];
+                applyCurrentFilters();
+            }
+
+            function removeAllFilters() {
+                currentFilters = {};
+                applyCurrentFilters();
+            }
+
+            function applyCurrentFilters() {
+                $('.filtarable-table tbody tr').each(function () {
+                    $(this).show();
+                });
+
+                for (var filter in currentFilters) {
+                    if (currentFilters.hasOwnProperty(filter)) {
+                        var filterValue = currentFilters[filter];
+                        $('.filtarable-table tbody tr').each(function () {
+                            var $row = $(this);
+                            var $col = $row.find('[data-col="' + filter + '"]');
+                            if (!$col.is(':contains("' + filterValue + '")')) {
+                                $row.hide();
+                            }
+                        });
+                    }
+                }
+            }
+
+            function applyFilter(filter, filterValue) {
+                currentFilters[filter] = filterValue;
+                applyCurrentFilters();
+            }
+        });
     </script>
     @RenderSection("Scripts", required: false)
 </body>

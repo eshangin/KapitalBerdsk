@@ -5,75 +5,62 @@
     ViewData["Title"] = "Движение средств";
 }
 
-<style>
-    .table-header-cell {
-        border-bottom: 0 !important;
-        padding-bottom: 1px !important;
-        white-space: nowrap;
-    }
-
-    .table-filter-cell {
-        border-top: 0 !important;
-        padding-top: 1px !important;
-    }
-</style>
-
 <h2>
     @ViewData["Title"]
     <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
 <form id="table-form">
-    <table id="funds-flow-table" class="table table-bordered table-condensed">
+    <table id="funds-flow-table" class="table table-bordered table-condensed filtarable-table">
         <thead>
             <tr>
-                <th class="table-header-cell col-140">Дата</th>
-                <th class="table-header-cell">Описание</th>
-                <th class="table-header-cell">Сотрудник</th>
-                <th class="table-header-cell">Организация</th>
-                <th class="table-header-cell col-100">Приход</th>
-                <th class="table-header-cell col-100">Расход</th>
-                <th class="table-header-cell">Объект</th>
-                <th class="table-header-cell col-100">Нал/безнал</th>
-                <th class="table-header-cell"></th>
+                <th class="filtarable-table__header-cell col-140">Дата</th>
+                <th class="filtarable-table__header-cell">Описание</th>
+                <th class="filtarable-table__header-cell">Сотрудник</th>
+                <th class="filtarable-table__header-cell">Организация</th>
+                <th class="filtarable-table__header-cell col-100">Приход</th>
+                <th class="filtarable-table__header-cell col-100">Расход</th>
+                <th class="filtarable-table__header-cell">Объект</th>
+                <th class="filtarable-table__header-cell col-100">Нал/безнал</th>
+                <th class="filtarable-table__header-cell"></th>
             </tr>
             <tr>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <span class="input-group date" data-bdatepicker>
                         <input data-filter="Date" type="text" class="form-control input-sm" />
                         <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                     </span>
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <input data-filter="Description" type="text" class="form-control input-sm" />
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <select data-filter="Employee" asp-items="Model.Employees" class="form-control input-sm">
                         <option value=""></option>
                     </select>
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <select data-filter="OrganizationName" asp-items="Model.Organizations" class="form-control input-sm">
                         <option value=""></option>
                     </select>
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <input data-filter="Income" type="text" class="form-control input-sm" />
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <input data-filter="Outgo" type="text" class="form-control input-sm" />
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <select data-filter="BuildingObject" asp-items="Model.BuildingObjects" class="form-control input-sm">
                         <option value=""></option>
                     </select>
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <select data-filter="PayType" asp-items="Html.GetEnumSelectList<KapitalBerdsk.Web.Classes.Data.Enums.PaymentType>()" class="form-control input-sm">
                         <option value=""></option>
                     </select>
                 </th>
-                <th class="table-filter-cell">
+                <th class="filtarable-table__filter-cell">
                     <button type="button" style="display: none" class="btn btn-sm btn-default" id="btn-reset-filter">Сбросить фильтр</button>
                 </th>
             </tr>
@@ -140,72 +127,3 @@
         </tbody>
     </table>
 </form>
-
-@section Scripts
-{
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var currentFilters = {};
-            $("[data-filter]").on('change input', function () {
-                var filter = $(this).attr('data-filter');
-                var filterValue = $(this).is('input')
-                    ? $(this).val()
-                    : $(this).parent().find("option:selected").text();
-
-                console.log(filterValue);
-
-                if (filterValue === '') {
-                    removeFilter(filter);
-                } else {                    
-                    applyFilter(filter, filterValue);                    
-                }
-
-                if ($.isEmptyObject(currentFilters)) {
-                    $('#btn-reset-filter').hide();
-                } else {
-                    $('#btn-reset-filter').show();
-                }
-            });
-
-            $('#btn-reset-filter').click(function () {
-                $('#table-form')[0].reset();
-                removeAllFilters();
-                $('#btn-reset-filter').hide();
-            });
-
-            function removeFilter(filter) {
-                delete currentFilters[filter];
-                applyCurrentFilters();
-            }
-
-            function removeAllFilters() {
-                currentFilters = {};
-                applyCurrentFilters();
-            }
-
-            function applyCurrentFilters() {
-                $('#funds-flow-table tbody tr').each(function() {
-                    $(this).show();
-                });
-
-                for (var filter in currentFilters) {
-                    if (currentFilters.hasOwnProperty(filter)) {
-                        var filterValue = currentFilters[filter];
-                        $('#funds-flow-table tbody tr').each(function() {
-                            var $row = $(this);
-                            var $col = $row.find('[data-col="' + filter + '"]');
-                            if (!$col.is(':contains("' + filterValue + '")')) {
-                                $row.hide();
-                            }
-                        });
-                    }
-                }
-            }
-
-            function applyFilter(filter, filterValue) {
-                currentFilters[filter] = filterValue;
-                applyCurrentFilters();
-            }
-        });
-    </script>
-}

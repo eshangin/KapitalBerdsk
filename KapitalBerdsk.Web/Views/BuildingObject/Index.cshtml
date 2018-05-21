@@ -11,44 +11,58 @@
     <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-condensed filtarable-table">
     <thead>
         <tr>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.PaidByCustomer)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.CostPrice)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.RealPrice)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.ResponsibleEmployeeName)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.ContractDateStart)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.ContractDateEnd)
             </th>
-            <th>
+            <th class="filtarable-table__header-cell">
                 @Html.DisplayNameFor(model => model.Status)
             </th>
-            <th></th>
+            <th class="filtarable-table__header-cell"></th>
+        </tr>
+        <tr>
+            <th class="filtarable-table__filter-cell">
+                <input data-filter="Name" type="text" class="form-control input-sm" />
+            </th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
+            <th class="filtarable-table__filter-cell"></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in inProgressObjects)
         {
         <tr>
-            <td>
+            <td data-col="Name">
                 <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
             </td>
             <td>
@@ -90,7 +104,7 @@
             @foreach (var item in closedObjects)
             {
             <tr>
-                <td>
+                <td data-col="Name">
                     <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                 </td>
                 <td>
