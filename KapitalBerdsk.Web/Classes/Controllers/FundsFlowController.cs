@@ -132,15 +132,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             if (ModelState.IsValid)
             {
                 var ff = new FundsFlow();
-                ff.Date = model.Date.Value;
-                ff.BuildingObjectId = model.BuildingObjectId;
-                ff.Description = model.Description;
-                ff.OrganizationId = model.OrganizationId;
-                ff.Income = model.Income;
-                ff.Outgo = model.Outgo;
-                ff.OutgoType = model.OutgoType;
-                ff.PayType = model.PayType;
-                ff.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
+                UpdateValues(ff, model);
                 await _context.FundsFlows.AddAsync(ff);
                 await _context.SaveChangesAsync();
 
@@ -164,6 +156,19 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             });
 
             return View(model);
+        }
+
+        private void UpdateValues(FundsFlow ff, EditFundsFlowModel model)
+        {
+            ff.Date = model.Date.Value;
+            ff.BuildingObjectId = model.BuildingObjectId;
+            ff.Description = model.Description;
+            ff.OrganizationId = model.OrganizationId;
+            ff.Income = model.Income;
+            ff.Outgo = model.Outgo;
+            ff.OutgoType = model.OutgoType;
+            ff.PayType = model.PayType;
+            ff.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
         }
 
         public async Task<ActionResult> Edit(int id)
@@ -221,15 +226,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             if (ModelState.IsValid)
             {
                 FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == model.Id);
-                ff.Date = model.Date.Value;
-                ff.BuildingObjectId = model.BuildingObjectId;
-                ff.Description = model.Description;
-                ff.OrganizationId = model.OrganizationId;
-                ff.Income = model.Income;
-                ff.Outgo = model.Outgo;
-                ff.OutgoType = model.OutgoType;
-                ff.PayType = model.PayType;
-                ff.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
+                UpdateValues(ff, model);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
