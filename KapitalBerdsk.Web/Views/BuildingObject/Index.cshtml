@@ -19,10 +19,14 @@
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th class="filtarable-table__header-cell">
-                    @Html.DisplayNameFor(model => model.Price)
+                    Стоимость
+                    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                       data-placement="top" title="@Html.DisplayNameFor(model => model.Price)"></i>
                 </th>
                 <th class="filtarable-table__header-cell">
-                    @Html.DisplayNameFor(model => model.PaidByCustomer)
+                    Выплачено
+                    <i class="glyphicon glyphicon-info-sign" data-toggle="tooltip"
+                       data-placement="top" title="@Html.DisplayNameFor(model => model.PaidByCustomer)"></i>
                 </th>
                 <th class="filtarable-table__header-cell">
                     @Html.DisplayNameFor(model => model.CostPrice)
@@ -34,10 +38,12 @@
                     @Html.DisplayNameFor(model => model.ResponsibleEmployeeName)
                 </th>
                 <th class="filtarable-table__header-cell">
-                    @Html.DisplayNameFor(model => model.ContractDateStart)
+                    Начало
+                    @*@Html.DisplayNameFor(model => model.ContractDateStart)*@
                 </th>
                 <th class="filtarable-table__header-cell">
-                    @Html.DisplayNameFor(model => model.ContractDateEnd)
+                    Окончание
+                    @*@Html.DisplayNameFor(model => model.ContractDateEnd)*@
                 </th>
                 <th class="filtarable-table__header-cell">
                     @Html.DisplayNameFor(model => model.Status)
