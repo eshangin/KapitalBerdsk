@@ -156,7 +156,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                         Name = item.Name,
                         Id = item.Id,
                         Price = item.Price,
-                        EmployeeName = item.Employee.FullName
+                        EmployeeName = item.OneTimeEmployeeName ?? item.Employee.FullName
                     })
                     .FirstOrDefaultAsync(item => item.Id == id);
             return View(model);
