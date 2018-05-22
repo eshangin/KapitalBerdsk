@@ -145,10 +145,12 @@
                 }
 
                 if ($.isEmptyObject(currentFilters)) {
-                    $('#btn-reset-filter').hide();
+                    $('#btn-reset-filter').hide();                    
                 } else {
                     $('#btn-reset-filter').show();
                 }
+
+                $(document).trigger('appEvent-dataFilterChange', [currentFilters]);
             });
 
             $('#btn-reset-filter').click(function () {
@@ -199,6 +201,14 @@
                     updateOrder();
                 }
             }).disableSelection();
+
+            $(document).on('appEvent-dataFilterChange', function (event, filters) {
+                if ($.isEmptyObject(filters)) {
+                    $(".b-orderable-table [data-portletHandler]").show();
+                } else {
+                    $(".b-orderable-table [data-portletHandler]").hide();
+                }
+            });
 
             function updateOrder() {
                 var items = $.map($('.b-orderable-table [data-itemId]').toArray(),
