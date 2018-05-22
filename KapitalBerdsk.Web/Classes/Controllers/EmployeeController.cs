@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Data.Enums;
+using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
@@ -243,21 +244,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             List<Employee> employees = await _context.Employees.ToListAsync();
 
-            for (int i = 0; i < model.Ids.Count(); i++)
-            {
-                int id = model.Ids.ElementAt(i);
-                Employee emp = employees.Find(item => item.Id == id);
-                emp.OrderNumber = i;
-            }
-
+            employees.UpdateOrder(model.Ids);
             await _context.SaveChangesAsync();
 
             return Ok();
-        }
-
-        public class UpdateOrderModel
-        {
-            public IEnumerable<int> Ids { get; set; }
         }
     }
 }

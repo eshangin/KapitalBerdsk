@@ -6,7 +6,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class Employee : IAuditable
+    public class Employee : IAuditable, IOrderable
     {
         public int Id { get; set; }
 

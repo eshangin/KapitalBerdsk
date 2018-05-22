@@ -191,6 +191,31 @@
                 applyCurrentFilters();
             }
         });
+
+        $(document).ready(function () {
+            $(".b-orderable-table tbody").sortable({
+                handle: "[data-portletHandler]",
+                stop: function (event, ui) {
+                    updateOrder();
+                }
+            }).disableSelection();
+
+            function updateOrder() {
+                var items = $.map($('.b-orderable-table [data-itemId]').toArray(),
+                    function (item) {
+                        return parseInt($(item).attr('data-itemId'));
+                    });
+
+                var endpointUrl = $('.b-orderable-table').attr('data-upadteOrderEndpoint');
+
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    type: 'POST',
+                    url: endpointUrl,
+                    data: JSON.stringify({ ids: items })
+                });
+            }
+        });
     </script>
     @RenderSection("Scripts", required: false)
 </body>

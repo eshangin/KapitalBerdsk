@@ -8,7 +8,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class Organization : IAuditable
+    public class Organization : IAuditable, IWithId
     {
         public int Id { get; set; }
 

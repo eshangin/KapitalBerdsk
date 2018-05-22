@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class Email : IAuditableWithDates
+    public class Email : IAuditableWithDates, IWithId
     {
         public int Id { get; set; }
 

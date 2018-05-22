@@ -8,7 +8,7 @@ namespace KapitalBerdsk.Web.Classes.Data
     /// <summary>
     /// Section of project documentation
     /// </summary>
-    public class PdSection : IAuditable, IWithOneTimeEmployee
+    public class PdSection : IAuditable, IWithOneTimeEmployee, IWithId
     {
         public int Id { get; set; }
 

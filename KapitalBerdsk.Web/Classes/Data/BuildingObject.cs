@@ -7,7 +7,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class BuildingObject : IAuditable
+    public class BuildingObject : IAuditable, IWithId
     {
         public int Id { get; set; }
 

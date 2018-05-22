@@ -9,7 +9,7 @@
     <a class="btn btn-xs btn-link" asp-action="Create">добавить</a>
 </h2>
 
-<table class="table table-bordered" id="employee-table">
+<table class="table table-bordered b-orderable-table" data-upadteOrderEndpoint="/Employee/UpdateOrder">
     <thead>
         <tr>
             <th></th>
@@ -36,9 +36,9 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr data-employeeRow="@item.Id">
+        <tr data-itemId="@item.Id">
             <td>
-                <span data-portletHandler style="width: 10px; height: 10px; display: inline-block; cursor: pointer">
+                <span data-portletHandler class="b-orderable-table__portlet-container">
                     <i class="glyphicon glyphicon-option-vertical"></i>
                 </span>
             </td>
@@ -68,30 +68,3 @@
     </tbody>
 </table>
 
-@section Scripts
-{
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $("#employee-table tbody").sortable({
-                handle: "[data-portletHandler]",
-                stop: function(event, ui) {
-                    updateOrder();
-                }
-            }).disableSelection();
-
-            function updateOrder() {
-                var items = $.map($('[data-employeeRow]').toArray(),
-                    function(item) {
-                        return parseInt($(item).attr('data-employeeRow'));
-                    });
-
-                $.ajax({
-                    contentType: "application/json; charset=utf-8",
-                    type: 'POST',
-                    url: '/Employee/UpdateOrder',
-                    data: JSON.stringify({ ids: items })                    
-                });
-            }
-        });
-    </script>
-}

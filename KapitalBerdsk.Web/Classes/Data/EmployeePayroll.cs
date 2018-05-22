@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class EmployeePayroll : IAuditable
+    public class EmployeePayroll : IAuditable, IWithId
     {
         public int Id { get; set; }
 

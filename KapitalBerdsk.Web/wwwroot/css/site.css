@@ -51,3 +51,11 @@
         display: none !important;
     }
 }
+
+.b-orderable-table {}
+.b-orderable-table__portlet-container {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    cursor: pointer
+}
