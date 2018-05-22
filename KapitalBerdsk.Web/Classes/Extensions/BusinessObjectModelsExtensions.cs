@@ -54,5 +54,17 @@ namespace KapitalBerdsk.Web.Classes.Extensions
         {
             return ApplyOrder(items.AsQueryable());
         }
+
+        public static IQueryable<PdSection> ApplyOrder(this IQueryable<PdSection> items)
+        {
+            return items
+                .OrderBy(item => item.OrderNumber)
+                .ThenByDescending(item => item.Id);
+        }
+
+        public static IEnumerable<PdSection> ApplyOrder(this IEnumerable<PdSection> items)
+        {
+            return ApplyOrder(items.AsQueryable());
+        }
     }
 }

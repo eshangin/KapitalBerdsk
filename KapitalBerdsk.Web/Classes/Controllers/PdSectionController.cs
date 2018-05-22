@@ -151,8 +151,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _context.PdSections
-                    .Include(item => item.Employee)
+            var model = await _context.PdSections.Include(item => item.Employee)
                     .Select(item => new PdSectionModel
                     {
                         Name = item.Name,

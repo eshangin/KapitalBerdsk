@@ -49,7 +49,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 Id = item.Id,
                 Name = item.Name,
-                PdSections = item.PdSections.Select(ps => new PdSectionModel
+                PdSections = item.PdSections.ApplyOrder().Select(ps => new PdSectionModel
                 {
                     Name = ps.Name,
                     Id = ps.Id,
@@ -138,8 +138,6 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var el = await _context.BuildingObjects
-                .Include(item => item.PdSections)
-                .ThenInclude(item => item.Employee)
                 .FirstOrDefaultAsync(item => item.Id == id);
             var model = new BuildingObjectModel
             {
@@ -149,23 +147,34 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Price = el.Price,
                 Status = el.Status,
                 Id = el.Id,
-                PdSections = el.PdSections.Select(item => new PdSectionModel
+                ResponsibleEmployeeId = el.ResponsibleEmployeeId
+            };
+
+            await FillRelatedObjects(model);
+
+            return View(model);
+        }
+
+        private async Task FillRelatedObjects(BuildingObjectModel model)
+        {
+            model.PdSections = (await _context.PdSections.Include(item => item.Employee)
+                                        .ApplyOrder()
+                                        .Where(item => item.BuildingObjectId == model.Id)
+                                        .ToListAsync())
+                .Select(item => new PdSectionModel
                 {
                     Name = item.Name,
                     Id = item.Id,
                     Price = item.Price,
                     EmployeeId = item.EmployeeId,
-                    EmployeeName = item.Employee.FullName
-                }),
-                ResponsibleEmployeeId = el.ResponsibleEmployeeId,
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
-                    new SelectListItem
-                    {
-                        Text = item.FullName,
-                        Value = item.Id.ToString()
-                    })
-            };
-            return View(model);
+                    EmployeeName = item.OneTimeEmployeeName ?? item.Employee?.FullName
+                });
+
+            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            {
+                Text = item.FullName,
+                Value = item.Id.ToString()
+            });
         }
 
         // POST: BuildingObject/Edit/5
@@ -193,20 +202,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            model.PdSections = (await _context.PdSections.Include(item => item.Employee).Where(item => item.BuildingObjectId == model.Id).ToListAsync())
-                .Select(item => new PdSectionModel
-                {
-                    Name = item.Name,
-                    Id = item.Id,
-                    Price = item.Price,
-                    EmployeeName = item.Employee.FullName
-                });
-
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
-            {
-                Text = item.FullName,
-                Value = item.Id.ToString()
-            });
+            await FillRelatedObjects(model);
 
             return View(model);
         }
