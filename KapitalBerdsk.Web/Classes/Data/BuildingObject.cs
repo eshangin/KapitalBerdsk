@@ -7,7 +7,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class BuildingObject : IAuditable, IWithId
+    public class BuildingObject : IAuditable, IWithId, IOrderable
     {
         public int Id { get; set; }
 
@@ -22,6 +22,8 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DateTime ContractDateEnd { get; set; }
 
         public BuildingObjectStatus Status { get; set; }
+
+        public int OrderNumber { get; set; }
 
         public List<PdSection> PdSections { get; set; }
 

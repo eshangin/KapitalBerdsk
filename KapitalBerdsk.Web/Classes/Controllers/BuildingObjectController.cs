@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -37,7 +38,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .ThenInclude(item => item.Employee)
                 .Include(item => item.FundsFlows)
                 .Include(item => item.ResponsibleEmployee)
-                .OrderByDescending(item => item.Id);
+                .OrderBy(item => item.OrderNumber)
+                .ThenByDescending(item => item.Id);
 
             if (id.HasValue)
             {
@@ -208,6 +210,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             });
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderModel model)
+        {
+            List<BuildingObject> items = await _context.BuildingObjects.ToListAsync();
+
+            items.UpdateOrder(model.Ids);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

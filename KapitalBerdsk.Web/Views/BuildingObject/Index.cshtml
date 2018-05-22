@@ -12,9 +12,10 @@
 </h2>
 
 <form class="filtarable-table">
-    <table class="table table-bordered table-condensed">
+    <table class="table table-bordered table-condensed b-orderable-table" data-upadteOrderEndpoint="@Url.Action(nameof(BuildingObjectController.UpdateOrder), "BuildingObject")">
         <thead>
             <tr>
+                <th class="filtarable-table__header-cell"></th>
                 <th class="filtarable-table__header-cell">
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
@@ -51,6 +52,7 @@
                 <th class="filtarable-table__header-cell"></th>
             </tr>
             <tr>
+                <th class="filtarable-table__filter-cell"></th>
                 <th class="filtarable-table__filter-cell">
                     <input data-filter="Name" type="text" class="form-control input-sm" />
                 </th>
@@ -74,40 +76,45 @@
         <tbody>
             @foreach (var item in inProgressObjects)
             {
-                <tr>
-                    <td data-col="Name">
-                        <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PaidByCustomer)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CostPrice)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.RealPrice)
-                    </td>
-                    <td>
-                        <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
-                            @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
-                        </a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ContractDateStart)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ContractDateEnd)
-                    </td>
-                    <td data-col="Status">
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
-                    <td>
-                        <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
-                    </td>
-                </tr>
+            <tr data-itemId="@item.Id">
+                <td>
+                    <span data-portletHandler class="b-orderable-table__portlet-container">
+                        <i class="glyphicon glyphicon-option-vertical"></i>
+                    </span>
+                </td>
+                <td data-col="Name">
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaidByCustomer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CostPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RealPrice)
+                </td>
+                <td>
+                    <a asp-controller="Employee" asp-action="Details" asp-route-id="@item.ResponsibleEmployeeId">
+                        @Html.DisplayFor(modelItem => item.ResponsibleEmployeeName)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContractDateStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContractDateEnd)
+                </td>
+                <td data-col="Status">
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <a class="btn btn-xs btn-link" asp-action="Edit" asp-route-id="@item.Id">редактировать</a>
+                </td>
+            </tr>
             }
             @if (closedObjects.Any())
             {
@@ -117,6 +124,7 @@
                 @foreach (var item in closedObjects)
                 {
                     <tr>
+                        <td></td>
                         <td data-col="Name">
                             <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                         </td>
