@@ -1,4 +1,5 @@
-﻿using KapitalBerdsk.Web.Classes.Data.Interfaces;
+﻿using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels.Interfaces;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
@@ -40,6 +41,18 @@ namespace KapitalBerdsk.Web.Classes.Extensions
                     orderable.OrderNumber = i;
                 }
             }
+        }
+
+        public static IQueryable<BuildingObject> ApplyOrder(this IQueryable<BuildingObject> items)
+        {
+            return items.OrderBy(item => item.Status)
+                .ThenBy(item => item.OrderNumber)
+                .ThenByDescending(item => item.Id);
+        }
+
+        public static IEnumerable<BuildingObject> ApplyOrder(this IEnumerable<BuildingObject> items)
+        {
+            return ApplyOrder(items.AsQueryable());
         }
     }
 }

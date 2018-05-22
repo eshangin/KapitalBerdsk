@@ -38,8 +38,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 .ThenInclude(item => item.Employee)
                 .Include(item => item.FundsFlows)
                 .Include(item => item.ResponsibleEmployee)
-                .OrderBy(item => item.OrderNumber)
-                .ThenByDescending(item => item.Id);
+                .ApplyOrder();
 
             if (id.HasValue)
             {

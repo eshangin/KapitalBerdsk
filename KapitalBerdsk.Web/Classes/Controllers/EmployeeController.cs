@@ -107,7 +107,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var combined = new List<EmployeeDetailsModel.BuildingObjectDetail>();
             IEnumerable<BuildingObject> combinedBuildingObjects = emp.FundsFlows.Where(ff => ff.BuildingObject != null).Select(ff => ff.BuildingObject)
                 .Union(emp.PdSections.Select(ps => ps.BuildingObject));
-            foreach (BuildingObject buildingObject in combinedBuildingObjects)
+            foreach (BuildingObject buildingObject in combinedBuildingObjects.ApplyOrder())
             {
                 decimal issued = issuedItems.FirstOrDefault(item => item.BuildingObjectId == buildingObject.Id)?.Issued ?? 0;
                 decimal accured = accuredItems.FirstOrDefault(item => item.BuildingObjectId == buildingObject.Id)?.Accrued ?? 0;

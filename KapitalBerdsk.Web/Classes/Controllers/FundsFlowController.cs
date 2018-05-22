@@ -60,7 +60,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = new FundsFlowListModel
             {
                 Items = items,
-                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
                 {
                     Text = item.Name
                 }),
@@ -96,7 +96,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Text = item.FullName,
                     Value = item.Id.ToString()
                 }),
-                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
@@ -143,7 +143,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Text = item.FullName,
                 Value = item.Id.ToString()
             });
-            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            model.BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
@@ -192,7 +192,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Text = item.FullName,
                     Value = item.Id.ToString()
                 }),
-                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
@@ -236,7 +236,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Text = item.FullName,
                 Value = item.Id.ToString()
             });
-            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            model.BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
