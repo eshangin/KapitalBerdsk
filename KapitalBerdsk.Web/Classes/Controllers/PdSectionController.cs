@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Data.Extensions;
@@ -172,6 +173,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(BuildingObjectController.Index), nameof(BuildingObjectController).Replace("Controller", string.Empty));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderModel model)
+        {
+            List<PdSection> items = await _context.PdSections.ToListAsync();
+
+            items.UpdateOrder(model.Ids);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

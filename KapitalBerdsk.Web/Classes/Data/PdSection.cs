@@ -8,7 +8,7 @@ namespace KapitalBerdsk.Web.Classes.Data
     /// <summary>
     /// Section of project documentation
     /// </summary>
-    public class PdSection : IAuditable, IWithOneTimeEmployee, IWithId
+    public class PdSection : IAuditable, IWithOneTimeEmployee, IWithId, IOrderable
     {
         public int Id { get; set; }
 
@@ -27,11 +27,13 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public decimal Price { get; set; }
 
+        public int OrderNumber { get; set; }
+
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public string ModifiedById { get; set; }
-        public ApplicationUser ModifiedBy { get; set; }
+        public ApplicationUser ModifiedBy { get; set; }        
     }
 }

@@ -242,9 +242,9 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderModel model)
         {
-            List<Employee> employees = await _context.Employees.ToListAsync();
+            List<Employee> items = await _context.Employees.ToListAsync();
 
-            employees.UpdateOrder(model.Ids);
+            items.UpdateOrder(model.Ids);
             await _context.SaveChangesAsync();
 
             return Ok();

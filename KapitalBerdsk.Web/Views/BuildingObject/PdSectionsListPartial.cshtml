@@ -4,9 +4,10 @@
     Разделы ПД
     <a class="btn btn-xs btn-link" asp-controller="PdSection" asp-action="Create" asp-route-objectId="@Model.Item1">добавить</a>
 </h4>
-<table class="table table-bordered">
+<table class="table table-bordered b-orderable-table" data-updateOrderEndpoint="@Url.Action(nameof(PdSectionController.UpdateOrder), "PdSection")">
     <thead>
     <tr>
+        <th></th>
         <th>Название</th>
         <th>Сотрудник</th>
         <th>Цена</th>
@@ -16,7 +17,12 @@
     <tbody>
     @foreach (var item in Model.Item2)
     {
-        <tr>
+        <tr data-itemId="@item.Id">
+            <td>
+                <span data-portletHandler class="b-orderable-table__portlet-container">
+                    <i class="glyphicon glyphicon-option-vertical"></i>
+                </span>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
