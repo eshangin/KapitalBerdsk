@@ -36,3 +36,18 @@
     border-top: 0 !important;
     padding-top: 1px !important;
 }
+
+.b-inpage-logo {
+    position: absolute;
+    width: 380px;
+    z-index: -1;
+    opacity: 0.3;
+}
+.b-inpage-logo__imb {
+    width: inherit;
+}
+@media (max-width: 1900px) {
+    .b-inpage-logo {
+        display: none !important;
+    }
+}
