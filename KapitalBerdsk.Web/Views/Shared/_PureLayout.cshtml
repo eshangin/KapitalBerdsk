@@ -1,5 +1,6 @@
 ﻿@using KapitalBerdsk.Web.Classes.Options
 @inject Microsoft.Extensions.Options.IOptions<YandexMetrikaOptions> YandexMetrikaOptions
+@inject Microsoft.Extensions.Options.IOptions<GeneralOptions> GeneralOptions
 
 <!DOCTYPE html>
 <html>
@@ -10,7 +11,7 @@
 
     @if (!string.IsNullOrWhiteSpace(YandexMetrikaOptions.Value.Code))
     {
-        @Html.Raw(YandexMetrikaOptions.Value.Code)
+    @Html.Raw(YandexMetrikaOptions.Value.Code)
     }
 
     <environment include="Development">
@@ -28,12 +29,15 @@
 </head>
 <body>
     <div class="container body-content">
+        @if (GeneralOptions.Value.ShowLogo)
+        {
         <div class="row">
             <div class="col-md-4 text-center">
                 <img src="~/images/logo-380.jpg" alt="Логотип" class="img-responsive" />
             </div>
         </div>
-    
+        }
+
         @RenderBody()
     </div>
 
@@ -59,7 +63,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-    
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

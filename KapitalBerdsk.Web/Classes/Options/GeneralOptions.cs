@@ -9,5 +9,6 @@ namespace KapitalBerdsk.Web.Classes.Options
     {
         public string AppBaseUrl { get; set; }
         public string DataProtectionKeysPath { get; set; }
+        public bool ShowLogo { get; set; }
     }
 }

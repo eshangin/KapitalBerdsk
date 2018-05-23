@@ -2,6 +2,7 @@
 @using KapitalBerdsk.Web.Classes.Options
 @inject SignInManager<ApplicationUser> SignInManager
 @inject Microsoft.Extensions.Options.IOptions<YandexMetrikaOptions> YandexMetrikaOptions
+@inject Microsoft.Extensions.Options.IOptions<GeneralOptions> GeneralOptions
 
 <!DOCTYPE html>
 <html>
@@ -54,9 +55,12 @@
             </div>
         </div>
     </nav>
-    <div class="b-inpage-logo">
-        <img src="~/images/logo-380.jpg" alt="Логотип" class="b-inpage-logo__imb" />
-    </div>
+    @if (GeneralOptions.Value.ShowLogo)
+    {
+        <div class="b-inpage-logo">
+            <img src="~/images/logo-380.jpg" alt="Логотип" class="b-inpage-logo__imb"/>
+        </div>
+    }
     <div class="container body-content">
         @if (SignInManager.IsSignedIn(User))
         {
@@ -145,7 +149,7 @@
                 }
 
                 if ($.isEmptyObject(currentFilters)) {
-                    $('#btn-reset-filter').hide();                    
+                    $('#btn-reset-filter').hide();
                 } else {
                     $('#btn-reset-filter').show();
                 }
