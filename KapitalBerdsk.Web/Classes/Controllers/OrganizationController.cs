@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
+using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 query = query.Where(item => item.Id == id.Value);
             }
+            else
+            {
+                query = query.OnlyActive();
+            }
 
             var model = (await query.ToListAsync()).Select(item => new OrganizationListItemModel
             {
@@ -55,7 +60,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            var model = new OrganizationModel()
+            {
+                IsCreateMode = true
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -64,16 +74,21 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _context.Organizations.AddAsync(new Organization()
-                {
-                    Name = model.Name
-                });
+                var org = new Organization();
+                UpdateValues(org, model);
+                await _context.Organizations.AddAsync(org);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
             return View(model);
+        }
+
+        private void UpdateValues(Organization entity, OrganizationModel model)
+        {
+            entity.Name = model.Name;
+            entity.IsInactive = model.IsInactive;
         }
 
         public async Task<ActionResult> Edit(int id)
@@ -83,7 +98,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = new OrganizationModel()
             {
                 Name = el.Name,
-                Id = el.Id
+                Id = el.Id,
+                IsInactive = el.IsInactive
             };
             return View(model);
         }
@@ -95,7 +111,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             if (ModelState.IsValid)
             {
                 var el = await _context.Organizations.FirstOrDefaultAsync(item => item.Id == model.Id);
-                el.Name = model.Name;
+                UpdateValues(el, model);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));

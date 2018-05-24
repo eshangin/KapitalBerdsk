@@ -66,5 +66,11 @@ namespace KapitalBerdsk.Web.Classes.Extensions
         {
             return ApplyOrder(items.AsQueryable());
         }
+
+        public static IQueryable<TEntity> OnlyActive<TEntity>(this IQueryable<TEntity> items)
+            where TEntity : IInactivatable
+        {
+            return items.Where(item => !item.IsInactive);
+        }
     }
 }

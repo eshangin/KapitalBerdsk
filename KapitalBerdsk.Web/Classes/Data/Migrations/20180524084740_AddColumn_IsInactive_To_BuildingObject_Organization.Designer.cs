@@ -12,9 +12,10 @@ using System;
 namespace KapitalBerdsk.Web.Classes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180524084740_AddColumn_IsInactive_To_BuildingObject_Organization")]
+    partial class AddColumn_IsInactive_To_BuildingObject_Organization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

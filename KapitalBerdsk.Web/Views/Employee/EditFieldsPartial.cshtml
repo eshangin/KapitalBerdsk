@@ -16,6 +16,15 @@
     <input asp-for="Email" class="form-control" />
     <span asp-validation-for="Email" class="text-danger"></span>
 </div>
+@Html.HiddenFor(model => model.IsCreateMode)
+@if (!Model.IsCreateMode)
+{
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" asp-for="IsInactive" /> @Html.DisplayNameFor(m => m.IsInactive)
+        </label>
+    </div>
+}
 <div class="form-group">
     <a class="btn btn-default" asp-action="Index">Отмена</a>
     <input type="submit" value="Сохранить" class="btn btn-primary" />

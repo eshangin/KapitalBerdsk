@@ -6,7 +6,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class Employee : IAuditable, IOrderable
+    public class Employee : IAuditable, IOrderable, IInactivatable
     {
         public int Id { get; set; }
 
@@ -21,6 +21,8 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public int OrderNumber { get; set; }
 
+        public bool IsInactive { get; set; }
+
         public List<PdSection> PdSections { get; set; }
 
         public List<FundsFlow> FundsFlows { get; set; }
@@ -33,6 +35,6 @@ namespace KapitalBerdsk.Web.Classes.Data
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public string ModifiedById { get; set; }
-        public ApplicationUser ModifiedBy { get; set; }
+        public ApplicationUser ModifiedBy { get; set; }        
     }
 }

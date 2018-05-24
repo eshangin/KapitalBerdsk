@@ -44,6 +44,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 query = query.Where(item => item.Id == id);
             }
+            else
+            {
+                query = query.OnlyActive();
+            }
 
             return (await query.ToListAsync()).Select(item => new BuildingObjectListItemModel
             {
@@ -83,6 +87,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = new BuildingObjectModel()
             {
                 ContractDateStart = DateTime.UtcNow.AddHours(7),
+                IsCreateMode = true,
                 Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
                     new SelectListItem
                     {
@@ -106,15 +111,9 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                await _context.BuildingObjects.AddAsync(new BuildingObject
-                {
-                    Name = model.Name,
-                    ContractDateEnd = model.ContractDateEnd.Value,
-                    ContractDateStart = model.ContractDateStart.Value,
-                    Status = model.Status,
-                    Price = model.Price.Value,
-                    ResponsibleEmployeeId = model.ResponsibleEmployeeId
-                });
+                var bo = new BuildingObject();
+                UpdateValues(bo, model);
+                await _context.BuildingObjects.AddAsync(bo);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
@@ -127,6 +126,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             });
 
             return View(model);
+        }
+
+        private void UpdateValues(BuildingObject entity, BuildingObjectModel model)
+        {
+            entity.Name = model.Name;
+            entity.Status = model.Status;
+            entity.Price = model.Price.Value;
+            entity.ContractDateStart = model.ContractDateStart.Value;
+            entity.ContractDateEnd = model.ContractDateEnd.Value;
+            entity.ResponsibleEmployeeId = model.ResponsibleEmployeeId;
+            entity.IsInactive = model.IsInactive;
         }
 
         private async Task<BuildingObject> GetBuildingObjectByName(string buildingObjectName)
@@ -147,7 +157,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Price = el.Price,
                 Status = el.Status,
                 Id = el.Id,
-                ResponsibleEmployeeId = el.ResponsibleEmployeeId
+                ResponsibleEmployeeId = el.ResponsibleEmployeeId,
+                IsInactive = el.IsInactive
             };
 
             await FillRelatedObjects(model);
@@ -191,12 +202,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             if (ModelState.IsValid)
             {
                 BuildingObject el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == model.Id);
-                el.Name = model.Name;
-                el.Status = model.Status;
-                el.Price = model.Price.Value;
-                el.ContractDateStart = model.ContractDateStart.Value;
-                el.ContractDateEnd = model.ContractDateEnd.Value;
-                el.ResponsibleEmployeeId = model.ResponsibleEmployeeId;
+                UpdateValues(el, model);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));

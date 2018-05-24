@@ -32,11 +32,16 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [Display(Name = "Ответственный")]
         public int? ResponsibleEmployeeId { get; set; }
 
+        [Display(Name = "Неактивен")]
+        public bool IsInactive { get; set; }
+
         [Display(Name = "Статус")]
         public BuildingObjectStatus Status { get; set; }
 
         public IEnumerable<PdSectionModel> PdSections { get; set; }
 
         public IEnumerable<SelectListItem> Employees { get; set; }
+
+        public bool IsCreateMode { get; set; }
     }
 }

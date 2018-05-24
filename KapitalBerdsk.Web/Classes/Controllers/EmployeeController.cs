@@ -27,6 +27,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         public async Task<ActionResult> Index()
         {
             var employees = await _context.Employees
+                .OnlyActive()
                 .Include(item => item.EmployeePayrolls)
                 .Include(item => item.PdSections)
                 .Include(item => item.FundsFlows)
@@ -166,7 +167,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         // GET: Employee/Create
         public async Task<ActionResult> Create()
         {
-            return View();
+            var model = new EmployeeModel()
+            {
+                IsCreateMode = true
+            };
+
+            return View(model);
         }
 
         // POST: Employee/Create
@@ -181,18 +187,23 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                await _context.Employees.AddAsync(new Employee
-                {
-                    FullName = model.FullName,
-                    Salary = model.Salary,
-                    Email = model.Email
-                });
+                var emp = new Employee();
+                UpdateValues(emp, model);
+                await _context.Employees.AddAsync(emp);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
             return View();
+        }
+
+        private void UpdateValues(Employee emp, EmployeeModel model)
+        {
+            emp.FullName = model.FullName;
+            emp.Salary = model.Salary;
+            emp.Email = model.Email;
+            emp.IsInactive = model.IsInactive;
         }
 
         private async Task<Employee> GetEmployeeByName(string name)
@@ -209,7 +220,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 FullName = emp.FullName,
                 Salary = emp.Salary,
                 Email = emp.Email,
-                Id = emp.Id
+                Id = emp.Id,
+                IsInactive = emp.IsInactive
             };
             return View(model);
         }
@@ -228,9 +240,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             if (ModelState.IsValid)
             {
                 Employee emp = await _context.Employees.FirstOrDefaultAsync(item => item.Id == model.Id);
-                emp.FullName = model.FullName;
-                emp.Salary = model.Salary;
-                emp.Email = model.Email;
+                UpdateValues(emp, model);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));

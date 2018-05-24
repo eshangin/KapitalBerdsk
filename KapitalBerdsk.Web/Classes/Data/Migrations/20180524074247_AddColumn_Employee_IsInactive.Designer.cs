@@ -12,9 +12,10 @@ using System;
 namespace KapitalBerdsk.Web.Classes.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180524074247_AddColumn_Employee_IsInactive")]
+    partial class AddColumn_Employee_IsInactive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,8 +36,6 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<DateTime>("DateUpdated");
-
-                    b.Property<bool>("IsInactive");
 
                     b.Property<string>("ModifiedById");
 
@@ -229,8 +228,6 @@ namespace KapitalBerdsk.Web.Classes.Data.Migrations
                     b.Property<DateTime>("DateCreated");
 
                     b.Property<DateTime>("DateUpdated");
-
-                    b.Property<bool>("IsInactive");
 
                     b.Property<string>("ModifiedById");
 

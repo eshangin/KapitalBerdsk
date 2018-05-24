@@ -8,7 +8,7 @@ using KapitalBerdsk.Web.Classes.Models;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class Organization : IAuditable, IWithId
+    public class Organization : IAuditable, IWithId, IInactivatable
     {
         public int Id { get; set; }
 
@@ -18,12 +18,14 @@ namespace KapitalBerdsk.Web.Classes.Data
 
         public List<FundsFlow> FundsFlows { get; set; }
 
+        public bool IsInactive { get; set; }
+
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
 
         public string CreatedById { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public string ModifiedById { get; set; }
-        public ApplicationUser ModifiedBy { get; set; }
+        public ApplicationUser ModifiedBy { get; set; }        
     }
 }

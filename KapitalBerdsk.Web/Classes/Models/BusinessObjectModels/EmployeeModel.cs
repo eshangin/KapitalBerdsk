@@ -16,5 +16,10 @@ namespace KapitalBerdsk.Web.Classes.Models.BusinessObjectModels
         [MaxLength(256)]
         [EmailAddress(ErrorMessage = Resources.ResourceKeys.EmailInvalid)]
         public string Email { get; set; }
+
+        [Display(Name = "Неактивен")]
+        public bool IsInactive { get; set; }
+
+        public bool IsCreateMode { get; set; }
     }
 }
