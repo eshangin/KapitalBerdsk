@@ -81,22 +81,32 @@ namespace KapitalBerdsk.Web.Classes.Services
             foreach (BuildingObject item in buildingObjectsWithClosingContracts)
             {
                 int dayBefore = (item.ContractDateEnd - today).Days;
-                string dayBeforeStr;
-                if (dayBefore.ToString().EndsWith("1"))
+                if (dayBefore == 0)
                 {
-                    dayBeforeStr = "день";
-                }
-                else if (dayBefore.ToString().EndsWith("2") ||
-                    dayBefore.ToString().EndsWith("3") ||
-                    dayBefore.ToString().EndsWith("4"))
-                {
-                    dayBeforeStr = "дня";
+                    message +=
+                        $"<li><b>{item.Name}</b> - сдача <b>сегодня</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
                 }
                 else
                 {
-                    dayBeforeStr = "дней";
+                    string dayBeforeStr;
+                    if (dayBefore.ToString().EndsWith("1"))
+                    {
+                        dayBeforeStr = "день";
+                    }
+                    else if (dayBefore.ToString().EndsWith("2") ||
+                             dayBefore.ToString().EndsWith("3") ||
+                             dayBefore.ToString().EndsWith("4"))
+                    {
+                        dayBeforeStr = "дня";
+                    }
+                    else
+                    {
+                        dayBeforeStr = "дней";
+                    }
+
+                    message +=
+                        $"<li><b>{item.Name}</b> - до сдачи <b>{dayBefore} {dayBeforeStr}</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
                 }
-                message += $"<li><b>{item.Name}</b> - до сдачи <b>{dayBefore} {dayBeforeStr}</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
             }
             message += "</ul>";
             return message;
