@@ -121,7 +121,6 @@ namespace KapitalBerdsk.Web.Classes.Services
             var items = await (
                 from bo in _context.BuildingObjects.Include(item => item.ResponsibleEmployee)
                 where bo.Status == BuildingObjectStatus.Active &&
-                      bo.ContractDateEnd >= today &&
                       bo.ContractDateEnd <= tillDate
                 orderby bo.ContractDateEnd
                 select bo).ToListAsync();
