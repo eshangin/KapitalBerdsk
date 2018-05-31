@@ -82,7 +82,12 @@ namespace KapitalBerdsk.Web.Classes.Services
             foreach (BuildingObject item in buildingObjectsWithClosingContracts)
             {
                 int dayBefore = (item.ContractDateEnd - today).Days;
-                if (dayBefore == 0)
+                if (dayBefore < 0)
+                {
+                    message +=
+                        $"<li><b>{item.Name}</b> - <b style='color:#a94442'>просрочен</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
+                }
+                else if (dayBefore == 0)
                 {
                     message +=
                         $"<li><b>{item.Name}</b> - сдача <b>сегодня</b> ({item.ContractDateEnd.ToShortDateString()})</li>";
@@ -116,12 +121,12 @@ namespace KapitalBerdsk.Web.Classes.Services
         public async Task<List<BuildingObject>> GetBuildingObjectWithClosingContracts()
         {
             var today = _dateTimeService.LocalDate;
-            var tillDate = today.AddDays(7);
+            var tillDate = today.AddDays(8);
 
             var items = await (
                 from bo in _context.BuildingObjects.Include(item => item.ResponsibleEmployee)
                 where bo.Status == BuildingObjectStatus.Active &&
-                      bo.ContractDateEnd <= tillDate
+                      bo.ContractDateEnd < tillDate
                 orderby bo.ContractDateEnd
                 select bo).ToListAsync();
 
