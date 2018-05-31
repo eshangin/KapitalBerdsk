@@ -15,21 +15,22 @@ namespace KapitalBerdsk.Web.Classes.Services
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IDateTimeService _dateTimeService;
 
         public BuildingObjectClosingContractsChecker(
             IEmailSender emailSender,
             ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IDateTimeService dateTimeService)
         {
             _emailSender = emailSender;
             _context = context;
             _userManager = userManager;
+            _dateTimeService = dateTimeService;
         }
 
         public async Task Check()
         {
-            DateTime today = DateTime.UtcNow.AddHours(7).Date;
-
             List<BuildingObject> items = await GetBuildingObjectWithClosingContracts();
 
             if (items.Any())
@@ -75,7 +76,7 @@ namespace KapitalBerdsk.Web.Classes.Services
 
         private string BuildMessageBody(IEnumerable<BuildingObject> buildingObjectsWithClosingContracts)
         {
-            DateTime today = DateTime.UtcNow.AddHours(7).Date;
+            DateTime today = _dateTimeService.LocalDate;
 
             string message = "<h3>Приближается срок окончания контрактов:</h3><ul>";
             foreach (BuildingObject item in buildingObjectsWithClosingContracts)
@@ -114,7 +115,7 @@ namespace KapitalBerdsk.Web.Classes.Services
 
         public async Task<List<BuildingObject>> GetBuildingObjectWithClosingContracts()
         {
-            var today = DateTime.UtcNow.AddHours(7).Date;
+            var today = _dateTimeService.LocalDate;
             var tillDate = today.AddDays(7);
 
             var items = await (

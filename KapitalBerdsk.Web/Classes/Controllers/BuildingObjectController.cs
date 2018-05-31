@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
+using KapitalBerdsk.Web.Classes.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +18,13 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     public class BuildingObjectController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IDateTimeService _dateTimeService;
 
-        public BuildingObjectController(ApplicationDbContext context)
+        public BuildingObjectController(ApplicationDbContext context,
+            IDateTimeService dateTimeService)
         {
             _context = context;
+            _dateTimeService = dateTimeService;
         }
 
         // GET: BuildingObject
@@ -86,7 +90,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             var model = new BuildingObjectModel()
             {
-                ContractDateStart = DateTime.UtcNow.AddHours(7),
+                ContractDateStart = _dateTimeService.LocalDate,
                 IsCreateMode = true,
                 Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
                     new SelectListItem

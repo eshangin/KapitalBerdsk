@@ -57,6 +57,7 @@ namespace KapitalBerdsk.Web.Classes
             services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();
             services.AddTransient<IPingWebAppService, PingWebAppService>();
             services.AddTransient<IPayEmployeePayrollService, PayEmployeePayrollService>();
+            services.AddTransient<IDateTimeService, DateTimeService>();            
 
             var generalOptions = new GeneralOptions();
             Configuration.GetSection("GeneralOptions").Bind(generalOptions);

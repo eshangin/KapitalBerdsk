@@ -10,16 +10,19 @@ namespace KapitalBerdsk.Web.Classes.Services
     public class PayEmployeePayrollService : IPayEmployeePayrollService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IDateTimeService _dateTimeService;
 
         public PayEmployeePayrollService(
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IDateTimeService dateTimeService)
         {
             _context = context;
+            _dateTimeService = dateTimeService;
         }
 
         public async Task PayToAllEmployees()
         {
-            DateTime today = DateTime.UtcNow.AddHours(7).Date;
+            DateTime today = _dateTimeService.LocalDate;
             DateTime prevMonth = today.AddMonths(-1);
             List<Employee> employees = await _context.Employees.Where(e => e.Salary.HasValue &&
                                                                                 e.Salary.Value > 0).ToListAsync();

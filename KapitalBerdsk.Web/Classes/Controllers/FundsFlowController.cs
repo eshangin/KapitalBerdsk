@@ -6,6 +6,7 @@ using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Data.Extensions;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
+using KapitalBerdsk.Web.Classes.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,13 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     public class FundsFlowController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IDateTimeService _dateTimeService;
 
-        public FundsFlowController(ApplicationDbContext context)
+        public FundsFlowController(ApplicationDbContext context,
+            IDateTimeService dateTimeService)
         {
             _context = context;
+            _dateTimeService = dateTimeService;
         }
 
         // GET: FundsFlow
@@ -106,7 +110,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                     Value = item.Id.ToString(),
                     Text = item.Name
                 }),
-                Date = DateTime.UtcNow.AddHours(7),
+                Date = _dateTimeService.LocalDate,
                 IsCreateMode = true
             };
             return View(model);
