@@ -37,11 +37,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             var model = from item in employees
                         let accured = item.EmployeePayrolls.Sum(ep => ep.Value) + item.PdSections.Sum(s => s.Price)
-                        let outgo = item.FundsFlows.Where(ff => ff.Outgo != null &&
+                        let outgo = item.FundsFlows.Where(ff => ff.Outgo.HasValue &&
                                                                 ff.OutgoType == OutgoType.Regular &&
                                                                 ff.OrganizationId == null).Sum(ff => ff.Outgo.Value)
-                        let accountable = item.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value)
-                        let writeOffAccountable = item.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value)
+                        let accountable = item.FundsFlows.Where(ff => ff.Outgo.HasValue && ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value)
+                        let writeOffAccountable = item.FundsFlows.Where(ff => ff.Outgo.HasValue && ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value)
                         select new EmployeeListItemModel
                         {
                             FullName = item.FullName,
@@ -72,8 +72,8 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 FullName = emp.FullName,
                 Email = emp.Email,
                 Salary = emp.Salary.ToDecimal(),
-                AccountableBalance = emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
-                                    emp.FundsFlows.Where(ff => ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
+                AccountableBalance = emp.FundsFlows.Where(ff => ff.Outgo.HasValue && ff.OutgoType == OutgoType.Accountable).Sum(ff => ff.Outgo.Value) -
+                                    emp.FundsFlows.Where(ff => ff.Outgo.HasValue && ff.OutgoType == OutgoType.WriteOffAccountable).Sum(ff => ff.Outgo.Value),
                 Id = emp.Id,
                 BuildingObjects = GetEmployeeBuildingObjectDetails(emp),
                 MonthlyEmployeePayrolls = GetEmployeeMonthlyPayrolls(emp)
