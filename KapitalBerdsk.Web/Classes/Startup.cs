@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Hangfire;
+using Hangfire.SqlServer;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Hangfire;
 using KapitalBerdsk.Web.Classes.Models;
@@ -73,7 +74,11 @@ namespace KapitalBerdsk.Web.Classes
                         factory.Create(typeof(SharedResource));
                 });
 
-            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection"),
+                new SqlServerStorageOptions()
+                {
+                    QueuePollInterval = TimeSpan.FromMinutes(1)
+                }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
