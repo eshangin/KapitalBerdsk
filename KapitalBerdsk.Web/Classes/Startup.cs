@@ -125,7 +125,7 @@ namespace KapitalBerdsk.Web.Classes
                 Authorization = new[] { new DashboardAuthorizationFilter() }
             });
 
-            new JobsScheduler().ScheduleStartupJobs();
+            //new JobsScheduler().ScheduleStartupJobs();
         }
     }
 }
