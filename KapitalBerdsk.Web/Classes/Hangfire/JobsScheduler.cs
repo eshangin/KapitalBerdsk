@@ -13,17 +13,21 @@ namespace KapitalBerdsk.Web.Classes.Hangfire
     {
         public void ScheduleStartupJobs()
         {
-            RecurringJob.AddOrUpdate<IBuildingObjectClosingContractsChecker>("Check Building Object Closing Contracts",
-                (s) => s.Check(),
-                "0 3 * * 1-5");
+            RecurringJob.RemoveIfExists("Check Building Object Closing Contracts");
+            RecurringJob.RemoveIfExists("Ping web app request");
+            RecurringJob.RemoveIfExists("Pay employee payroll");
 
-            RecurringJob.AddOrUpdate<IPingWebAppService>("Ping web app request",
-                (service) => service.Ping(),
-                "0/5 * * * *");
+            //RecurringJob.AddOrUpdate<IBuildingObjectClosingContractsChecker>("Check Building Object Closing Contracts",
+            //    (s) => s.Check(),
+            //    "0 3 * * 1-5");
 
-            RecurringJob.AddOrUpdate<IPayEmployeePayrollService>("Pay employee payroll",
-                (service) => service.PayToAllEmployees(),
-                "0 0 1 * *");
+            //RecurringJob.AddOrUpdate<IPingWebAppService>("Ping web app request",
+            //    (service) => service.Ping(),
+            //    "0/5 * * * *");
+
+            //RecurringJob.AddOrUpdate<IPayEmployeePayrollService>("Pay employee payroll",
+            //    (service) => service.PayToAllEmployees(),
+            //    "0 0 1 * *");
         }
     }
 }
