@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MediatR;
 
 namespace KapitalBerdsk.Web.Classes
 {
@@ -58,7 +59,7 @@ namespace KapitalBerdsk.Web.Classes
             services.AddTransient<IBuildingObjectClosingContractsChecker, BuildingObjectClosingContractsChecker>();
             services.AddTransient<IPingWebAppService, PingWebAppService>();
             services.AddTransient<IPayEmployeePayrollService, PayEmployeePayrollService>();
-            services.AddTransient<IDateTimeService, DateTimeService>();            
+            services.AddTransient<IDateTimeService, DateTimeService>();
 
             var generalOptions = new GeneralOptions();
             Configuration.GetSection("GeneralOptions").Bind(generalOptions);
@@ -67,6 +68,7 @@ namespace KapitalBerdsk.Web.Classes
                 .PersistKeysToFileSystem(new DirectoryInfo(generalOptions.DataProtectionKeysPath))
                 .SetApplicationName("KapitalBerdsk.Web");
 
+            services.AddMediatR();
             services.AddMvc()
                 .AddDataAnnotationsLocalization(options =>
                 {

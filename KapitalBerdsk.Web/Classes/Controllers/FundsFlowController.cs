@@ -7,6 +7,7 @@ using KapitalBerdsk.Web.Classes.Data.Extensions;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using KapitalBerdsk.Web.Classes.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +21,16 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IDateTimeService _dateTimeService;
+        private readonly IMediator _mediator;
 
-        public FundsFlowController(ApplicationDbContext context,
-            IDateTimeService dateTimeService)
+        public FundsFlowController(
+            ApplicationDbContext context,
+            IDateTimeService dateTimeService,
+            IMediator mediator)
         {
             _context = context;
             _dateTimeService = dateTimeService;
+            _mediator = mediator;
         }
 
         // GET: FundsFlow
