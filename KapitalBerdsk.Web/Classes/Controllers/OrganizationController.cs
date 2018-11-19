@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Classes.Commands.Organizations;
 using KapitalBerdsk.Web.Classes.Data;
-using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
-using Microsoft.AspNetCore.Http;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Classes.Controllers
 {
     public class OrganizationController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _mediator;
 
-        public OrganizationController(ApplicationDbContext context)
+        public OrganizationController(
+            IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         public async Task<ActionResult> Index()
@@ -29,18 +29,25 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         private async Task<IEnumerable<OrganizationListItemModel>> GetListItems(int? id = null)
         {
-            var query = _context.Organizations.Include(item => item.FundsFlows).Select(item => item);
+            var orgs = new List<Organization>();
 
             if (id.HasValue)
             {
-                query = query.Where(item => item.Id == id.Value);
+                orgs.Add(await _mediator.Send(new GetOrganizationByIdQuery(id.Value)
+                {
+                    IncludeFundsFlows = true
+                }));
             }
             else
             {
-                query = query.OnlyActive();
+                orgs.AddRange(await _mediator.Send(new ListOrganizationsQuery()
+                {
+                    IncludeFundsFlows = true,
+                    OnlyActive = true
+                }));
             }
 
-            var model = (await query.ToListAsync()).Select(item => new OrganizationListItemModel
+            var model = orgs.Select(item => new OrganizationListItemModel
             {
                 Name = item.Name,
                 Id = item.Id,
@@ -74,10 +81,11 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             if (ModelState.IsValid)
             {
-                var org = new Organization();
-                UpdateValues(org, model);
-                await _context.Organizations.AddAsync(org);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SaveOrganizationCommand()
+                {
+                    Name = model.Name,
+                    IsInactive = model.IsInactive
+                });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -93,8 +101,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public async Task<ActionResult> Edit(int id)
         {
-            var el = await _context.Organizations
-                .FirstOrDefaultAsync(item => item.Id == id);
+            var el = await _mediator.Send(new GetOrganizationByIdQuery(id));
             var model = new OrganizationModel()
             {
                 Name = el.Name,
@@ -110,9 +117,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             if (ModelState.IsValid)
             {
-                var el = await _context.Organizations.FirstOrDefaultAsync(item => item.Id == model.Id);
-                UpdateValues(el, model);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SaveOrganizationCommand()
+                {
+                    Id = model.Id,
+                    Name = model.Name,
+                    IsInactive = model.IsInactive
+                });
 
                 return RedirectToAction(nameof(Index));
             }

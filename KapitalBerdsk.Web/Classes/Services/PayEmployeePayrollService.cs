@@ -1,4 +1,7 @@
-﻿using KapitalBerdsk.Web.Classes.Data;
+﻿using KapitalBerdsk.Web.Classes.Commands.EmployeePayrolls;
+using KapitalBerdsk.Web.Classes.Commands.Employees;
+using KapitalBerdsk.Web.Classes.Data;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,34 +12,33 @@ namespace KapitalBerdsk.Web.Classes.Services
 {
     public class PayEmployeePayrollService : IPayEmployeePayrollService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _mediator;
         private readonly IDateTimeService _dateTimeService;
 
         public PayEmployeePayrollService(
-            ApplicationDbContext context,
-            IDateTimeService dateTimeService)
+            IDateTimeService dateTimeService,
+            IMediator mediator)
         {
-            _context = context;
             _dateTimeService = dateTimeService;
+            _mediator = mediator;
         }
 
         public async Task PayToAllEmployees()
         {
             DateTime today = _dateTimeService.LocalDate;
             DateTime prevMonth = today.AddMonths(-1);
-            List<Employee> employees = await _context.Employees.Where(e => e.Salary.HasValue &&
-                                                                                e.Salary.Value > 0).ToListAsync();
-            foreach (var emp in employees)
+            Employee[] employees = await _mediator.Send(new ListEmployeesQuery()
             {
-                await _context.EmployeePayrolls.AddAsync(new EmployeePayroll()
-                {
-                    EmployeeId = emp.Id,
-                    Value = emp.Salary.Value,
-                    Year = prevMonth.Year,
-                    Month = prevMonth.Month
-                });
-            }
-            await _context.SaveChangesAsync();
+                WithSalaryOnly = true
+            });
+
+            await _mediator.Send(new SaveEmployeePayrollsCommand(employees.Select(emp => new EmployeePayroll()
+            {
+                EmployeeId = emp.Id,
+                Value = emp.Salary.Value,
+                Year = prevMonth.Year,
+                Month = prevMonth.Month
+            }).ToArray()));
         }
     }
 }

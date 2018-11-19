@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Classes.Commands.BuildingObjects;
+using KapitalBerdsk.Web.Classes.Commands.Employees;
+using KapitalBerdsk.Web.Classes.Commands.FundsFlows;
+using KapitalBerdsk.Web.Classes.Commands.Organizations;
 using KapitalBerdsk.Web.Classes.Data;
-using KapitalBerdsk.Web.Classes.Data.Extensions;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using KapitalBerdsk.Web.Classes.Services;
@@ -12,23 +15,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Classes.Controllers
 {
     [Authorize]
     public class FundsFlowController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IDateTimeService _dateTimeService;
         private readonly IMediator _mediator;
 
         public FundsFlowController(
-            ApplicationDbContext context,
             IDateTimeService dateTimeService,
             IMediator mediator)
         {
-            _context = context;
             _dateTimeService = dateTimeService;
             _mediator = mediator;
         }
@@ -36,20 +35,15 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         // GET: FundsFlow
         public async Task<ActionResult> Index()
         {
-            IQueryable<FundsFlow> query = from ff in _context.FundsFlows
-                                                        .Include(item => item.Employee)
-                                                        .Include(item => item.BuildingObject)
-                                                        .Include(item => item.Organization)
-                                          orderby ff.Date descending, ff.Id descending
-                                          select ff;
-
-            if (!User.IsInRole(Constants.Roles.Admin))
+            var flows = await _mediator.Send(new ListFundsFlowsQuery()
             {
-                string userId = GetCurrentUserId();
-                query = query.Where(ff => ff.CreatedById == userId);
-            }
+                UserId = User.IsInRole(Constants.Roles.Admin) ? null : GetCurrentUserId(),
+                IncludeBuildingObject = true,
+                IncludeOrganization = true,
+                IncludeEmployee = true
+            });
 
-            var items = (await query.ToListAsync()).Select(item => new FundsFlowListItemModel
+            var items = flows.Select(item => new FundsFlowListItemModel
                 {
                     Date = item.Date,
                     Description = item.Description,
@@ -69,19 +63,21 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             var model = new FundsFlowListModel
             {
                 Items = items,
-                BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
                 {
                     Text = item.Name
                 }),
-                Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+                Organizations = (await _mediator.Send(new ListOrganizationsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
                 })
             };
 
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => item.FullName)
-                .Union(_context.FundsFlows.Where(ff => !string.IsNullOrWhiteSpace(ff.OneTimeEmployeeName)).Select(ff => ff.OneTimeEmployeeName)).Select(employeeName =>
+            var oneTimeEmployees = await _mediator.Send(new ListOneTimeEmployeesQuery());
+
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => item.FullName)
+                .Union(oneTimeEmployees).Select(employeeName =>
                     new SelectListItem
                     {
                         Text = employeeName
@@ -100,17 +96,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             var model = new EditFundsFlowModel
             {
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
                 }),
-                BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
                 }),
-                Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+                Organizations = (await _mediator.Send(new ListOrganizationsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
@@ -139,25 +135,35 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                var ff = new FundsFlow();
-                UpdateValues(ff, model);
-                await _context.FundsFlows.AddAsync(ff);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SaveFundsFlowCommand()
+                {
+                    Date = model.Date.Value,
+                    BuildingObjectId = model.BuildingObjectId,
+                    Description = model.Description,
+                    OrganizationId = model.OrganizationId,
+                    Income = model.Income,
+                    Outgo = model.Outgo,
+                    OutgoType = model.OutgoType,
+                    PayType = model.PayType,
+                    UseOneTimeEmployee = model.UseOneTimeEmployee,
+                    EmployeeId = model.EmployeeId,
+                    OneTimeEmployeeName = model.OneTimeEmployeeName
+                });
 
                 return RedirectToAction(nameof(Index));
             }
 
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
             });
-            model.BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
+            model.BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
             });
-            model.Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+            model.Organizations = (await _mediator.Send(new ListOrganizationsQuery())).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
@@ -166,22 +172,9 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
-        private void UpdateValues(FundsFlow ff, EditFundsFlowModel model)
-        {
-            ff.Date = model.Date.Value;
-            ff.BuildingObjectId = model.BuildingObjectId;
-            ff.Description = model.Description;
-            ff.OrganizationId = model.OrganizationId;
-            ff.Income = model.Income;
-            ff.Outgo = model.Outgo;
-            ff.OutgoType = model.OutgoType;
-            ff.PayType = model.PayType;
-            ff.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
-        }
-
         public async Task<ActionResult> Edit(int id)
         {
-            FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == id);
+            FundsFlow ff = await _mediator.Send(new GetFundsFlowByIdQuery(id));
             var model = new EditFundsFlowModel
             {
                 Id = ff.Id,
@@ -196,17 +189,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 Outgo = ff.Outgo,
                 OutgoType = ff.OutgoType,
                 PayType = ff.PayType,
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
                 }),
-                BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
                 }),
-                Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+                Organizations = (await _mediator.Send(new ListOrganizationsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name
@@ -233,24 +226,36 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                FundsFlow ff = await _context.FundsFlows.FirstOrDefaultAsync(item => item.Id == model.Id);
-                UpdateValues(ff, model);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SaveFundsFlowCommand()
+                {
+                    Id = model.Id,
+                    Date = model.Date.Value,
+                    BuildingObjectId = model.BuildingObjectId,
+                    Description = model.Description,
+                    OrganizationId = model.OrganizationId,
+                    Income = model.Income,
+                    Outgo = model.Outgo,
+                    OutgoType = model.OutgoType,
+                    PayType = model.PayType,
+                    UseOneTimeEmployee = model.UseOneTimeEmployee,
+                    EmployeeId = model.EmployeeId,
+                    OneTimeEmployeeName = model.OneTimeEmployeeName
+                });
 
                 return RedirectToAction(nameof(Index));
             }
 
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
             });
-            model.BuildingObjects = (await _context.BuildingObjects.ApplyOrder().ToListAsync()).Select(item => new SelectListItem
+            model.BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
             });
-            model.Organizations = (await _context.Organizations.ToListAsync()).Select(item => new SelectListItem
+            model.Organizations = (await _mediator.Send(new ListOrganizationsQuery())).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name
@@ -261,28 +266,33 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _context.FundsFlows
-                .Include(item => item.Employee)
-                .Include(item => item.BuildingObject)
-                .Include(item => item.Organization)
-                .OrderByDescending(item => item.Date)
-                .ThenByDescending(item => item.Id)
-                .Where(item => item.Id == id)
-                .Select(item => new FundsFlowListItemModel
+            FundsFlow flow = await _mediator.Send(new GetFundsFlowByIdQuery(id)
+            {
+                IncludeBuildingObject = true,
+                IncludeEmployee = true,
+                IncludeOrganization = true
+            });
+
+            FundsFlowListItemModel model = null;
+
+            if (flow != null)
+            {
+                model = new FundsFlowListItemModel()
                 {
-                    Date = item.Date,
-                    Description = item.Description,
-                    Income = item.Income,
-                    Outgo = item.Outgo,
-                    PayType = item.PayType,
-                    Id = item.Id,
-                    EmployeeName = item.Employee == null ? item.OneTimeEmployeeName : item.Employee.FullName,
-                    EmployeeId = item.EmployeeId,
-                    OrganizationName = item.Organization == null ? null : item.Organization.Name,
-                    OrganizationId = item.OrganizationId,
-                    BuildingObjectName = item.BuildingObject == null ? null : item.BuildingObject.Name,
-                    BuildingObjectId = item.BuildingObjectId
-                }).FirstOrDefaultAsync();
+                    Date = flow.Date,
+                    Description = flow.Description,
+                    Income = flow.Income,
+                    Outgo = flow.Outgo,
+                    PayType = flow.PayType,
+                    Id = flow.Id,
+                    EmployeeName = flow.Employee == null ? flow.OneTimeEmployeeName : flow.Employee.FullName,
+                    EmployeeId = flow.EmployeeId,
+                    OrganizationName = flow.Organization == null ? null : flow.Organization.Name,
+                    OrganizationId = flow.OrganizationId,
+                    BuildingObjectName = flow.BuildingObject == null ? null : flow.BuildingObject.Name,
+                    BuildingObjectId = flow.BuildingObjectId
+                };
+            }
 
             return View(model);
         }
@@ -291,9 +301,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
-            var itemToDelete = new FundsFlow() { Id = id };
-            _context.Entry(itemToDelete).State = EntityState.Deleted;
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new DeteteFundsFlowCommand(id));
 
             return RedirectToAction(nameof(Index));
         }

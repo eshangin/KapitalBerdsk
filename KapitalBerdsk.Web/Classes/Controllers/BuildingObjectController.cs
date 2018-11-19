@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Classes.Commands.BuildingObjects;
+using KapitalBerdsk.Web.Classes.Commands.Employees;
+using KapitalBerdsk.Web.Classes.Commands.PdSections;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
 using KapitalBerdsk.Web.Classes.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +21,15 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     [Authorize]
     public class BuildingObjectController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly IDateTimeService _dateTimeService;
+        private readonly IMediator _mediator;
 
-        public BuildingObjectController(ApplicationDbContext context,
-            IDateTimeService dateTimeService)
+        public BuildingObjectController(
+            IDateTimeService dateTimeService,
+            IMediator mediator)
         {
-            _context = context;
             _dateTimeService = dateTimeService;
+            _mediator = mediator;
         }
 
         // GET: BuildingObject
@@ -37,23 +42,31 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         private async Task<IEnumerable<BuildingObjectListItemModel>> GetBuildingObjectListItems(int? id = null)
         {
-            IQueryable<BuildingObject> query = _context.BuildingObjects
-                .Include(item => item.PdSections)
-                .ThenInclude(item => item.Employee)
-                .Include(item => item.FundsFlows)
-                .Include(item => item.ResponsibleEmployee)
-                .ApplyOrder();
+            var buildingObjects = new List<BuildingObject>();
 
             if (id.HasValue)
             {
-                query = query.Where(item => item.Id == id);
+                buildingObjects.Add(await _mediator.Send(new GetBuildingObjectByIdQuery(id.Value)
+                {
+                    IncludeFundsFlows = true,
+                    IncludePdSections = true,
+                    IncludePdSectionsEmployee = true,
+                    IncludeResponsibleEmployee = true
+                }));
             }
             else
             {
-                query = query.OnlyActive();
+                buildingObjects.AddRange(await _mediator.Send(new ListBuildingObjectsQuery()
+                {
+                    IncludeFundsFlows = true,
+                    IncludePdSections = true,
+                    IncludePdSectionsEmployee = true,
+                    IncludeResponsibleEmployee = true,
+                    OnlyActive = true
+                }));
             }
 
-            return (await query.ToListAsync()).Select(item => new BuildingObjectListItemModel
+            return buildingObjects.Select(item => new BuildingObjectListItemModel
             {
                 Id = item.Id,
                 Name = item.Name,
@@ -92,7 +105,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             {
                 ContractDateStart = _dateTimeService.LocalDate,
                 IsCreateMode = true,
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item =>
+                Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item =>
                     new SelectListItem
                     {
                         Text = item.FullName,
@@ -108,22 +121,28 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(BuildingObjectModel model)
         {
-            if ((await GetBuildingObjectByName(model.Name)) != null)
+            if (await _mediator.Send(new GetBuildingObjectByNameQuery(model.Name)) != null)
             {
                 ModelState.AddModelError("", "Объект с таким именем уже существует");
             }
 
             if (ModelState.IsValid)
             {
-                var bo = new BuildingObject();
-                UpdateValues(bo, model);
-                await _context.BuildingObjects.AddAsync(bo);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SaveBuildingObjectCommand()
+                {
+                    Name = model.Name,
+                    Status = model.Status,
+                    Price = model.Price.Value,
+                    ContractDateStart = model.ContractDateStart.Value,
+                    ContractDateEnd = model.ContractDateEnd.Value,
+                    ResponsibleEmployeeId = model.ResponsibleEmployeeId,
+                    IsInactive = model.IsInactive
+                });
 
                 return RedirectToAction(nameof(Index));
             }
 
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
@@ -132,27 +151,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
-        private void UpdateValues(BuildingObject entity, BuildingObjectModel model)
-        {
-            entity.Name = model.Name;
-            entity.Status = model.Status;
-            entity.Price = model.Price.Value;
-            entity.ContractDateStart = model.ContractDateStart.Value;
-            entity.ContractDateEnd = model.ContractDateEnd.Value;
-            entity.ResponsibleEmployeeId = model.ResponsibleEmployeeId;
-            entity.IsInactive = model.IsInactive;
-        }
-
-        private async Task<BuildingObject> GetBuildingObjectByName(string buildingObjectName)
-        {
-            return await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Name == buildingObjectName);
-        }
-
         // GET: BuildingObject/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var el = await _context.BuildingObjects
-                .FirstOrDefaultAsync(item => item.Id == id);
+            BuildingObject el = await _mediator.Send(new GetBuildingObjectByIdQuery(id));
             var model = new BuildingObjectModel
             {
                 Name = el.Name,
@@ -172,20 +174,20 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         private async Task FillRelatedObjects(BuildingObjectModel model)
         {
-            model.PdSections = (await _context.PdSections.Include(item => item.Employee)
-                                        .ApplyOrder()
-                                        .Where(item => item.BuildingObjectId == model.Id)
-                                        .ToListAsync())
-                .Select(item => new PdSectionModel
-                {
-                    Name = item.Name,
-                    Id = item.Id,
-                    Price = item.Price,
-                    EmployeeId = item.EmployeeId,
-                    EmployeeName = item.OneTimeEmployeeName ?? item.Employee?.FullName
-                });
+            model.PdSections = (await _mediator.Send(new ListPdSectionsQuery()
+            {
+                BuildingObjectId = model.Id,
+                IncludeEmployee = true
+            })).Select(item => new PdSectionModel
+            {
+                Name = item.Name,
+                Id = item.Id,
+                Price = item.Price,
+                EmployeeId = item.EmployeeId,
+                EmployeeName = item.OneTimeEmployeeName ?? item.Employee?.FullName
+            });
 
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
@@ -197,7 +199,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(BuildingObjectModel model)
         {
-            BuildingObject objectByName = await GetBuildingObjectByName(model.Name);
+            BuildingObject objectByName = await _mediator.Send(new GetBuildingObjectByNameQuery(model.Name));
             if (objectByName != null && objectByName.Id != model.Id)
             {
                 ModelState.AddModelError("", "Объект с таким именем уже существует");
@@ -205,9 +207,17 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                BuildingObject el = await _context.BuildingObjects.FirstOrDefaultAsync(item => item.Id == model.Id);
-                UpdateValues(el, model);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SaveBuildingObjectCommand()
+                {
+                    Id = model.Id,
+                    Name = model.Name,
+                    Status = model.Status,
+                    Price = model.Price.Value,
+                    ContractDateStart = model.ContractDateStart.Value,
+                    ContractDateEnd = model.ContractDateEnd.Value,
+                    ResponsibleEmployeeId = model.ResponsibleEmployeeId,
+                    IsInactive = model.IsInactive
+                });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -220,10 +230,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderModel model)
         {
-            List<BuildingObject> items = await _context.BuildingObjects.ToListAsync();
-
-            items.UpdateOrder(model.Ids);
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new UpdateBuildingObjectsOrderCommand(model.Ids));
 
             return Ok();
         }

@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
+using KapitalBerdsk.Web.Classes.Commands.Emails;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Options;
 using MailKit.Net.Smtp;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -16,12 +18,14 @@ namespace KapitalBerdsk.Web.Classes.Services
     public class EmailSender : IEmailSender
     {
         private readonly SmtpOptions _smtpOptions;
-        private readonly ApplicationDbContext _context;
+        private readonly IMediator _mediator;
 
-        public EmailSender(IOptions<SmtpOptions> smtpOptions, ApplicationDbContext context)
+        public EmailSender(
+            IOptions<SmtpOptions> smtpOptions, 
+            IMediator mediator)
         {
             _smtpOptions = smtpOptions.Value;
-            _context = context;
+            _mediator = mediator;
         }
 
         public async Task<int> AddPendingEmail(string from, string to, string subject, string body)
@@ -55,8 +59,7 @@ namespace KapitalBerdsk.Web.Classes.Services
                 email.Status = Data.Enums.EmailStatus.Pending;
                 email.From = email.From ?? _smtpOptions.From;
             }
-            await _context.Emails.AddRangeAsync(emails);
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new CreateEmailsCommand(emails));
 
             foreach (var email in emails)
             {
@@ -68,14 +71,19 @@ namespace KapitalBerdsk.Web.Classes.Services
 
         public async Task HandlePendingEmail(int emailId)
         {
-            Email email = await _context.Emails.SingleAsync(item => item.Id == emailId);
-            email.Status = Data.Enums.EmailStatus.InProgress;
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new UpdateEmailCommand(emailId)
+            {
+                EmailStatus = Data.Enums.EmailStatus.InProgress
+            });
+
+            Email email = await _mediator.Send(new GetEmailByIdQuery(emailId));
 
             await SendEmailAsync(email.From, email.ToCsv.Split(","), email.Subject, email.Body);
 
-            email.Status = Data.Enums.EmailStatus.Sent;
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new UpdateEmailCommand(emailId)
+            {
+                EmailStatus = Data.Enums.EmailStatus.Sent
+            });
         }
 
         private Task SendEmailAsync(string from, string toAddress, string subject, string message)

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Classes.Commands.BuildingObjects;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,25 +15,25 @@ namespace KapitalBerdsk.Web.Classes.Services
     public class BuildingObjectClosingContractsChecker : IBuildingObjectClosingContractsChecker
     {
         private readonly IEmailSender _emailSender;
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDateTimeService _dateTimeService;
+        private readonly IMediator _mediator;
 
         public BuildingObjectClosingContractsChecker(
             IEmailSender emailSender,
-            ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            IDateTimeService dateTimeService)
+            IDateTimeService dateTimeService,
+            IMediator mediator)
         {
             _emailSender = emailSender;
-            _context = context;
             _userManager = userManager;
             _dateTimeService = dateTimeService;
+            _mediator = mediator;
         }
 
         public async Task Check()
         {
-            List<BuildingObject> items = await GetBuildingObjectWithClosingContracts();
+            IEnumerable<BuildingObject> items = await GetBuildingObjectWithClosingContracts();
 
             if (items.Any())
             {
@@ -118,19 +120,19 @@ namespace KapitalBerdsk.Web.Classes.Services
             return message;
         }
 
-        public async Task<List<BuildingObject>> GetBuildingObjectWithClosingContracts()
+        public async Task<IEnumerable<BuildingObject>> GetBuildingObjectWithClosingContracts()
         {
             var today = _dateTimeService.LocalDate;
-            var tillDate = today.AddDays(8);
+            var tillDate = today.AddDays(8).AddMilliseconds(-1);
 
-            var items = await (
-                from bo in _context.BuildingObjects.Include(item => item.ResponsibleEmployee)
-                where bo.Status == BuildingObjectStatus.Active &&
-                      bo.ContractDateEnd < tillDate
-                orderby bo.ContractDateEnd
-                select bo).ToListAsync();
+            var items = await _mediator.Send(new ListBuildingObjectsQuery()
+            {
+                IncludeResponsibleEmployee = true,
+                MaxContractDateEnd = tillDate,
+                WithStatus = BuildingObjectStatus.Active
+            });
 
-            return items;
+            return items.OrderBy(_ => _.ContractDateEnd);
         }
     }
 }

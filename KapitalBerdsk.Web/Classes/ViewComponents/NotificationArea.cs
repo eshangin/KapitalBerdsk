@@ -18,7 +18,7 @@ namespace KapitalBerdsk.Web.Classes.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            List<BuildingObject> model = await _buildingObjectClosingContractsChecker.GetBuildingObjectWithClosingContracts();
+            IEnumerable<BuildingObject> model = await _buildingObjectClosingContractsChecker.GetBuildingObjectWithClosingContracts();
             return View(model);
         }
     }

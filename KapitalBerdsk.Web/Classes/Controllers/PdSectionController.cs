@@ -1,10 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using KapitalBerdsk.Web.Classes.Commands.BuildingObjects;
+using KapitalBerdsk.Web.Classes.Commands.Common;
+using KapitalBerdsk.Web.Classes.Commands.Employees;
+using KapitalBerdsk.Web.Classes.Commands.PdSections;
 using KapitalBerdsk.Web.Classes.Data;
 using KapitalBerdsk.Web.Classes.Data.Extensions;
 using KapitalBerdsk.Web.Classes.Extensions;
 using KapitalBerdsk.Web.Classes.Models.BusinessObjectModels;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +21,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
     [Authorize]
     public class PdSectionController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly IMediator _mediator;
 
-        public PdSectionController(ApplicationDbContext context)
+        public PdSectionController(
+            IMediator mediator)
         {
-            _context = context;
+            _mediator = mediator;
         }
 
         // GET: PdSection/Create
@@ -28,12 +34,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         {
             var model = new EditPdSectionModel
             {
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
                 }),
-                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name,
@@ -55,23 +61,27 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                var pdSection = new PdSection();
-                UpdateValues(pdSection, model);
-
-                await _context.PdSections.AddAsync(pdSection);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SavePdSectionCommand()
+                {
+                    BuildingObjectId = model.BuildingObjectId.Value,
+                    EmployeeId = model.EmployeeId,
+                    Name = model.Name,
+                    OneTimeEmployeeName = model.OneTimeEmployeeName,
+                    Price = model.Price.Value,
+                    UseOneTimeEmployee = model.UseOneTimeEmployee
+                });
 
                 return RedirectToAction(nameof(BuildingObjectController.Details), "BuildingObject", 
                     new { id = model.SelectedBuildingObjectId });
             }
 
-            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            model.BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name,
                 Selected = item.Id == objectId
             });
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
@@ -80,18 +90,10 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             return View(model);
         }
 
-        private void UpdateValues(PdSection pdSection, EditPdSectionModel model)
-        {
-            pdSection.Name = model.Name;
-            pdSection.BuildingObjectId = model.BuildingObjectId.Value;
-            pdSection.Price = model.Price.Value;
-            pdSection.SetEmployee(model.UseOneTimeEmployee, model.EmployeeId, model.OneTimeEmployeeName);
-        }
-
         // GET: PdSection/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            var pdSection = await _context.PdSections.FirstOrDefaultAsync(item => item.Id == id);
+            PdSection pdSection = await _mediator.Send(new GetPdSectionByIdQuery(id));
             var model = new EditPdSectionModel
             {
                 Id = pdSection.Id,
@@ -100,12 +102,12 @@ namespace KapitalBerdsk.Web.Classes.Controllers
                 EmployeeId = pdSection.EmployeeId,
                 OneTimeEmployeeName = pdSection.OneTimeEmployeeName,
                 UseOneTimeEmployee = !string.IsNullOrWhiteSpace(pdSection.OneTimeEmployeeName),
-                Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+                Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
                 {
                     Text = item.FullName,
                     Value = item.Id.ToString()
                 }),
-                BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+                BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
                 {
                     Value = item.Id.ToString(),
                     Text = item.Name,
@@ -126,21 +128,28 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
             if (ModelState.IsValid)
             {
-                PdSection pdSection = await _context.PdSections.FirstOrDefaultAsync(item => item.Id == model.Id);
-                UpdateValues(pdSection, model);
-                await _context.SaveChangesAsync();
+                await _mediator.Send(new SavePdSectionCommand()
+                {
+                    Id = model.Id,
+                    BuildingObjectId = model.BuildingObjectId.Value,
+                    EmployeeId = model.EmployeeId,
+                    Name = model.Name,
+                    OneTimeEmployeeName = model.OneTimeEmployeeName,
+                    Price = model.Price.Value,
+                    UseOneTimeEmployee = model.UseOneTimeEmployee
+                });
 
                 return RedirectToAction(nameof(BuildingObjectController.Details), "BuildingObject",
                     new { id = model.SelectedBuildingObjectId });
             }
 
-            model.BuildingObjects = (await _context.BuildingObjects.ToListAsync()).Select(item => new SelectListItem
+            model.BuildingObjects = (await _mediator.Send(new ListBuildingObjectsQuery())).Select(item => new SelectListItem
             {
                 Value = item.Id.ToString(),
                 Text = item.Name,
                 Selected = item.Id == model.SelectedBuildingObjectId
             });
-            model.Employees = (await _context.Employees.OrderBy(item => item.OrderNumber).ToListAsync()).Select(item => new SelectListItem
+            model.Employees = (await _mediator.Send(new ListEmployeesQuery())).Select(item => new SelectListItem
             {
                 Text = item.FullName,
                 Value = item.Id.ToString()
@@ -151,15 +160,23 @@ namespace KapitalBerdsk.Web.Classes.Controllers
 
         public async Task<ActionResult> Delete(int id)
         {
-            var model = await _context.PdSections.Include(item => item.Employee)
-                    .Select(item => new PdSectionModel
-                    {
-                        Name = item.Name,
-                        Id = item.Id,
-                        Price = item.Price,
-                        EmployeeName = item.OneTimeEmployeeName ?? item.Employee.FullName
-                    })
-                    .FirstOrDefaultAsync(item => item.Id == id);
+            PdSectionModel model = null;
+            PdSection pdSection = await _mediator.Send(new GetPdSectionByIdQuery(id)
+            {
+                IncludeEmployee = true
+            });
+
+            if (pdSection != null)
+            {
+                model = new PdSectionModel
+                {
+                    Name = pdSection.Name,
+                    Id = pdSection.Id,
+                    Price = pdSection.Price,
+                    EmployeeName = pdSection.OneTimeEmployeeName ?? pdSection.Employee.FullName
+                };
+            }
+
             return View(model);
         }
 
@@ -167,9 +184,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
-            var itemToDelete = new PdSection() { Id = id };
-            _context.Entry(itemToDelete).State = EntityState.Deleted;
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new DetetePdSectionCommand(id));
 
             return RedirectToAction(nameof(BuildingObjectController.Index), nameof(BuildingObjectController).Replace("Controller", string.Empty));
         }
@@ -177,10 +192,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
         [HttpPost]
         public async Task<ActionResult> UpdateOrder([FromBody] UpdateOrderModel model)
         {
-            List<PdSection> items = await _context.PdSections.ToListAsync();
-
-            items.UpdateOrder(model.Ids);
-            await _context.SaveChangesAsync();
+            await _mediator.Send(new UpdatePdSectionsOrderCommand(model.Ids));
 
             return Ok();
         }
