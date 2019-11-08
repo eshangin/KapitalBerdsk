@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace KapitalBerdsk.Web.Classes
 {
@@ -35,6 +36,8 @@ namespace KapitalBerdsk.Web.Classes
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDataProtection().PersistKeysToDbContext<ApplicationDbContext>();
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
                 {
                     options.Password = new PasswordOptions
@@ -50,6 +53,11 @@ namespace KapitalBerdsk.Web.Classes
                 .AddErrorDescriber<RuIdentityErrorDescriber>()
                 .AddDefaultTokenProviders();
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = "kapuser";
+            });
+
             services.Configure<SmtpOptions>(Configuration.GetSection("SmtpOptions"));
             services.Configure<YandexMetrikaOptions>(Configuration.GetSection("YandexMetrika"));
             services.Configure<GeneralOptions>(Configuration.GetSection("GeneralOptions"));
@@ -63,13 +71,13 @@ namespace KapitalBerdsk.Web.Classes
 
             var generalOptions = new GeneralOptions();
             Configuration.GetSection("GeneralOptions").Bind(generalOptions);
-
-            services.AddDataProtection()
-                .PersistKeysToFileSystem(new DirectoryInfo(generalOptions.DataProtectionKeysPath))
-                .SetApplicationName("KapitalBerdsk.Web");
+            
+            //services.AddDataProtection()
+            //    .PersistKeysToFileSystem(new DirectoryInfo(generalOptions.DataProtectionKeysPath))
+            //    .SetApplicationName("KapitalBerdsk.Web");
 
             services.AddMediatR();
-            services.AddMvc()
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddDataAnnotationsLocalization(options =>
                 {
                     options.DataAnnotationLocalizerProvider = (type, factory) =>

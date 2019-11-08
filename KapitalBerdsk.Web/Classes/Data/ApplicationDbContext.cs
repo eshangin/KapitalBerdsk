@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using KapitalBerdsk.Web.Classes.Data.Enums;
 using KapitalBerdsk.Web.Classes.Data.Interfaces;
 using KapitalBerdsk.Web.Classes.Models;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KapitalBerdsk.Web.Classes.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IDataProtectionKeyContext
     {
         public DbSet<Employee> Employees { get; set; }
         public DbSet<BuildingObject> BuildingObjects { get; set; }
@@ -22,6 +23,7 @@ namespace KapitalBerdsk.Web.Classes.Data
         public DbSet<Organization> Organizations { get; set; }
         public DbSet<EmployeePayroll> EmployeePayrolls { get; set; }
         public DbSet<Email> Emails { get; set; }
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
