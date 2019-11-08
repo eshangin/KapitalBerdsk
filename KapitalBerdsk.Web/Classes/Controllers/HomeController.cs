@@ -21,7 +21,7 @@ namespace KapitalBerdsk.Web.Classes.Controllers
             if (_signInManager.IsSignedIn(User))
             {
                 return RedirectToAction(nameof(FundsFlowController.Index),
-                    nameof(FundsFlowController).Replace("controller", string.Empty, StringComparison.OrdinalIgnoreCase));
+                    nameof(BuildingObjectController).Replace("controller", string.Empty, StringComparison.OrdinalIgnoreCase));
             }
             else
             {
